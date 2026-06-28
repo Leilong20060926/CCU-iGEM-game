@@ -203,7 +203,7 @@
     .start-button:active .png-button { transform: scale(0.98); }
     .png-button {
       width: 85px; height: 53px;
-      background-image: url('../public/buttoms/Homepage_buttom.PNG');
+      background-image: url('public/buttoms/Homepage_buttom.PNG');
       background-size: contain; background-repeat: no-repeat; background-color: transparent;
       border: none; cursor: pointer; text-indent: -9999px; transition: transform 0.2s ease;
     }
@@ -367,7 +367,7 @@
     .scene-overlay-btn {
       position: absolute; left: 27%; top: 74%;
       transform: translate(-50%, -50%); width: 120px; height: 50px;
-      background-image: url('../public/buttoms/3-6_buttom.PNG');
+      background-image: url('public/buttoms/3-6_buttom.PNG');
       background-size: contain; background-repeat: no-repeat;
       background-color: transparent; border: none; cursor: pointer; z-index: 10;
       transition: transform 0.2s ease;
@@ -481,21 +481,21 @@
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <nav class="sidebar" id="sidebar">
     <ul class="sidebar-menu">
-      <li><a onclick="resumeGame()" id="backToGameBtn"><img src="../public/menu/left.svg" alt="" class="menu-icon"/><span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span></a></li>
-      <li><a onclick="navTo('star')"><img src="../public/menu/star.svg" alt="" class="menu-icon"/><span data-zh="收集結局" data-en="Endings">收集結局</span></a></li>
-      <li><a onclick="navTo('egg')"><img src="../public/menu/egg.svg" alt="" class="menu-icon"/><span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span></a></li>
-      <li><a onclick="navTo('doc')"><img src="../public/menu/doc.svg" alt="" class="menu-icon"/><span data-zh="相關資訊" data-en="Information">相關資訊</span></a></li>
-      <li><a onclick="navTo('info')"><img src="../public/menu/info.svg" alt="" class="menu-icon"/><span data-zh="關於我們" data-en="About Us">關於我們</span></a></li>
+      <li><a onclick="resumeGame()" id="backToGameBtn"><img src="public/menu/left.svg" alt="" class="menu-icon"/><span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span></a></li>
+      <li><a onclick="navTo('star')"><img src="public/menu/star.svg" alt="" class="menu-icon"/><span data-zh="收集結局" data-en="Endings">收集結局</span></a></li>
+      <li><a onclick="navTo('egg')"><img src="public/menu/egg.svg" alt="" class="menu-icon"/><span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span></a></li>
+      <li><a onclick="navTo('doc')"><img src="public/menu/doc.svg" alt="" class="menu-icon"/><span data-zh="相關資訊" data-en="Information">相關資訊</span></a></li>
+      <li><a onclick="navTo('info')"><img src="public/menu/info.svg" alt="" class="menu-icon"/><span data-zh="關於我們" data-en="About Us">關於我們</span></a></li>
     </ul>
   </nav>
   <div class="top-left-controls">
     <button class="btn" id="alignBtn" aria-label="Align left">
-      <img id="alignIcon" src="../public/menu/align-left.svg" alt="Align left" />
+      <img id="alignIcon" src="public/menu/align-left.svg" alt="Align left" />
     </button>
   </div>
   <div class="controls">
     <button class="btn" id="musicBtn" aria-label="Toggle music">
-      <img id="musicIcon" src="../public/menu/music.svg" alt="Music" />
+      <img id="musicIcon" src="public/menu/music.svg" alt="Music" />
     </button>
     <button class="btn" id="langBtn" aria-label="Toggle language">
       <span id="langText">EN</span>
@@ -526,7 +526,7 @@
       <div class="image-relative-wrapper" style="width:calc(100vw - 1002px);min-width:270px;position:relative;overflow:hidden;">
 
         <div id="homepageScene">
-          <img class="game-image" src="../public/pictures/homepage.PNG" alt="homepage" />
+          <img class="game-image" src="public/pictures/homepage.PNG" alt="homepage" />
           <a class="start-button" id="startBtn" href="#">
             <button class="png-button">前往下一頁</button>
           </a>
@@ -534,16 +534,16 @@
         <div id="characterScene">
           <div class="character-buttons-container" id="characterButtonsContainer">
             <a class="character-button show character-button-1" href="#" onclick="navTo('char1');return false;">
-              <button class="character-img-button" style="background-image: url('../public/buttoms/Character1.PNG');"></button>
+              <button class="character-img-button" style="background-image: url('public/buttoms/Character1.PNG');"></button>
             </a>
             <a class="character-button show character-button-2" href="#" onclick="navTo('char2');return false;">
-              <button class="character-img-button" style="background-image: url('../public/buttoms/Character2.PNG');"></button>
+              <button class="character-img-button" style="background-image: url('public/buttoms/Character2.PNG');"></button>
             </a>
             <a class="character-button show character-button-3" href="#" onclick="navTo('char3');return false;">
-              <button class="character-img-button" style="background-image: url('../public/buttoms/Character3.PNG');"></button>
+              <button class="character-img-button" style="background-image: url('public/buttoms/Character3.PNG');"></button>
             </a>
           </div>
-          <img class="game-image" id="characterImage" src="../public/pictures/characters.PNG" alt="characters" />
+          <img class="game-image" id="characterImage" src="public/pictures/characters.PNG" alt="characters" />
         </div>
       </div>
     </div>
@@ -557,17 +557,17 @@
       <!-- 1-1 -->
       <div id="scene-1-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-1" data-goto="1-2"><div id="storyText-1-1" class="story-text"></div><span class="story-text-arrow" data-goto="1-2"></span></div>
-        <img class="game-image" src="../public/pictures/1-1.PNG" alt="1-1" />
+        <img class="game-image" src="public/pictures/1-1.PNG" alt="1-1" />
       </div></div></div>
       <!-- 1-2 -->
       <div id="scene-1-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-2" data-goto="1-2-c"><div id="storyText-1-2" class="story-text"></div><span class="story-text-arrow" data-goto="1-2-c"></span></div>
-        <img class="game-image" src="../public/pictures/1-2.PNG" alt="1-2" />
+        <img class="game-image" src="public/pictures/1-2.PNG" alt="1-2" />
       </div></div></div>
       <!-- 1-2-c dialogue -->
       <div id="scene-1-2-c" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-2-c" data-goto="1-2-choose"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-2-c" class="story-text"></div><span class="story-text-arrow" data-goto="1-2-choose"></span></div>
-        <img class="game-image" src="../public/pictures/1-2-c.PNG" alt="1-2-c" />
+        <img class="game-image" src="public/pictures/1-2-c.PNG" alt="1-2-c" />
       </div></div></div>
       <!-- 1-2-choose -->
       <div id="scene-1-2-choose" class="scene"><div class="game-container"><div class="image-relative-wrapper">
@@ -578,77 +578,77 @@
             <li><button class="choice-button" data-choice="normal-rice" data-zh="繁殖於綠意漸褪的稻作" data-en="Reproduce on fading green rice crops">繁殖於綠意漸褪的稻作</button></li>
           </ul>
         </div>
-        <img class="game-image" style="filter:blur(8px);" src="../public/pictures/1-2-c.PNG" alt="1-2-c" />
+        <img class="game-image" style="filter:blur(8px);" src="public/pictures/1-2-c.PNG" alt="1-2-c" />
       </div></div></div>
       <!-- 1-3 -->
       <div id="scene-1-3" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-3" data-goto="1-3-c1"><div id="storyText-1-3" class="story-text"></div><span class="story-text-arrow" data-goto="1-3-c1"></span></div>
-        <img class="game-image" src="../public/pictures/1-3.PNG" alt="1-3" />
+        <img class="game-image" src="public/pictures/1-3.PNG" alt="1-3" />
       </div></div></div>
       <!-- 1-3-c1 -->
       <div id="scene-1-3-c1" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-3-c1" data-goto="1-3-c2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-3-c1" class="story-text"></div><span class="story-text-arrow" data-goto="1-3-c2"></span></div>
-        <img class="game-image" src="../public/pictures/1-3-c.PNG" alt="1-3-c" />
+        <img class="game-image" src="public/pictures/1-3-c.PNG" alt="1-3-c" />
       </div></div></div>
       <!-- 1-3-c2 -->
       <div id="scene-1-3-c2" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-3-c2" data-ending="end_bad2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-3-c2" class="story-text"></div><span class="story-text-arrow" data-ending="end_bad2"></span></div>
-        <img class="game-image" src="../public/pictures/1-3-c.PNG" alt="1-3-c" />
+        <img class="game-image" src="public/pictures/1-3-c.PNG" alt="1-3-c" />
       </div></div></div>
       <!-- 1-4 -->
       <div id="scene-1-4" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-4" data-goto="1-2-choose"><div id="storyText-1-4" class="story-text"></div><span class="story-text-arrow" data-goto="1-2-choose"></span></div>
-        <img class="game-image" src="../public/pictures/1-4.PNG" alt="1-4" />
+        <img class="game-image" src="public/pictures/1-4.PNG" alt="1-4" />
       </div></div></div>
       <!-- 1-5 -->
       <div id="scene-1-5" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-5" data-goto="1-2-choose"><div id="storyText-1-5" class="story-text"></div><span class="story-text-arrow" data-goto="1-2-choose"></span></div>
-        <img class="game-image" src="../public/pictures/1-5.PNG" alt="1-5" />
+        <img class="game-image" src="public/pictures/1-5.PNG" alt="1-5" />
       </div></div></div>
       <!-- 1-s1 -->
       <div id="scene-1-s1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s1"><div id="storyText-1-s1" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="../public/pictures/1-1.PNG" alt="1-s1" />
+        <img class="game-image" src="public/pictures/1-1.PNG" alt="1-s1" />
       </div></div></div>
       <!-- 1-s2-1 -->
       <div id="scene-1-s2-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s2-1" data-goto="1-s2-c"><div id="storyText-1-s2-1" class="story-text"></div><span class="story-text-arrow" data-goto="1-s2-c"></span></div>
-        <img class="game-image" src="../public/pictures/1-6.PNG" alt="1-s2-1" />
+        <img class="game-image" src="public/pictures/1-6.PNG" alt="1-s2-1" />
       </div></div></div>
       <!-- 1-s2-c -->
       <div id="scene-1-s2-c" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s2-c" data-goto="1-s2-2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-s2-c" class="story-text"></div><span class="story-text-arrow" data-goto="1-s2-2"></span></div>
-        <img class="game-image" src="../public/pictures/1-6-c.PNG" alt="1-s2-c" />
+        <img class="game-image" src="public/pictures/1-6-c.PNG" alt="1-s2-c" />
       </div></div></div>
       <!-- 1-s2-2 -->
       <div id="scene-1-s2-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s2-2" data-goto="1-s3"><div id="storyText-1-s2-2" class="story-text"></div><span class="story-text-arrow" data-goto="1-s3"></span></div>
-        <img class="game-image" src="../public/pictures/1-6.PNG" alt="1-s2-2" />
+        <img class="game-image" src="public/pictures/1-6.PNG" alt="1-s2-2" />
       </div></div></div>
       <!-- 1-s3 animation -->
       <div id="scene-1-s3" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s3"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-s3" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" id="animationImage" src="../public/pictures/1-7-1.PNG" alt="animation" />
+        <img class="game-image" id="animationImage" src="public/pictures/1-7-1.PNG" alt="animation" />
       </div></div></div>
       <!-- 1-s4-1 -->
       <div id="scene-1-s4-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s4-1"><div id="storyText-1-s4-1" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="../public/pictures/1-8.PNG" alt="1-s4-1" />
+        <img class="game-image" src="public/pictures/1-8.PNG" alt="1-s4-1" />
       </div></div></div>
       <!-- 1-s4-c -->
       <div id="scene-1-s4-c" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s4-c" data-goto="1-s4-2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-s4-c" class="story-text"></div><span class="story-text-arrow" data-goto="1-s4-2"></span></div>
-        <img class="game-image" src="../public/pictures/1-8-c.PNG" alt="1-s4-c" />
+        <img class="game-image" src="public/pictures/1-8-c.PNG" alt="1-s4-c" />
       </div></div></div>
       <!-- 1-s4-2 -->
       <div id="scene-1-s4-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s4-2" data-ending="end_special1"><div id="storyText-1-s4-2" class="story-text"></div><span class="story-text-arrow" data-ending="end_special1"></span></div>
-        <img class="game-image" src="../public/pictures/1-8.PNG" alt="1-s4-2" />
+        <img class="game-image" src="public/pictures/1-8.PNG" alt="1-s4-2" />
       </div></div></div>
       <!-- 1-2p2 -->
       <div id="scene-1-2p2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-2p2"><div id="storyText-1-2p2" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="../public/pictures/1-2.PNG" alt="1-2p2" />
+        <img class="game-image" src="public/pictures/1-2.PNG" alt="1-2p2" />
       </div></div></div>
       <!-- 1-2p2-choose -->
       <div id="scene-1-2p2-choose" class="scene"><div class="game-container"><div class="image-relative-wrapper">
@@ -659,72 +659,72 @@
             <li><button class="choice-button" data-choice="observe" data-zh="主動外出觀察周遭環境" data-en="Actively go out to observe the surroundings">主動外出觀察周遭環境</button></li>
           </ul>
         </div>
-        <img class="game-image" style="filter:blur(8px);" src="../public/pictures/1-2-c.PNG" alt="1-2p2-choose" />
+        <img class="game-image" style="filter:blur(8px);" src="public/pictures/1-2-c.PNG" alt="1-2p2-choose" />
       </div></div></div>
       <!-- 1-9 -->
       <div id="scene-1-9" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-9"><div id="storyText-1-9" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="../public/pictures/1-10.PNG" alt="1-10" />
+        <img class="game-image" src="public/pictures/1-10.PNG" alt="1-10" />
       </div></div></div>
       <!-- 1-10 -->
       <div id="scene-1-10" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-10"><div id="storyText-1-10" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="../public/pictures/1-9.PNG" alt="1-9" />
+        <img class="game-image" src="public/pictures/1-9.PNG" alt="1-9" />
       </div></div></div>
       <!-- 1-11-1 -->
       <div id="scene-1-11-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-11-1" data-ending="end_bad1"><div id="storyText-1-11-1" class="story-text"></div><span class="story-text-arrow" data-ending="end_bad1"></span></div>
-        <img class="game-image" src="../public/pictures/1-11.PNG" alt="1-11" />
+        <img class="game-image" src="public/pictures/1-11.PNG" alt="1-11" />
       </div></div></div>
       <!-- 1-11-2 -->
       <div id="scene-1-11-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-11-2" data-ending="end_good2"><div id="storyText-1-11-2" class="story-text"></div><span class="story-text-arrow" data-ending="end_good2"></span></div>
-        <img class="game-image" src="../public/pictures/1-11.PNG" alt="1-11" />
+        <img class="game-image" src="public/pictures/1-11.PNG" alt="1-11" />
       </div></div></div>
       <!-- 1-12-1 -->
       <div id="scene-1-12-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-12-1"><div id="storyText-1-12-1" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="../public/pictures/3-1.PNG" alt="3-1" />
+        <img class="game-image" src="public/pictures/3-1.PNG" alt="3-1" />
       </div></div></div>
       <!-- 1-12-cs -->
       <div id="scene-1-12-cs" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-12-cs"><div id="storyText-1-12-cs" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="../public/pictures/1-12.PNG" alt="1-12" />
+        <img class="game-image" src="public/pictures/1-12.PNG" alt="1-12" />
       </div></div></div>
       <!-- 1-12-cd -->
       <div id="scene-1-12-cd" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-12-cd" data-goto="1-12-c2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-12-cd" class="story-text"></div><span class="story-text-arrow" data-goto="1-12-c2"></span></div>
-        <img class="game-image" src="../public/pictures/1-12-c.PNG" alt="1-12-c" />
+        <img class="game-image" src="public/pictures/1-12-c.PNG" alt="1-12-c" />
       </div></div></div>
       <!-- 1-12-c2 -->
       <div id="scene-1-12-c2" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-12-c2" data-goto="1-12-3"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-12-c2" class="story-text"></div><span class="story-text-arrow" data-goto="1-12-3"></span></div>
-        <img class="game-image" src="../public/pictures/1-12-c2.PNG" alt="1-12-c2" />
+        <img class="game-image" src="public/pictures/1-12-c2.PNG" alt="1-12-c2" />
       </div></div></div>
       <!-- 1-12-3 -->
       <div id="scene-1-12-3" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-12-3"><div id="storyText-1-12-3" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="../public/pictures/1-12.PNG" alt="1-12" />
+        <img class="game-image" src="public/pictures/1-12.PNG" alt="1-12" />
       </div></div></div>
       <!-- 1-12-c3 -->
       <div id="scene-1-12-c3" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-12-c3" data-ending="end_good1"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-12-c3" class="story-text"></div><span class="story-text-arrow" data-ending="end_good1"></span></div>
-        <img class="game-image" src="../public/pictures/1-12-c2.PNG" alt="1-12-c2" />
+        <img class="game-image" src="public/pictures/1-12-c2.PNG" alt="1-12-c2" />
       </div></div></div>
       <!-- 1-13-1 -->
       <div id="scene-1-13-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-13-1"><div id="storyText-1-13-1" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="../public/pictures/1-13.PNG" alt="1-13" />
+        <img class="game-image" src="public/pictures/1-13.PNG" alt="1-13" />
       </div></div></div>
       <!-- 1-13-c -->
       <div id="scene-1-13-c" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-13-c" data-goto="1-13-2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-13-c" class="story-text"></div><span class="story-text-arrow" data-goto="1-13-2"></span></div>
-        <img class="game-image" src="../public/pictures/1-13-c.PNG" alt="1-13-c" />
+        <img class="game-image" src="public/pictures/1-13-c.PNG" alt="1-13-c" />
       </div></div></div>
       <!-- 1-13-2 -->
       <div id="scene-1-13-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-13-2" data-ending="end_bad4"><div id="storyText-1-13-2" class="story-text"></div><span class="story-text-arrow" data-ending="end_bad4"></span></div>
-        <img class="game-image" src="../public/pictures/1-13.PNG" alt="1-13" />
+        <img class="game-image" src="public/pictures/1-13.PNG" alt="1-13" />
       </div></div></div>
     </div><!-- /sceneWrapper1 -->
   </div><!-- /page-char1 -->
@@ -744,7 +744,7 @@
           <div id="storyText2" class="story-text"></div>
           <span class="story-text-arrow" id="nextArrow2"></span>
         </div>
-        <img class="game-image" id="gameImage2" src="../public/pictures/2-10.PNG" alt="scene" />
+        <img class="game-image" id="gameImage2" src="public/pictures/2-10.PNG" alt="scene" />
       </div>
     </div>
   </div>
@@ -765,7 +765,7 @@
           <span class="story-text-arrow" id="nextArrow3"></span>
         </div>
         <button class="scene-overlay-btn hidden" id="sceneOverlayBtn3"></button>
-        <img class="game-image" id="gameImage3" src="../public/pictures/3-1.PNG" alt="scene" />
+        <img class="game-image" id="gameImage3" src="public/pictures/3-1.PNG" alt="scene" />
       </div>
     </div>
   </div>
@@ -780,7 +780,7 @@
           <div id="endingAnimText" class="story-text"></div>
           <span class="story-text-arrow" id="endingAnimArrow"></span>
         </div>
-        <img id="endingAnimImage" class="game-image" src="../public/pictures/1-7-1.PNG" alt="animation scene" />
+        <img id="endingAnimImage" class="game-image" src="public/pictures/1-7-1.PNG" alt="animation scene" />
       </div>
     </div>
   </div>
@@ -792,26 +792,26 @@
     <div class="achieve-wall-container menu-page-wrapper">
       <h2 class="wall-title"></h2>
       <div class="achieve-grid">
-        <div class="achieve-card locked" id="card_1_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/1-g1.PNG" /></div><div class="achieve-name" id="name_1_g1">？？？</div></div>
-        <div class="achieve-card locked" id="card_1_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/1-g2.PNG" /></div><div class="achieve-name" id="name_1_g2">？？？</div></div>
-        <div class="achieve-card locked" id="card_1_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/1-b1.PNG" /></div><div class="achieve-name" id="name_1_b1">？？？</div></div>
-        <div class="achieve-card locked" id="card_1_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/1-b2.PNG" /></div><div class="achieve-name" id="name_1_b2">？？？</div></div>
-        <div class="achieve-card locked" id="card_1_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/1-b3.PNG" /></div><div class="achieve-name" id="name_1_b3">？？？</div></div>
-        <div class="achieve-card locked" id="card_1_b4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/1-b4.PNG" /></div><div class="achieve-name" id="name_1_b4">？？？</div></div>
-        <div class="achieve-card locked" id="card_2_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/2-b1.PNG" /></div><div class="achieve-name" id="name_2_b1">？？？</div></div>
-        <div class="achieve-card locked" id="card_2_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/2-b2.PNG" /></div><div class="achieve-name" id="name_2_b2">？？？</div></div>
-        <div class="achieve-card locked" id="card_2_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/2-b3.PNG" /></div><div class="achieve-name" id="name_2_b3">？？？</div></div>
-        <div class="achieve-card locked" id="card_2_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/2-g1.PNG" /></div><div class="achieve-name" id="name_2_g1">？？？</div></div>
-        <div class="achieve-card locked" id="card_2_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/2-g2.PNG" /></div><div class="achieve-name" id="name_2_g2">？？？</div></div>
-        <div class="achieve-card locked" id="card_2_g3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/2-g3.PNG" /></div><div class="achieve-name" id="name_2_g3">？？？</div></div>
-        <div class="achieve-card locked" id="card_2_g4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/2-g4.PNG" /></div><div class="achieve-name" id="name_2_g4">？？？</div></div>
-        <div class="achieve-card locked" id="card_3_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/3-b1.PNG" /></div><div class="achieve-name" id="name_3_b1">？？？</div></div>
-        <div class="achieve-card locked" id="card_3_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/3-b2.PNG" /></div><div class="achieve-name" id="name_3_b2">？？？</div></div>
-        <div class="achieve-card locked" id="card_3_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/3-b3.PNG" /></div><div class="achieve-name" id="name_3_b3">？？？</div></div>
-        <div class="achieve-card locked" id="card_3_b4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/3-b4.PNG" /></div><div class="achieve-name" id="name_3_b4">？？？</div></div>
-        <div class="achieve-card locked" id="card_3_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/3-g1.PNG" /></div><div class="achieve-name" id="name_3_g1">？？？</div></div>
-        <div class="achieve-card locked" id="card_3_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/3-g2.PNG" /></div><div class="achieve-name" id="name_3_g2">？？？</div></div>
-        <div class="achieve-card locked" id="card_3_g3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/3-g3.PNG" /></div><div class="achieve-name" id="name_3_g3">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-g1.PNG" /></div><div class="achieve-name" id="name_1_g1">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-g2.PNG" /></div><div class="achieve-name" id="name_1_g2">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-b1.PNG" /></div><div class="achieve-name" id="name_1_b1">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-b2.PNG" /></div><div class="achieve-name" id="name_1_b2">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-b3.PNG" /></div><div class="achieve-name" id="name_1_b3">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_b4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-b4.PNG" /></div><div class="achieve-name" id="name_1_b4">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-b1.PNG" /></div><div class="achieve-name" id="name_2_b1">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-b2.PNG" /></div><div class="achieve-name" id="name_2_b2">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-b3.PNG" /></div><div class="achieve-name" id="name_2_b3">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-g1.PNG" /></div><div class="achieve-name" id="name_2_g1">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-g2.PNG" /></div><div class="achieve-name" id="name_2_g2">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_g3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-g3.PNG" /></div><div class="achieve-name" id="name_2_g3">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_g4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-g4.PNG" /></div><div class="achieve-name" id="name_2_g4">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-b1.PNG" /></div><div class="achieve-name" id="name_3_b1">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-b2.PNG" /></div><div class="achieve-name" id="name_3_b2">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-b3.PNG" /></div><div class="achieve-name" id="name_3_b3">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_b4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-b4.PNG" /></div><div class="achieve-name" id="name_3_b4">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-g1.PNG" /></div><div class="achieve-name" id="name_3_g1">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-g2.PNG" /></div><div class="achieve-name" id="name_3_g2">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_g3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-g3.PNG" /></div><div class="achieve-name" id="name_3_g3">？？？</div></div>
       </div>
     </div>
     <!-- Modal -->
@@ -891,25 +891,25 @@
       <div id="eggUnlocked" style="display:none;">
         <div class="egg-section-title" data-zh="遊戲彩蛋" data-en="Easter Egg">遊戲彩蛋</div>
         <p class="egg-body-text"
-          data-zh="🎉 恭喜完成所有結局！<br>你成功體驗了每位角色的選擇與命運。<br>作為獎勵，點擊以下團隊設計的桌布即可下載圖片！"
-          data-en="🎉 Congratulations on completing all endings!<br>You have experienced the choices and fate of every character.<br>As a reward, click on the wallpapers below designed by our team to download!">
-          🎉 恭喜完成所有結局！<br>你成功體驗了每位角色的選擇與命運。<br>作為獎勵，點擊以下團隊設計的桌布即可下載圖片！
+          data-zh="恭喜完成所有結局！<br>你成功體驗了每位角色的選擇與命運。<br>作為獎勵，點擊以下團隊設計的桌布即可下載圖片！"
+          data-en="Congratulations on completing all endings!<br>You have experienced the choices and fate of every character.<br>As a reward, click on the wallpapers below designed by our team to download!">
+          恭喜完成所有結局！<br>你成功體驗了每位角色的選擇與命運。<br>作為獎勵，點擊以下團隊設計的桌布即可下載圖片！
         </p>
         <div class="egg-wallpaper-grid" id="eggWallpaperGrid">
-          <div class="egg-wallpaper-card" data-src="../public/egg/wallpaper1.PNG" data-name="NoFold_wallpaper1.PNG">
-            <img src="../public/egg/wallpaper1.PNG" alt="桌布 1" />
+          <div class="egg-wallpaper-card" data-src="public/egg/wallpaper1.PNG" data-name="NoFold_wallpaper1.PNG">
+            <img src="public/egg/wallpaper1.PNG" alt="桌布 1" />
             <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
           </div>
-          <div class="egg-wallpaper-card" data-src="../public/egg/wallpaper2.PNG" data-name="NoFold_wallpaper2.PNG">
-            <img src="../public/egg/wallpaper2.PNG" alt="桌布 2" />
+          <div class="egg-wallpaper-card" data-src="public/egg/wallpaper2.PNG" data-name="NoFold_wallpaper2.PNG">
+            <img src="public/egg/wallpaper2.PNG" alt="桌布 2" />
             <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
           </div>
-          <div class="egg-wallpaper-card" data-src="../public/egg/wallpaper3.PNG" data-name="NoFold_wallpaper3.PNG">
-            <img src="../public/egg/wallpaper3.PNG" alt="桌布 3" />
+          <div class="egg-wallpaper-card" data-src="public/egg/wallpaper3.PNG" data-name="NoFold_wallpaper3.PNG">
+            <img src="public/egg/wallpaper3.PNG" alt="桌布 3" />
             <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
           </div>
-          <div class="egg-wallpaper-card" data-src="../public/egg/wallpaper4.PNG" data-name="NoFold_wallpaper4.PNG">
-            <img src="../public/egg/wallpaper4.PNG" alt="桌布 4" />
+          <div class="egg-wallpaper-card" data-src="public/egg/wallpaper4.PNG" data-name="NoFold_wallpaper4.PNG">
+            <img src="public/egg/wallpaper4.PNG" alt="桌布 4" />
             <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
           </div>
         </div>
@@ -970,7 +970,7 @@
       <div class="doc-news-title" id="docVideoTitle">CCU iGEM10<br>稻米研究紀錄</div>
       <div class="doc-video-box">
         <video controls style="width:100%;border-radius:4px;">
-          <source src="../public/video/grow.mp4" type="video/mp4" />
+          <source src="public/video/grow.mp4" type="video/mp4" />
         </video>
       </div>
     </div>
@@ -1176,7 +1176,7 @@
     musicBtn.addEventListener('click', () => {
       isMusicOn = !isMusicOn;
       const icon = document.getElementById('musicIcon');
-      icon.src = isMusicOn ? '../public/menu/music.svg' : '../public/menu/music-slash.svg';
+      icon.src = isMusicOn ? 'public/menu/music.svg' : 'public/menu/music-slash.svg';
     });
 
     alignBtn.addEventListener('click', () => {
@@ -1187,7 +1187,7 @@
         alignIcon.style.display = 'none';
         if (!closeIcon) {
           closeIcon = document.createElement('img');
-          closeIcon.id = 'closeIcon'; closeIcon.src = '../public/menu/cross.svg';
+          closeIcon.id = 'closeIcon'; closeIcon.src = 'public/menu/cross.svg';
           closeIcon.alt = 'Close'; closeIcon.style.width = '24px'; closeIcon.style.height = '24px';
           alignBtn.appendChild(closeIcon);
         } else { closeIcon.style.display = 'inline'; }
@@ -1274,7 +1274,7 @@
   let animationTimer1 = null;
   let currentScene1   = null;
 
-  const ANIMATION_FRAMES1 = ['../public/pictures/1-7-1.PNG','../public/pictures/1-7-2.PNG','../public/pictures/1-7-3.PNG','../public/pictures/1-7-4.PNG','../public/pictures/1-7-5.PNG'];
+  const ANIMATION_FRAMES1 = ['public/pictures/1-7-1.PNG','public/pictures/1-7-2.PNG','public/pictures/1-7-3.PNG','public/pictures/1-7-4.PNG','public/pictures/1-7-5.PNG'];
 
   function resetChar1() {
     if (globalTypewriterTimer1) { clearTimeout(globalTypewriterTimer1); globalTypewriterTimer1 = null; }
@@ -1572,7 +1572,7 @@
     if(el)el.textContent=text; isTyping2=false; if(arrowEl)arrowEl.classList.add('show');
   }
 
-  const ANIM_FRAMES2 = ['../public/pictures/1-7-1.PNG','../public/pictures/1-7-2.PNG','../public/pictures/1-7-3.PNG','../public/pictures/1-7-4.PNG','../public/pictures/1-7-5.PNG'];
+  const ANIM_FRAMES2 = ['public/pictures/1-7-1.PNG','public/pictures/1-7-2.PNG','public/pictures/1-7-3.PNG','public/pictures/1-7-4.PNG','public/pictures/1-7-5.PNG'];
   let animTimer2 = null;
   function char2StartSpecialAnim(){ char2StopSpecialAnim(); let fi=0,dir=1; char2GameImageEl().src=ANIM_FRAMES2[0]; animTimer2=setInterval(()=>{fi+=dir;if(fi===ANIM_FRAMES2.length-1)dir=-1;else if(fi===0)dir=1;char2GameImageEl().src=ANIM_FRAMES2[fi];},250); }
   function char2StopSpecialAnim(){ if(animTimer2){clearInterval(animTimer2);animTimer2=null;} }
@@ -1662,7 +1662,7 @@
     char2CurrentTexts=scene.texts[gameLang]||scene.texts['zh'];
     char2StopSpecialAnim();
     if(scene.animated)char2StartSpecialAnim();
-    else char2GameImageEl().src='../public/pictures/'+scene.image;
+    else char2GameImageEl().src='public/pictures/'+scene.image;
     if(scene.charName){char2CharNameEl().classList.remove('hidden');char2CharNameEl().innerText=gameLang==='en'?scene.charName.en:scene.charName.zh;char2SceneWrapper().classList.add('scene-dialogue');}
     else{char2CharNameEl().classList.add('hidden');char2SceneWrapper().classList.remove('scene-dialogue');}
     char2ChoicesBox().classList.remove('show');
@@ -1869,7 +1869,7 @@
     const scene=SCENES3[key];if(!scene)return;
     char3CurrentScene=key;char3CurrentPart=0;
     char3CurrentTexts=scene.texts[gameLang]||scene.texts['zh'];
-    char3GameImageEl().src='../public/pictures/'+scene.image;
+    char3GameImageEl().src='public/pictures/'+scene.image;
     if(scene.charName){char3CharNameEl().classList.remove('hidden');char3CharNameEl().innerText=gameLang==='en'?scene.charName.en:scene.charName.zh;char3SceneWrapper().classList.add('scene-dialogue');}
     else{char3CharNameEl().classList.add('hidden');char3SceneWrapper().classList.remove('scene-dialogue');}
     char3ChoicesBox().classList.remove('show');
@@ -1934,56 +1934,56 @@
   const ENDING_ANIM_SCENES = [
     {
       id: '1-7',
-      frames: ['../public/pictures/1-7-1.PNG','../public/pictures/1-7-2.PNG','../public/pictures/1-7-3.PNG','../public/pictures/1-7-4.PNG','../public/pictures/1-7-5.PNG'],
+      frames: ['public/pictures/1-7-1.PNG','public/pictures/1-7-2.PNG','public/pictures/1-7-3.PNG','public/pictures/1-7-4.PNG','public/pictures/1-7-5.PNG'],
       interval: 250, next: 'a1',
       zh: ['你剛剛所經歷的選擇，並不只是遊戲，而是正在世界各地發生的現實。'],
       en: ['The choices you just experienced are not just a game, but a reality happening all over the world.']
     },
     {
       id: 'a1',
-      frames: ['../public/animation/a1-1.PNG','../public/animation/a1-2.PNG','../public/animation/a1-3.PNG','../public/animation/a1-4.PNG','../public/animation/a1-5.PNG','../public/animation/a1-6.PNG','../public/animation/a1-7.PNG','../public/animation/a1-8.PNG','../public/animation/a1-9.PNG'],
+      frames: ['public/animation/a1-1.PNG','public/animation/a1-2.PNG','public/animation/a1-3.PNG','public/animation/a1-4.PNG','public/animation/a1-5.PNG','public/animation/a1-6.PNG','public/animation/a1-7.PNG','public/animation/a1-8.PNG','public/animation/a1-9.PNG'],
       interval: 250, next: 'a2',
       zh: ['你知道嗎？全球超過一半的人口，都以稻米作為主要糧食來源。','而亞洲，更是世界上最大的稻米消費與生產地區。','然而，在保護稻米產量的背後，卻隱藏著一個越來越嚴重的問題——'],
       en: ['Do you know that more than half of the global population relies on rice as a staple food source.','Asia, in particular, is the largest region for both rice consumption and production in the world.','However, behind the effort to protect rice yields, there lies a growing and increasingly serious problem—']
     },
     {
       id: 'a2',
-      frames: ['../public/animation/a2-1.PNG','../public/animation/a2-2.PNG','../public/animation/a2-3.PNG','../public/animation/a2-4.PNG','../public/animation/a2-5.PNG','../public/animation/a2-6.PNG','../public/animation/a2-7.PNG','../public/animation/a2-8.PNG','../public/animation/a2-9.PNG','../public/animation/a2-10.PNG'],
+      frames: ['public/animation/a2-1.PNG','public/animation/a2-2.PNG','public/animation/a2-3.PNG','public/animation/a2-4.PNG','public/animation/a2-5.PNG','public/animation/a2-6.PNG','public/animation/a2-7.PNG','public/animation/a2-8.PNG','public/animation/a2-9.PNG','public/animation/a2-10.PNG'],
       interval: 250, next: 'a3',
       zh: ['農藥。','研究指出，長期生活在農藥頻繁噴灑區域附近的人，或長時間接觸農藥的人，罹患癌症的風險會明顯提高。','不僅如此，農藥還會導致蜂后數量減少85%，殺死蜜蜂等重要的授粉昆蟲，危害樹蛙等瀕危物種，甚至破壞土壤肥力，使土地失去原本的生命力。','聯合國糧農組織警告說，如果這樣的情況持續下去，未來我們面對的，將不只是環境問題，更可能是糧食短缺與生態崩潰。'],
       en: ['Pesticides.','Studies have shown that people who live near areas with frequent pesticide spraying, or those who are regularly exposed to pesticides over long periods, face a significantly higher risk of developing cancer.','In addition, pesticides have been found to reduce queen bee populations by up to 85%, kill essential pollinators such as bees, threaten endangered species like tree frogs, and even degrade soil fertility, stripping the land of its natural vitality.','The Food and Agriculture Organization of the United Nations has warned that if this situation continues, what we may face in the future is not only an environmental crisis, but also potential food shortages and ecological collapse.']
     },
     {
       id: 'a3',
-      frames: ['../public/animation/a3-1.PNG','../public/animation/a3-2.PNG','../public/animation/a3-3.PNG','../public/animation/a3-4.PNG','../public/animation/a3-5.PNG','../public/animation/a3-6.PNG','../public/animation/a3-7.PNG','../public/animation/a3-8.PNG'],
+      frames: ['public/animation/a3-1.PNG','public/animation/a3-2.PNG','public/animation/a3-3.PNG','public/animation/a3-4.PNG','public/animation/a3-5.PNG','public/animation/a3-6.PNG','public/animation/a3-7.PNG','public/animation/a3-8.PNG'],
       interval: 250, next: 'a4',
       zh: ['透過對農民的採訪和實地調查，我們也了解到另一個殘酷的現實。','因為氣候變遷加劇，病蟲害問題越來越嚴重，許多農民為了保護收成，只能噴灑更多農藥。這形成了一個惡性循環：','農藥使用越多，環境破壞越嚴重。'],
       en: ['Through interviews with farmers and on-site field investigations, we also came to understand another harsh reality.','Due to the worsening impacts of climate change, pest and disease problems are becoming increasingly severe. Many farmers, in order to protect their harvests, are forced to use more pesticides. This creates a vicious cycle:','The more pesticides are used, the more severe the environmental damage becomes.']
     },
     {
       id: 'a4',
-      frames: ['../public/animation/a4-1.PNG','../public/animation/a4-2.PNG','../public/animation/a4-3.PNG','../public/animation/a4-4.PNG','../public/animation/a4-5.PNG'],
+      frames: ['public/animation/a4-1.PNG','public/animation/a4-2.PNG','public/animation/a4-3.PNG','public/animation/a4-4.PNG','public/animation/a4-5.PNG'],
       interval: 250, next: 'a5',
       zh: ['因此，我們開始思考：','有沒有一種方式，能夠保護作物，同時也保護人體健康與環境？','在研究過程中，我們發現了大自然早已提供答案。','當水稻受到害蟲攻擊時，植物本身其實會自然釋放一種物質——檸檬烯。','檸檬烯就像植物發出的警訊，能夠幫助驅趕害蟲，其中包括水稻最具破壞性的害蟲之一——瘤野螟。','於是，我們希望透過合成生物學生產檸檬烯。','相比傳統農藥，檸檬烯是一種來自自然的生物型防治方式。','它不只能降低對人體健康的危害，也有機會減少對蜜蜂、土壤與生態系的傷害，讓農業朝向更永續的方向發展。'],
       en: ['Therefore, we began to ask ourselves:','Is there a way to protect crops while also safeguarding human health and the environment?','During our research, we discovered that nature had already provided the answer.','When rice plants are attacked by pests, they naturally release a substance called limonene.','Limonene acts like a warning signal from the plant, helping to repel insects—including one of the most destructive rice pests, the rice leafroller.','Based on this, we aim to produce limonene through synthetic biology.','Compared to traditional pesticides, limonene is a bio-based pest control method derived from nature.','It not only reduces risks to human health, but also has the potential to lessen harm to bees, soil, and ecosystems—helping agriculture move toward a more sustainable future.']
     },
     {
       id: 'a5',
-      frames: ['../public/animation/a5-1.PNG','../public/animation/a5-2.PNG','../public/animation/a5-3.PNG','../public/animation/a5-4.PNG','../public/animation/a5-5.PNG','../public/animation/a5-6.PNG','../public/animation/a5-7.PNG','../public/animation/a5-8.PNG','../public/animation/a5-9.PNG'],
+      frames: ['public/animation/a5-1.PNG','public/animation/a5-2.PNG','public/animation/a5-3.PNG','public/animation/a5-4.PNG','public/animation/a5-5.PNG','public/animation/a5-6.PNG','public/animation/a5-7.PNG','public/animation/a5-8.PNG','public/animation/a5-9.PNG'],
       interval: 250, next: 'a6',
       zh: ['但真正的改變，需要農民、政府與你的共同合作。','農民需要更安全、永續的防治方式；政府需要推動友善農業與相關支持政策；','而你的每一次選擇，也正在決定未來農業的方向。'],
       en: ['But real change requires collaboration among farmers, the government, and you.','Farmers need safer and more sustainable methods of pest control. The government needs to promote eco-friendly agriculture and supportive policies.','And every choice you make is also shaping the future direction of agriculture.']
     },
     {
       id: 'a6',
-      frames: ['../public/animation/a5-1.PNG','../public/animation/a5-2.PNG','../public/animation/a5-3.PNG','../public/animation/a5-4.PNG','../public/animation/a5-5.PNG','../public/animation/a5-6.PNG','../public/animation/a5-7.PNG','../public/animation/a5-8.PNG','../public/animation/a5-9.PNG'],
+      frames: ['public/animation/a5-1.PNG','public/animation/a5-2.PNG','public/animation/a5-3.PNG','public/animation/a5-4.PNG','public/animation/a5-5.PNG','public/animation/a5-6.PNG','public/animation/a5-7.PNG','public/animation/a5-8.PNG','public/animation/a5-9.PNG'],
       interval: 250, next: 'a7',
       zh: ['我們希望透過《NoFold》，讓你重新思考農藥、糧食、我們與環境之間的關係。','當更多人願意支持友善環境的農產品，改變才有可能真正發生。'],
       en: ['We hope that through NoFold, you can rethink the relationship between pesticides, food, and the environment we share.','Only when more people are willing to support environmentally friendly agricultural products can real change truly begin.']
     },
     {
       id: 'a7',
-      frames: ['../public/animation/a7-1.PNG','../public/animation/a7-2.PNG','../public/animation/a7-3.PNG'],
+      frames: ['public/animation/a7-1.PNG','public/animation/a7-2.PNG','public/animation/a7-3.PNG'],
       interval: 200, next: null,
       zh: ['也許有一天，當風吹過稻田時，','人們聞到的，不再是刺鼻的農藥味，而是土地與稻田最自然的氣息。'],
       en: ['Perhaps one day, when the wind passes through the rice fields,','people will no longer smell the sharp scent of pesticides, but instead, the most natural fragrance of the land and the rice fields themselves.']
@@ -2247,7 +2247,7 @@
   }
 
   function renderModal(achData, lang){
-    const imgPath = `../public/results/${achData.cardId.replace('card_','').replace('_','-')}.PNG`;
+    const imgPath = `public/results/${achData.cardId.replace('card_','').replace('_','-')}.PNG`;
     const s = achData.styles;
     const root = document.documentElement;
     root.style.setProperty('--current-theme', s.theme);
@@ -2271,7 +2271,7 @@
         const target = ACHIEVEMENTS.find(a=>a.key===targetKey);
         if(target){
           const isUnlocked = localStorage.getItem(target.key)==='true';
-          const tImgPath = `../public/results/${target.cardId.replace('card_','').replace('_','-')}.PNG`;
+          const tImgPath = `public/results/${target.cardId.replace('card_','').replace('_','-')}.PNG`;
           const itemDiv = document.createElement('div'); itemDiv.className='sub-ending-item';
           const imgBox = document.createElement('div'); imgBox.className='sub-ending-img-box';
           if(!isUnlocked) imgBox.classList.add('sub-locked');
