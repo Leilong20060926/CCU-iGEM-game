@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3-2-2</title>
+  <link rel="stylesheet" href="../../public/css/shared.css" />
+  <link rel="stylesheet" href="../../public/css/text-box.css" />
+  <link rel="stylesheet" href="../../public/css/typewriter.css" />
+  <style>
+    .story-text-box {
+      background: rgba(45, 82, 119, 0.85);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="../index.html" id="backToGameBtn"><img src="../../public/menu/left.svg" alt="" class="menu-icon"/><span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span></a></li>
+      <li><a href="../menu/star.html"><img src="../../public/menu/star.svg" alt="" class="menu-icon"/><span data-zh="收集結局" data-en="Endings">收集結局</span></a></li>
+      <li><a href="../menu/egg.html"><img src="../../public/menu/egg.svg" alt="" class="menu-icon"/><span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span></a></li>
+      <li><a href="../menu/doc.html"><img src="../../public/menu/doc.svg" class="menu-icon"/><span data-zh="相關資訊" data-en="Information">相關資訊</span></a></li>
+      <li><a href="../menu/info.html"><img src="../../public/menu/info.svg" alt="" class="menu-icon"/><span data-zh="關於我們" data-en="About Us">關於我們</span></a></li>
+    </ul>
+  </nav>
+  <div class="top-left-controls">
+    <button class="btn" id="alignBtn" aria-label="Align left">
+      <img id="alignIcon" src="../../public/menu/align-left.svg" alt="Align left" />
+    </button>
+  </div>
+  <div class="controls">
+    <button class="btn" id="musicBtn" aria-label="Toggle music">
+      <img id="musicIcon" src="../../public/menu/music.svg" alt="Music" />
+    </button>
+    <button class="btn" id="langBtn" aria-label="Toggle language">
+      <span id="langText">EN</span>
+    </button>
+  </div>
+
+  <div class="game-container" id="gameContainer">
+    <div class="image-relative-wrapper">
+      <div class="story-text-box" id="storyTextBox">
+        <div id="storyText" class="story-text"></div>
+        <a href="3-2-choose.html" class="story-text-arrow"></a>
+      </div>
+      <img class="game-image" src="../../public/pictures/3-2.png" alt="3-2 scene" />
+    </div>
+  </div>
+
+  <script src="../../public/js/shared-controls.js"></script>
+  <script src="../../public/js/typewriter.js"></script>
+  <script>
+    const storyData = {
+      zh: '你按照了你的老方法來種植，想說至少還能控制。',
+      en: 'You follow your usual farming method, hoping at least to maintain control.'
+    };
+
+    function renderStory(lang) {
+      const text = storyData[lang] || storyData['zh'];
+      startTypewriter(text, { 
+        onComplete: () => {
+          document.querySelector('.story-text-arrow').classList.add('show');
+        }
+      });
+    }
+
+    window.addEventListener('languageChanged', (e) => {
+      const lang = e.detail.lang;
+      document.querySelectorAll('[data-zh]').forEach(el => {
+        el.innerText = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-zh');
+      });
+      renderStory(lang);
+    });
+
+    window.addEventListener('load', () => {
+      localStorage.setItem('currentGamePage', window.location.href);
+      const initialLang = (document.getElementById('langText').innerText === 'ZH') ? 'en' : 'zh';
+      renderStory(initialLang);
+    });
+  </script>
+</body>
+</html>

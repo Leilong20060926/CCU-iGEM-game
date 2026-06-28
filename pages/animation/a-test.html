@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>故事動畫</title>
+  <link rel="stylesheet" href="../../public/css/shared.css" />
+  <link rel="stylesheet" href="../../public/css/text-box.css" />
+  <link rel="stylesheet" href="../../public/css/typewriter.css" />
+
+  <style>
+    .story-text-box {
+      background: rgba(169, 113, 68, 0.85);
+      color: white;
+      cursor: pointer;
+      user-select: none;
+    }
+    .game-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li>
+        <a href="../index.html" id="backToGameBtn">
+          <img src="../../public/menu/left.svg" alt="" class="menu-icon"/>
+          <span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/star.html">
+          <img src="../../public/menu/star.svg" alt="" class="menu-icon"/>
+          <span data-zh="收集結局" data-en="Endings">收集結局</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/egg.html">
+          <img src="../../public/menu/egg.svg" alt="" class="menu-icon"/>
+          <span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/doc.html">
+          <img src="../../public/menu/doc.svg" class="menu-icon"/>
+          <span data-zh="相關資訊" data-en="Information">相關資訊</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/info.html">
+          <img src="../../public/menu/info.svg" alt="" class="menu-icon"/>
+          <span data-zh="關於我們" data-en="About Us">關於我們</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="top-left-controls">
+    <button class="btn" id="alignBtn" aria-label="Align left">
+      <img id="alignIcon" src="../../public/menu/align-left.svg" alt="Align left" />
+    </button>
+  </div>
+  <div class="controls">
+    <button class="btn" id="musicBtn" aria-label="Toggle music">
+      <img id="musicIcon" src="../../public/menu/music.svg" alt="Music" />
+    </button>
+    <button class="btn" id="langBtn" aria-label="Toggle language">
+      <span id="langText">EN</span>
+    </button>
+  </div>
+
+  <div class="game-container" id="gameContainer">
+    <div class="image-relative-wrapper">
+      <div class="story-text-box" id="storyTextBox">
+        <div id="storyText" class="story-text"></div>
+        <span class="story-text-arrow"></span>
+      </div>
+      <img id="animationImage" class="game-image" src="../../public/pictures/1-7-1.png" alt="animation scene" />
+    </div>
+  </div>
+
+  <script src="../../public/js/shared-controls.js"></script>
+
+  <script>
+  /* ============================================================
+     場景資料：每個場景包含 frames / interval / next / zh / en
+     next = null 表示最後一頁（無跳轉）
+  ============================================================ */
+  const SCENES = [
+    {
+      id: '1-7',
+      frames: [
+        '../../public/pictures/1-7-1.png',
+        '../../public/pictures/1-7-2.png',
+        '../../public/pictures/1-7-3.png',
+        '../../public/pictures/1-7-4.png',
+        '../../public/pictures/1-7-5.png'
+      ],
+      interval: 250,
+      next: 'a1',
+      zh: ['你剛剛所經歷的選擇，並不只是遊戲，而是正在世界各地發生的現實。'],
+      en: ['The choices you just experienced are not just a game, but a reality happening all over the world.']
+    },
+    {
+      id: 'a1',
+      frames: [
+        '../../public/animation/a1-1.png','../../public/animation/a1-2.png',
+        '../../public/animation/a1-3.png','../../public/animation/a1-4.png',
+        '../../public/animation/a1-5.png','../../public/animation/a1-6.png',
+        '../../public/animation/a1-7.png','../../public/animation/a1-8.png',
+        '../../public/animation/a1-9.png'
+      ],
+      interval: 250,
+      next: 'a2',
+      zh: [
+        '你知道嗎？全球超過一半的人口，都以稻米作為主要糧食來源。',
+        '而亞洲，更是世界上最大的稻米消費與生產地區。',
+        '然而，在保護稻米產量的背後，卻隱藏著一個越來越嚴重的問題——'
+      ],
+      en: [
+        'Do you know that more than half of the global population relies on rice as a staple food source.',
+        'Asia, in particular, is the largest region for both rice consumption and production in the world.',
+        'However, behind the effort to protect rice yields, there lies a growing and increasingly serious problem—'
+      ]
+    },
+    {
+      id: 'a2',
+      frames: [
+        '../../public/animation/a2-1.png','../../public/animation/a2-2.png',
+        '../../public/animation/a2-3.png','../../public/animation/a2-4.png',
+        '../../public/animation/a2-5.png','../../public/animation/a2-6.png',
+        '../../public/animation/a2-7.png','../../public/animation/a2-8.png',
+        '../../public/animation/a2-9.png','../../public/animation/a2-10.png'
+      ],
+      interval: 250,
+      next: 'a3',
+      zh: [
+        '農藥。',
+        '研究指出，長期生活在農藥頻繁噴灑區域附近的人，或長時間接觸農藥的人，罹患癌症的風險會明顯提高。',
+        '不僅如此，農藥還會導致蜂后數量減少85%，殺死蜜蜂等重要的授粉昆蟲，危害樹蛙等瀕危物種，甚至破壞土壤肥力，使土地失去原本的生命力。',
+        '聯合國糧農組織警告說，如果這樣的情況持續下去，未來我們面對的，將不只是環境問題，更可能是糧食短缺與生態崩潰。'
+      ],
+      en: [
+        'Pesticides.',
+        'Studies have shown that people who live near areas with frequent pesticide spraying, or those who are regularly exposed to pesticides over long periods, face a significantly higher risk of developing cancer.',
+        'In addition, pesticides have been found to reduce queen bee populations by up to 85%, kill essential pollinators such as bees, threaten endangered species like tree frogs, and even degrade soil fertility, stripping the land of its natural vitality.',
+        'The Food and Agriculture Organization of the United Nations has warned that if this situation continues, what we may face in the future is not only an environmental crisis, but also potential food shortages and ecological collapse.'
+      ]
+    },
+    {
+      id: 'a3',
+      frames: [
+        '../../public/animation/a3-1.png','../../public/animation/a3-2.png',
+        '../../public/animation/a3-3.png','../../public/animation/a3-4.png',
+        '../../public/animation/a3-5.png','../../public/animation/a3-6.png',
+        '../../public/animation/a3-7.png','../../public/animation/a3-8.png'
+      ],
+      interval: 250,
+      next: 'a4',
+      zh: [
+        '透過對農民的採訪和實地調查，我們也了解到另一個殘酷的現實。',
+        '因為氣候變遷加劇，病蟲害問題越來越嚴重，許多農民為了保護收成，只能噴灑更多農藥。這形成了一個惡性循環：',
+        '農藥使用越多，環境破壞越嚴重。'
+      ],
+      en: [
+        'Through interviews with farmers and on-site field investigations, we also came to understand another harsh reality.',
+        'Due to the worsening impacts of climate change, pest and disease problems are becoming increasingly severe. Many farmers, in order to protect their harvests, are forced to use more pesticides. This creates a vicious cycle:',
+        'The more pesticides are used, the more severe the environmental damage becomes.'
+      ]
+    },
+    {
+      id: 'a4',
+      frames: [
+        '../../public/animation/a4-1.png','../../public/animation/a4-2.png',
+        '../../public/animation/a4-3.png','../../public/animation/a4-4.png',
+        '../../public/animation/a4-5.png'
+      ],
+      interval: 250,
+      next: 'a5',
+      zh: [
+        '因此，我們開始思考：',
+        '有沒有一種方式，能夠保護作物，同時也保護人體健康與環境？',
+        '在研究過程中，我們發現了大自然早已提供答案。',
+        '當水稻受到害蟲攻擊時，植物本身其實會自然釋放一種物質——檸檬烯。',
+        '檸檬烯就像植物發出的警訊，能夠幫助驅趕害蟲，其中包括水稻最具破壞性的害蟲之一——瘤野螟。',
+        '於是，我們希望透過合成生物學生產檸檬烯。',
+        '相比傳統農藥，檸檬烯是一種來自自然的生物型防治方式。',
+        '它不只能降低對人體健康的危害，也有機會減少對蜜蜂、土壤與生態系的傷害，讓農業朝向更永續的方向發展。'
+      ],
+      en: [
+        'Therefore, we began to ask ourselves:',
+        'Is there a way to protect crops while also safeguarding human health and the environment?',
+        'During our research, we discovered that nature had already provided the answer.',
+        'When rice plants are attacked by pests, they naturally release a substance called limonene.',
+        'Limonene acts like a warning signal from the plant, helping to repel insects—including one of the most destructive rice pests, the rice leafroller.',
+        'Based on this, we aim to produce limonene through synthetic biology.',
+        'Compared to traditional pesticides, limonene is a bio-based pest control method derived from nature.',
+        'It not only reduces risks to human health, but also has the potential to lessen harm to bees, soil, and ecosystems—helping agriculture move toward a more sustainable future.'
+      ]
+    },
+    {
+      id: 'a5',
+      frames: [
+        '../../public/animation/a5-1.png','../../public/animation/a5-2.png',
+        '../../public/animation/a5-3.png','../../public/animation/a5-4.png',
+        '../../public/animation/a5-5.png','../../public/animation/a5-6.png',
+        '../../public/animation/a5-7.png','../../public/animation/a5-8.png',
+        '../../public/animation/a5-9.png'
+      ],
+      interval: 250,
+      next: 'a6',
+      zh: [
+        '但真正的改變，需要農民、政府與你的共同合作。',
+        '農民需要更安全、永續的防治方式；政府需要推動友善農業與相關支持政策；',
+        '而你的每一次選擇，也正在決定未來農業的方向。'
+      ],
+      en: [
+        'But real change requires collaboration among farmers, the government, and you.',
+        'Farmers need safer and more sustainable methods of pest control. The government needs to promote eco-friendly agriculture and supportive policies.',
+        'And every choice you make is also shaping the future direction of agriculture.'
+      ]
+    },
+    {
+      id: 'a6',
+      frames: [
+        '../../public/animation/a5-1.png','../../public/animation/a5-2.png',
+        '../../public/animation/a5-3.png','../../public/animation/a5-4.png',
+        '../../public/animation/a5-5.png','../../public/animation/a5-6.png',
+        '../../public/animation/a5-7.png','../../public/animation/a5-8.png',
+        '../../public/animation/a5-9.png'
+      ],
+      interval: 250,
+      next: 'a7',
+      zh: [
+        '我們希望透過《NoFold》，讓你重新思考農藥、糧食、我們與環境之間的關係。',
+        '當更多人願意支持友善環境的農產品，改變才有可能真正發生。'
+      ],
+      en: [
+        'We hope that through NoFold, you can rethink the relationship between pesticides, food, and the environment we share.',
+        'Only when more people are willing to support environmentally friendly agricultural products can real change truly begin.'
+      ]
+    },
+    {
+      id: 'a7',
+      frames: [
+        '../../public/animation/a7-1.png',
+        '../../public/animation/a7-2.png',
+        '../../public/animation/a7-3.png'
+      ],
+      interval: 200,
+      next: null,   // 最後一頁，改成你要跳的路徑，例如 '../menu/star.html'
+      zh: [
+        '也許有一天，當風吹過稻田時，',
+        '人們聞到的，不再是刺鼻的農藥味，而是土地與稻田最自然的氣息。'
+      ],
+      en: [
+        'Perhaps one day, when the wind passes through the rice fields,',
+        'people will no longer smell the sharp scent of pesticides, but instead, the most natural fragrance of the land and the rice fields themselves.'
+      ]
+    }
+  ];
+
+  /* ============================================================
+     全域狀態
+  ============================================================ */
+  const PROGRESS_KEY = 'storySceneId';
+
+  let currentSceneId  = '1-7';
+  let currentLang     = localStorage.getItem('gameLanguage') || 'zh';
+  let partIndex       = 0;       // 目前顯示第幾句
+  let isTyping        = false;
+  let typeTimer       = null;
+  let animTimer       = null;
+
+  const animImg   = document.getElementById('animationImage');
+  const storyText = document.getElementById('storyText');
+  const arrow     = document.querySelector('.story-text-arrow');
+  const textBox   = document.getElementById('storyTextBox');
+
+  /* ============================================================
+     動畫
+  ============================================================ */
+  function startAnim(scene) {
+    if (animTimer) clearInterval(animTimer);
+    let idx = 0;
+    animImg.src = scene.frames[0];
+    animTimer = setInterval(() => {
+      idx = (idx + 1) % scene.frames.length;
+      animImg.src = scene.frames[idx];
+    }, scene.interval);
+  }
+
+  /* ============================================================
+     打字機（內建，不依賴外部 typewriter.js）
+  ============================================================ */
+  function typeText(text, onDone) {
+    if (typeTimer) { clearTimeout(typeTimer); typeTimer = null; }
+    storyText.textContent = '';
+    arrow.classList.remove('show');
+    isTyping = true;
+    let i = 0;
+    function tick() {
+      if (i < text.length) {
+        storyText.textContent += text[i++];
+        typeTimer = setTimeout(tick, 40);
+      } else {
+        typeTimer = null;
+        isTyping = false;
+        if (onDone) onDone();
+      }
+    }
+    tick();
+  }
+
+  // 立刻完成打字
+  function finishTyping(text) {
+    if (typeTimer) { clearTimeout(typeTimer); typeTimer = null; }
+    storyText.textContent = text;
+    isTyping = false;
+    arrow.classList.add('show');
+  }
+
+  /* ============================================================
+     顯示指定場景的第 partIndex 句
+  ============================================================ */
+  function showCurrentPart() {
+    const scene = SCENES.find(s => s.id === currentSceneId);
+    if (!scene) return;
+    const lines = scene[currentLang] || scene['zh'];
+    const text  = lines[partIndex];
+    const isLast = (partIndex === lines.length - 1);
+
+    typeText(text, () => {
+      arrow.classList.add('show');
+    });
+  }
+
+  /* ============================================================
+     點擊文字框（或箭頭）的統一處理
+  ============================================================ */
+  function handleClick() {
+    const scene = SCENES.find(s => s.id === currentSceneId);
+    if (!scene) return;
+    const lines = scene[currentLang] || scene['zh'];
+
+    // 打字機進行中 → 立刻跳完這一句
+    if (isTyping) {
+      finishTyping(lines[partIndex]);
+      return;
+    }
+
+    // 還有下一句 → 繼續播
+    if (partIndex < lines.length - 1) {
+      partIndex++;
+      showCurrentPart();
+      return;
+    }
+
+    // 最後一句已播完 → 跳下一場景
+    saveProgress(scene.next || currentSceneId);
+    if (scene.next) {
+      goToScene(scene.next);
+    }
+    // next === null 代表結束，什麼都不做
+  }
+
+  textBox.addEventListener('click', handleClick);
+  arrow.addEventListener('click', (e) => {
+    e.stopPropagation();
+    handleClick();
+  });
+
+  /* ============================================================
+     跳到指定場景
+  ============================================================ */
+  function goToScene(id) {
+    const scene = SCENES.find(s => s.id === id);
+    if (!scene) return;
+    currentSceneId = id;
+    partIndex = 0;
+    saveProgress(id);
+    startAnim(scene);
+    showCurrentPart();
+  }
+
+  /* ============================================================
+     進度（用 sessionStorage 保留場景，回來時繼續）
+  ============================================================ */
+  function saveProgress(sceneId) {
+    sessionStorage.setItem(PROGRESS_KEY, sceneId);
+  }
+
+  function loadProgress() {
+    return sessionStorage.getItem(PROGRESS_KEY) || '1-7';
+  }
+
+  // 「回到遊戲」按鈕不需要額外處理，sessionStorage 自動保留
+
+  /* ============================================================
+     語言切換：重播當前場景第一句
+  ============================================================ */
+  window.addEventListener('languageChanged', (e) => {
+    currentLang = e.detail.lang;
+    partIndex = 0;
+    showCurrentPart();
+  });
+
+  /* ============================================================
+     啟動
+     shared-controls.js 的 DOMContentLoaded 會 dispatch languageChanged，
+     我們在 languageChanged 裡才開始播，所以這裡只需啟動動畫。
+  ============================================================ */
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedId = loadProgress();
+    const scene   = SCENES.find(s => s.id === savedId) || SCENES[0];
+    currentSceneId = scene.id;
+    startAnim(scene);
+    // 文字等 languageChanged 觸發後再播
+  });
+  </script>
+</body>
+</html>

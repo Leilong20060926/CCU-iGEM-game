@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1-2p2-choose</title>
+  <link rel="stylesheet" href="../../public/css/shared.css" />
+  <link rel="stylesheet" href="../../public/css/dialogue-box.css" />
+  <link rel="stylesheet" href="../../public/css/choices-box.css" />
+  <style>
+    .story-text-box.blur {
+      filter: blur(5px);
+      opacity: 0.5;
+    }
+
+    .story-text-box::before {
+      border-bottom: 12px solid rgba(180, 220, 180, 0.95);
+    }
+
+    .choices-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2000;
+      background: rgba(180, 220, 180, 0.95);
+      color: #333;
+    }
+
+    .choice-button {
+      background: rgba(100, 180, 100, 0.3);
+      border-color: rgba(100, 180, 100, 0.6);
+      color: #333;
+    }
+
+    .choice-button:hover {
+      background: rgba(100, 180, 100, 0.4);
+      border-color: rgba(100, 180, 100, 0.8);
+    }
+
+    .choice-button:active {
+      background: rgba(100, 180, 100, 0.5);
+    }
+
+    .debug-status-bar {
+      position: fixed;
+      bottom: 20px; 
+      right: 20px;  
+      background: rgba(0, 0, 0, 0.85);
+      color: #00ff00; 
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      z-index: 3000; 
+      border: 1px solid #00ff00;
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <div class="debug-status-bar" id="debugStatusBar"></div>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li>
+        <a href="../index.html" id="backToGameBtn">
+          <img src="../../public/menu/left.svg" alt="" class="menu-icon"/>
+          <span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/star.html">
+          <img src="../../public/menu/star.svg" alt="" class="menu-icon"/>
+          <span data-zh="收集結局" data-en="Endings">收集結局</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/egg.html">
+          <img src="../../public/menu/egg.svg" alt="" class="menu-icon"/>
+          <span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/doc.html">
+          <img src="../../public/menu/doc.svg" class="menu-icon"/>
+          <span data-zh="相關資訊" data-en="Information">相關資訊</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/info.html">
+          <img src="../../public/menu/info.svg" alt="" class="menu-icon"/>
+          <span data-zh="關於我們" data-en="About Us">關於我們</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  
+  <div class="top-left-controls">
+    <button class="btn" id="alignBtn" aria-label="Align left">
+      <img id="alignIcon" src="../../public/menu/align-left.svg" alt="Align left" />
+    </button>
+  </div>
+  
+  <div class="controls">
+    <button class="btn" id="musicBtn" aria-label="Toggle music">
+      <img id="musicIcon" src="../../public/menu/music.svg" alt="Music" />
+    </button>
+    <button class="btn" id="langBtn" aria-label="Toggle language">
+      <span id="langText">EN</span>
+    </button>
+  </div>
+
+  <div class="game-container" id="gameContainer">
+    <div class="image-relative-wrapper">
+      <div class="choices-container show" id="choicesContainer">
+        <div class="choices-title" data-zh="請選擇要如何保護你的子代：" data-en="Please choose how to protect your offspring:">請選擇要如何保護你的子代：</div>
+        <ul class="choices-list">
+          <li><button class="choice-button" data-choice="latent" data-zh="採取潛伏策略" data-en="Adopt a latent strategy">採取潛伏策略</button></li>
+          <li><button class="choice-button" data-choice="observe" data-zh="主動外出觀察周遭環境" data-en="Actively go out to observe the surroundings">主動外出觀察周遭環境</button></li>
+        </ul>
+      </div>
+
+      <img class="game-image blurred" style="filter: blur(8px);" src="../../public/pictures/1-2-c.png" alt="1-2p2 scene" />
+    </div>
+  </div>
+
+  <script src="../../public/js/shared-controls.js"></script>
+  <script>
+    localStorage.setItem('currentGamePage', window.location.href);
+
+    const debugStatusBar = document.getElementById('debugStatusBar');
+    const choiceButtons = document.querySelectorAll('.choice-button');
+
+    const debugTextData = {
+      zh: { health: '健康值', breeding: '繁殖率', generation: '子代成長值', special: 'Special結局', good1: '好1結局', good2: '好2', bad1: '壞1結局', collected: '已收集', notCollected: '未收集' },
+      en: { health: 'HP', breeding: 'Reproduction', generation: 'Growth', special: 'Special Ending', good1: 'Good 1', good2: 'Good 2', bad1: 'Bad 1', collected: 'Unlocked', notCollected: 'Locked' }
+    };
+
+    function updateDebugDisplay() {
+      const currentLang = localStorage.getItem('gameLanguage') || 'zh';
+      const label = debugTextData[currentLang];
+
+      let currentHealth = localStorage.getItem('health') || '15';
+      let currentBreeding = localStorage.getItem('breeding') || '0';
+      let currentGeneration = localStorage.getItem('generation') || '0'; 
+      
+      let hasUnlockedSpecial = localStorage.getItem('end_special') === 'true' ? label.collected : label.notCollected;
+      let hasUnlockedGood1 = localStorage.getItem('end_good1') === 'true' ? label.collected : label.notCollected;
+      let hasUnlockedGood2 = localStorage.getItem('end_good2') === 'true' ? label.collected : label.notCollected;
+      let hasUnlockedBad1 = localStorage.getItem('end_bad1') === 'true' ? label.collected : label.notCollected;
+
+      debugStatusBar.innerHTML = `
+        [DEBUG]<br>
+        ❤️ ${label.health}: ${currentHealth}<br>
+        📈 ${label.breeding}: ${currentBreeding}%<br>
+        🌱 ${label.generation}: ${currentGeneration}%<br>
+        -----------------<br>
+        🎬 ${label.special}: ${hasUnlockedSpecial}<br>
+        🏆 ${label.good1}: ${hasUnlockedGood1} | ${label.good2}: ${hasUnlockedGood2}<br>
+        💀 ${label.bad1}: ${hasUnlockedBad1}
+      `;
+    }
+
+    window.addEventListener('languageChanged', () => {
+      updateDebugDisplay();
+    });
+
+    choiceButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        let health = parseInt(localStorage.getItem('health')) || 15;
+        let breeding = parseInt(localStorage.getItem('breeding')) || 0;
+        let generation = parseInt(localStorage.getItem('generation')) || 0;
+
+        const choice = this.getAttribute('data-choice');
+        let nextTargetPage = ''; 
+
+        if (choice === 'latent') {
+          health -= 1;
+          generation += 10;
+          nextTargetPage = '1-9.html'; 
+        } else if (choice === 'observe') {
+          if (Math.random() < 0.5) {
+            if (Math.random() < 0.5) {
+              nextTargetPage = '1-11-1.html';        
+              localStorage.setItem('end_bad1', 'true'); 
+            } else {
+              nextTargetPage = '1-11-2.html';       
+              localStorage.setItem('end_good2', 'true');
+            }
+          } else {
+            health -= 2;
+            generation += 40;
+            nextTargetPage = '1-10.html'; 
+          }
+        }
+
+        if (generation >= 100 && nextTargetPage !== '1-11-1.html' && nextTargetPage !== '1-11-2.html') {
+          nextTargetPage = '1-12-1.html';           
+          localStorage.setItem('end_good1', 'true');   
+        }
+
+        if (health <= 0) {
+          nextTargetPage = '1-13-1.html'; 
+        }
+
+        localStorage.setItem('health', health.toString());
+        localStorage.setItem('breeding', breeding.toString());
+        localStorage.setItem('generation', generation.toString());
+
+        updateDebugDisplay();
+        window.location.href = nextTargetPage;
+      });
+    });
+  </script>
+</body>
+</html>

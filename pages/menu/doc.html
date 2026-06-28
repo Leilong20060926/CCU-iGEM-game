@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1-1 故事</title>
+  <link rel="stylesheet" href="../../public/css/shared.css" />
+  <link rel="stylesheet" href="../../public/css/text-box.css" />
+  <style>
+    .image-relative-wrapper {
+      border: 2px solid #000;
+      background: #fcfcfc;
+      box-sizing: border-box;
+    }
+
+    .story-text-box {
+      position: relative !important;
+      top: auto !important;
+      left: auto !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-height: 100vh !important;
+      background: #fcfcfc !important;
+      color: #333333 !important;
+      padding: 25px !important;
+      box-sizing: border-box !important;
+      overflow-y: auto !important;
+      z-index: 10 !important;
+      float: none !important;
+      display: block !important;
+      margin: 0 !important;
+      transform: none !important;
+      bottom: auto !important;
+      right: auto !important;
+    }
+
+    #storyText {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .news-title {
+      font-size: 16pt;
+      font-weight: bold;
+      color: #000000;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      padding-bottom: 4px;
+      display: inline-block;
+      border-bottom: 4px solid #ffcc00;
+    }
+
+    .news-title:first-child {
+      margin-top: 5px;
+    }
+
+    .news-list {
+      list-style-type: none !important;
+      padding-left: 0 !important;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    .news-list li {
+      font-size: 11pt;
+      line-height: 1.7;
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 12px;
+      text-align: left;
+      color: #333333;
+    }
+
+    .news-list li::before {
+      content: "■";
+      position: absolute;
+      left: 0;
+      color: #ffcc00;
+      font-size: 9pt;
+      top: 2px;
+    }
+
+    .video-container-box {
+      background: #f0f0f0;
+      border: 1px solid #dddddd;
+      padding: 20px;
+      text-align: center;
+      margin-top: 25px;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .video-placeholder-text {
+      font-weight: bold;
+      color: #555555;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="../index.html" id="backToGameBtn"><img src="../../public/menu/left.svg" alt="" class="menu-icon"/>回到遊戲</a></li>
+      <li><a href="../menu/star.html"><img src="../../public/menu/star.svg" alt="" class="menu-icon"/>收集結局</a></li>
+      <li><a href="../menu/egg.html"><img src="../../public/menu/egg.svg" alt="" class="menu-icon"/>遊戲彩蛋</a></li>
+      <li><a href="../menu/doc.html"><img src="../../public/menu/doc.svg" alt="" class="menu-icon"/>相關資訊</a></li>
+      <li><a href="../menu/info.html"><img src="../../public/menu/info.svg" alt="" class="menu-icon"/>關於我們</a></li>
+    </ul>
+  </nav>
+  <div class="top-left-controls">
+    <button class="btn" id="alignBtn" aria-label="Align left">
+      <img id="alignIcon" src="../../public/menu/align-left.svg" alt="Align left" />
+    </button>
+  </div>
+  <div class="controls">
+    <button class="btn" id="musicBtn" aria-label="Toggle music">
+      <img id="musicIcon" src="../../public/menu/music.svg" alt="Music" />
+    </button>
+    <button class="btn" id="langBtn" aria-label="Toggle language">
+      <span id="langText">EN</span>
+    </button>
+  </div>
+
+  <div class="game-container" id="gameContainer">
+    <div class="image-relative-wrapper">
+      <div class="story-text-box" id="storyTextBox">
+        <div id="storyText">
+
+          <div class="news-title" data-zh="瘤野螟的破壞" data-en="The Damage of Striped Rice Borers">瘤野螟的破壞</div>
+          <ul class="news-list">
+            <li data-zh="瘤野螟為水稻二期作重要害蟲之一，也是亞洲所有稻作生態系中最具破壞性的害蟲之一。" data-en="The striped rice borer is one of the most important pests in the second crop of rice, and one of the most destructive pests across all rice ecosystems in Asia.">瘤野螟為水稻二期作重要害蟲之一，也是亞洲所有稻作生態系中最具破壞性的害蟲之一。</li>
+            <li data-zh="若慣行稻不使用農藥，瘤野螟幼蟲會將葉片捲起並藏匿其中啃食稻葉，這會導致水稻產生嚴重的白葉情況，使稻穗無法結實而無法收成。" data-en="Without pesticides, the larvae roll up rice leaves and hide inside to feed on them, causing severe white leaf symptoms that prevent the rice from forming grains and make harvest impossible.">若慣行稻不使用農藥，瘤野螟幼蟲會將葉片捲起並藏匿其中啃食稻葉，這會導致水稻產生嚴重的白葉情況，使稻穗無法結實而無法收成。</li>
+          </ul>
+
+          <div class="news-title" data-zh="農藥的危害" data-en="The Hazards of Pesticides">農藥的危害</div>
+          <ul class="news-list">
+            <li data-zh="致癌風險：有實驗顯示，在美國農業密集的區域，農民以及居住在農田附近裡的居民，因環境中的農藥殘留（隨風飄散、水源污染），面臨極高的致癌風險。" data-en="Cancer Risk: Studies show that in intensive farming areas in the United States, farmers and nearby residents face extremely high cancer risks due to pesticide residues spread through wind and water contamination.">致癌風險：有實驗顯示，在美國農業密集的區域，農民以及居住在農田附近裡的居民，因環境中的農藥殘留（隨風飄散、水源污染），面臨極高的致癌風險。</li>
+            <li data-zh="惡性循環：化學農藥與抗藥性形成惡性循環，導致農業生產過程中不斷地交替用藥、混合。" data-en="Vicious Cycle: Chemical pesticides and resistance form a vicious cycle, leading to the continuous alternation and mixing of chemicals in agricultural production.">惡性循環：化學農藥與抗藥性形成惡性循環，導致農業生產過程中不斷地交替用藥、混合。</li>
+            <li data-zh="蜂群破壞：長期農藥的累積會使新女王蜂的產量暴跌 85%，對整體蜂群生態造成毀滅性破壞。" data-en="Bee Colony Collapse: Long-term pesticide accumulation can cause new queen bee production to plummet by 85%, causing devastating damage to entire bee colony ecosystems.">蜂群破壞：長期農藥的累積會使新女王蜂的產量暴跌 85%，對整體蜂群生態造成毀滅性破壞。</li>
+            <li data-zh="生態衝擊：農藥毒殺野生授粉昆蟲，甚至嚴重影響瀕危物種（如兩棲類樹蛙）的生存空間。" data-en="Ecological Impact: Pesticides poison wild pollinating insects and seriously threaten the survival of endangered species such as amphibious tree frogs.">生態衝擊：農藥毒殺野生授粉昆蟲，甚至嚴重影響瀕危物種（如兩棲類樹蛙）的生存空間。</li>
+          </ul>
+
+          <div class="news-title" data-zh="我們能做些什麼" data-en="What Can We Do">我們能做些什麼</div>
+          <ul class="news-list">
+            <li data-zh="支持有機稻米，保護整體自然環境、同時保護自身健康。" data-en="Support organic rice to protect the natural environment and your own health at the same time.">支持有機稻米，保護整體自然環境、同時保護自身健康。</li>
+            <li data-zh="支持環保標章，在日常生活中優先購買並選用環保包裝的產品。" data-en="Support eco-labels and prioritize purchasing products with environmentally friendly packaging in your daily life.">支持環保標章，在日常生活中優先購買並選用環保包裝的產品。</li>
+          </ul>
+
+          <div class="news-title" id="videoTitle">CCU iGEM10<br>稻米研究紀錄</div>
+          <div class="video-container-box">
+            <video controls style="width:100%; border-radius:4px;">
+              <source src="../../public/video/grow.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+        </div>
+        <a href="1-2.html" class="story-text-arrow"></a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../public/js/shared-controls.js"></script>
+  <script src="../../public/js/typewriter.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      // startTypewriter('test2');
+    });
+
+    window.addEventListener('languageChanged', (e) => {
+      const lang = e.detail.lang;
+      const videoTitle = document.getElementById('videoTitle');
+      if (videoTitle) {
+        videoTitle.innerHTML = lang === 'zh'
+          ? 'CCU-Taiwan iGEM10<br>稻米研究紀錄'
+          : 'CCU-Taiwan iGEM10<br>Rice Research Record';
+      }
+    });
+  </script>
+</body>
+</html>

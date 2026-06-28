@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>關於我們</title>
+  <link rel="stylesheet" href="../../public/css/shared.css" />
+  <link rel="stylesheet" href="../../public/css/text-box.css" />
+  <style>
+    .image-relative-wrapper {
+      border: 2px solid #000;
+      background: #fcfcfc;
+      box-sizing: border-box;
+    }
+
+    .story-text-box {
+      position: relative !important;
+      top: auto !important;
+      left: auto !important;
+      width: 100% !important;
+      height: 100% !important;
+      max-height: 100vh !important;
+      background: #fcfcfc !important;
+      color: #333333 !important;
+      padding: 25px !important;
+      box-sizing: border-box !important;
+      overflow-y: auto !important;
+      z-index: 10 !important;
+      float: none !important;
+      display: block !important;
+      margin: 0 !important;
+      transform: none !important;
+      bottom: auto !important;
+      right: auto !important;
+    }
+
+    #storyText {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .news-title {
+      font-size: 16pt;
+      font-weight: bold;
+      color: #000000;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      padding-bottom: 4px;
+      display: inline-block;
+      border-bottom: 4px solid #ffcc00;
+    }
+
+    .news-title:first-child {
+      margin-top: 5px;
+    }
+
+    .news-body {
+      font-size: 11pt;
+      line-height: 1.8;
+      color: #333333;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    /* 連結按鈕區 */
+    .link-buttons {
+      display: flex;
+      flex-direction: row;
+      gap: 14px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+    .link-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      background: #FFEE91;
+      border: 1px solid #000;
+      border-radius: 18px;
+      cursor: pointer;
+      text-decoration: none;
+      color: #000000;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .link-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 30px rgba(0,0,0,0.14);
+      background: #ffe666;
+    }
+
+    .link-btn:active {
+      transform: translateY(0);
+    }
+
+    .link-btn img {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="../index.html" id="backToGameBtn"><img src="../../public/menu/left.svg" alt="" class="menu-icon"/>回到遊戲</a></li>
+      <li><a href="../menu/star.html"><img src="../../public/menu/star.svg" alt="" class="menu-icon"/>收集結局</a></li>
+      <li><a href="../menu/egg.html"><img src="../../public/menu/egg.svg" alt="" class="menu-icon"/>遊戲彩蛋</a></li>
+      <li><a href="../menu/doc.html"><img src="../../public/menu/doc.svg" alt="" class="menu-icon"/>相關資訊</a></li>
+      <li><a href="../menu/info.html"><img src="../../public/menu/info.svg" alt="" class="menu-icon"/>關於我們</a></li>
+    </ul>
+  </nav>
+  <div class="top-left-controls">
+    <button class="btn" id="alignBtn" aria-label="Align left">
+      <img id="alignIcon" src="../../public/menu/align-left.svg" alt="Align left" />
+    </button>
+  </div>
+  <div class="controls">
+    <button class="btn" id="musicBtn" aria-label="Toggle music">
+      <img id="musicIcon" src="../../public/menu/music.svg" alt="Music" />
+    </button>
+    <button class="btn" id="langBtn" aria-label="Toggle language">
+      <span id="langText">EN</span>
+    </button>
+  </div>
+
+  <div class="game-container" id="gameContainer">
+    <div class="image-relative-wrapper">
+      <div class="story-text-box" id="storyTextBox">
+        <div id="storyText">
+
+          <div class="news-title" data-zh="簡介" data-en="About Us">簡介</div>
+          <p class="news-body" data-zh="我們是 No Fold，CCU-Taiwan iGEM 團隊，由國立中正大學各學院的學生所組成，涵蓋理學院、工學院、社會科學院、文學院，以及跨領域學士學位學程的同學。" data-en="We are No Fold, the CCU-Taiwan iGEM team, composed of students from various colleges at National Chung Cheng University, including the College of Science, College of Engineering, College of Social Sciences, College of Humanities, and the Interdisciplinary Bachelor's Degree Program.">我們是 No Fold，CCU-Taiwan iGEM 團隊，由國立中正大學各學院的學生所組成，涵蓋理學院、工學院、社會科學院、文學院，以及跨領域學士學位學程的同學。</p>
+          <p class="news-body" data-zh="我們團隊計畫利用生物合成學的方式，開發可用於驅趕農業害蟲瘤野螟的系統，希望大家了解農藥對世界的危害以及增進大眾對有機稻米的認知。" data-en="Our team plans to use synthetic biology to develop a system that can repel the agricultural pest striped rice borer. We hope to raise awareness about the harm pesticides cause to the world and promote public understanding of organic rice.">我們團隊計畫利用生物合成學的方式，開發可用於驅趕農業害蟲瘤野螟的系統，希望大家了解農藥對世界的危害以及增進大眾對有機稻米的認知。</p>
+
+          <div class="news-title" data-zh="相關連結" data-en="Related Links">相關連結</div>
+          <div class="link-buttons">
+            <a class="link-btn" href="https://www.instagram.com/ccuigem/" target="_blank">
+              <img src="https://cdn-icons-png.flaticon.com/512/3621/3621435.png" alt="Instagram" />
+            </a>
+            <a class="link-btn" href="https://igem.ccu.edu.tw" target="_blank">
+              <img src="https://cdn-icons-png.flaticon.com/512/17724/17724849.png" alt="Website" />
+            </a>
+            <a class="link-btn" href="https://www.youtube.com/@ccutaiwanigemteam133/featured" target="_blank">
+              <img src="https://cdn-icons-png.flaticon.com/512/5968/5968852.png" alt="YouTube" />
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../public/js/shared-controls.js"></script>
+  <script src="../../public/js/typewriter.js"></script>
+  <script>
+    window.addEventListener('load', () => {});
+  </script>
+</body>
+</html>

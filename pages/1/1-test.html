@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game SPA</title>
+ 
+  <style>
+    /* ══════════════════════════════════════════
+       shared.css
+    ══════════════════════════════════════════ */
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      background: #252947;
+      overflow: hidden;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #252947;
+    }
+    img {
+      max-width: 100vw;
+      max-height: 100vh;
+      object-fit: contain;
+      display: block;
+    }
+    .game-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+    }
+    .controls {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      display: flex;
+      gap: 12px;
+      z-index: 3000;
+    }
+    .top-left-controls {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      display: flex;
+      gap: 12px;
+      z-index: 3000;
+    }
+    .btn {
+      width: 56px;
+      height: 56px;
+      border: 1px solid #000;
+      border-radius: 18px;
+      cursor: pointer;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      background: #FFEE91;
+      color: #000000;
+      font-weight: 700;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 16px 30px rgba(0,0,0,0.14); background: #ffe666; }
+    .btn:active { transform: translateY(0); }
+    .btn img { width: 24px; height: 24px; max-width: none; max-height: none; }
+    #langText { font-size: 1.1rem; letter-spacing: 0.06em; }
+    .sidebar {
+      position: fixed;
+      left: -280px;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: #F5C857;
+      z-index: 2005;
+      transition: left 0.3s ease;
+      padding-top: 95px;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+    .sidebar-menu li { padding: 0; }
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 24px;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 600;
+      border-left: 4px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .menu-icon { width: 24px; height: 24px; flex-shrink: 0; }
+    .sidebar-menu a:hover { background: rgba(255,255,255,0.1); border-left-color: #ffffff; padding-left: 28px; }
+    .sidebar-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0);
+      z-index: 998;
+      transition: background 0.3s ease;
+      pointer-events: none;
+    }
+    .sidebar-overlay.show { background: rgba(0,0,0,0.3); pointer-events: auto; }
+ 
+    /* ══════════════════════════════════════════
+       黑框底圖共用
+    ══════════════════════════════════════════ */
+    .image-relative-wrapper {
+      position: relative;
+      display: inline-block;
+      width: calc(100vw - 1002px);
+      min-width: 270px;
+      max-width: 100vw;
+      margin: auto;
+      box-sizing: border-box;
+    }
+    .game-image {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 2px solid #000;
+      box-sizing: border-box;
+      transition: filter 0.3s ease;
+    }
+    .game-image.blur { filter: blur(8px); }
+ 
+    /* ══════════════════════════════════════════
+       text-box：深綠框
+    ══════════════════════════════════════════ */
+    .story-text-box {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 75%;
+      min-height: 130px;
+      box-sizing: border-box;
+      z-index: 50;
+      overflow: visible;
+      transition: filter 0.3s ease;
+      background: rgba(60, 100, 60, 0.85);
+      color: white;
+      border-radius: 10px;
+      padding: 20px;
+      font-size: 1rem;
+      line-height: 1.6;
+      text-align: left;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      cursor: pointer;
+    }
+    .story-text-box.blur { filter: blur(5px); opacity: 0.5; }
+ 
+    /* text-box 箭頭（白色） */
+    .story-text-arrow {
+      width: 0;
+      height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 12px solid white;
+      margin: 15px auto 0;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      display: block;
+    }
+    .story-text-arrow.show { opacity: 1; }
+    .story-text-arrow:hover { border-top-color: #e0e0e0; }
+ 
+    /* ══════════════════════════════════════════
+       dialogue-box：淺綠氣泡框
+    ══════════════════════════════════════════ */
+    .scene-dialogue .story-text-box {
+      background: rgba(180, 220, 180, 0.95);
+      color: #333;
+      border-radius: 15px;
+      bottom: 25px;
+      width: 85%;
+      min-height: 110px;
+      padding: 12px 18px;
+      border: none;
+    }
+    .scene-dialogue .story-text-box::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: 25px;
+      width: 0;
+      height: 0;
+      border-left: 12px solid transparent;
+      border-right: 0 solid transparent;
+      border-bottom: 12px solid rgba(180, 220, 180, 0.95);
+    }
+    .scene-dialogue .story-text-arrow {
+      border-top-color: #333;
+      margin: 8px auto 0;
+    }
+    .scene-dialogue .story-text-arrow:hover { border-top-color: #555; }
+ 
+    /* 角色名標籤 */
+    .character-name {
+      background: rgba(100, 180, 100, 0.9);
+      color: white;
+      font-weight: bold;
+      padding: 5px 12px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+    }
+    .story-text { margin: 0; }
+ 
+    /* ══════════════════════════════════════════
+       choices-box
+    ══════════════════════════════════════════ */
+    .choices-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 400px;
+      border-radius: 15px;
+      padding: 40px 30px;
+      z-index: 2000;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      display: none;
+      background: rgba(180, 220, 180, 0.95);
+      color: #333;
+    }
+    .choices-container.show { display: block; }
+    .choices-title { font-size: 1.4rem; font-weight: bold; text-align: center; margin-bottom: 25px; line-height: 1.5; }
+    .choices-list { list-style: none; padding: 0; margin: 0; }
+    .choice-button {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      font-family: inherit;
+      font-weight: 500;
+      border: 2px solid;
+      background: rgba(100, 180, 100, 0.3);
+      border-color: rgba(100, 180, 100, 0.6);
+      color: #333;
+    }
+    .choice-button:hover { background: rgba(100,180,100,0.4); border-color: rgba(100,180,100,0.8); transform: translateY(-2px); }
+    .choice-button:active { background: rgba(100,180,100,0.5); transform: translateY(0); }
+ 
+    /* ══════════════════════════════════════════
+       場景容器
+    ══════════════════════════════════════════ */
+    #sceneWrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+    .scene {
+      display: none;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+ 
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li>
+        <a href="../index.html" id="backToGameBtn">
+          <img src="../../public/menu/left.svg" alt="" class="menu-icon"/>
+          <span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/star.html">
+          <img src="../../public/menu/star.svg" alt="" class="menu-icon"/>
+          <span data-zh="收集結局" data-en="Endings">收集結局</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/egg.html">
+          <img src="../../public/menu/egg.svg" alt="" class="menu-icon"/>
+          <span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/doc.html">
+          <img src="../../public/menu/doc.svg" class="menu-icon"/>
+          <span data-zh="相關資訊" data-en="Information">相關資訊</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/info.html">
+          <img src="../../public/menu/info.svg" alt="" class="menu-icon"/>
+          <span data-zh="關於我們" data-en="About Us">關於我們</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+ 
+  <div class="top-left-controls">
+    <button class="btn" id="alignBtn" aria-label="Align left">
+      <img id="alignIcon" src="../../public/menu/align-left.svg" alt="Align left" />
+    </button>
+  </div>
+  <div class="controls">
+    <button class="btn" id="musicBtn" aria-label="Toggle music">
+      <img id="musicIcon" src="../../public/menu/music.svg" alt="Music" />
+    </button>
+    <button class="btn" id="langBtn" aria-label="Toggle language">
+      <span id="langText">EN</span>
+    </button>
+  </div>
+ 
+  <div id="sceneWrapper">
+ 
+    <!-- ════════════════════════════════════════
+         第一段：1-1 ~ 1-5 + choose（原框架）
+         ════════════════════════════════════════ -->
+ 
+    <!-- 1-1 -->
+    <div id="scene-1-1" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-1" data-goto="1-2">
+            <div id="storyText-1-1" class="story-text"></div>
+            <span class="story-text-arrow" data-goto="1-2"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-1.png" alt="1-1 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-2 -->
+    <div id="scene-1-2" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-2" data-goto="1-2-c">
+            <div id="storyText-1-2" class="story-text"></div>
+            <span class="story-text-arrow" data-goto="1-2-c"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-2.png" alt="1-2 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-2-c（dialogue） -->
+    <div id="scene-1-2-c" class="scene scene-dialogue">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-2-c" data-goto="1-2-choose">
+            <div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div>
+            <div id="storyText-1-2-c" class="story-text"></div>
+            <span class="story-text-arrow" data-goto="1-2-choose"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-2-c.png" alt="1-2-c scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-2-choose -->
+    <div id="scene-1-2-choose" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="choices-container show" id="choicesContainer-1-2">
+            <div class="choices-title" data-zh="請選擇要繁殖於哪一種稻作：" data-en="Please choose which rice crop to reproduce on:">請選擇要繁殖於哪一種稻作：</div>
+            <ul class="choices-list">
+              <li><button class="choice-button" data-choice="high-nitrogen" data-zh="繁殖於高氮密集的稻作" data-en="Reproduce on nitrogen-dense rice crops">繁殖於高氮密集的稻作</button></li>
+              <li><button class="choice-button" data-choice="normal-rice" data-zh="繁殖於綠意漸褪的稻作" data-en="Reproduce on fading green rice crops">繁殖於綠意漸褪的稻作</button></li>
+            </ul>
+          </div>
+          <img class="game-image" style="filter: blur(8px);" src="../../public/pictures/1-2-c.png" alt="1-2-c scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-3 -->
+    <div id="scene-1-3" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-3" data-goto="1-3-c1">
+            <div id="storyText-1-3" class="story-text"></div>
+            <span class="story-text-arrow" data-goto="1-3-c1"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-3.png" alt="1-3 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-3-c1（dialogue） -->
+    <div id="scene-1-3-c1" class="scene scene-dialogue">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-3-c1" data-goto="1-3-c2">
+            <div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div>
+            <div id="storyText-1-3-c1" class="story-text"></div>
+            <span class="story-text-arrow" data-goto="1-3-c2"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-3-c.png" alt="1-3-c scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-3-c2（dialogue） -->
+    <div id="scene-1-3-c2" class="scene scene-dialogue">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-3-c2" data-ending="end_bad2">
+            <div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div>
+            <div id="storyText-1-3-c2" class="story-text"></div>
+            <span class="story-text-arrow" data-ending="end_bad2"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-3-c.png" alt="1-3-c scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-4 -->
+    <div id="scene-1-4" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-4" data-goto="1-2-choose">
+            <div id="storyText-1-4" class="story-text"></div>
+            <span class="story-text-arrow" data-goto="1-2-choose"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-4.png" alt="1-4 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-5 -->
+    <div id="scene-1-5" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-5" data-goto="1-2-choose">
+            <div id="storyText-1-5" class="story-text"></div>
+            <span class="story-text-arrow" data-goto="1-2-choose"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-5.png" alt="1-5 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- ════════════════════════════════════════
+         Special 結局支線：1-s1 → 1-s2-1 → 1-s2-c → 1-s2-2
+                          → 1-s3 → 1-s4-1 → 1-s4-c → 1-s4-2
+         ════════════════════════════════════════ -->
+ 
+    <!-- 1-s1（多段文字） -->
+    <div id="scene-1-s1" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-s1">
+            <div id="storyText-1-s1" class="story-text"></div>
+            <span class="story-text-arrow"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-1.png" alt="1-1 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-s2-1 -->
+    <div id="scene-1-s2-1" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-s2-1" data-goto="1-s2-c">
+            <div id="storyText-1-s2-1" class="story-text"></div>
+            <span class="story-text-arrow" data-goto="1-s2-c"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-6.png" alt="1-6 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-s2-c（dialogue） -->
+    <div id="scene-1-s2-c" class="scene scene-dialogue">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-s2-c" data-goto="1-s2-2">
+            <div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div>
+            <div id="storyText-1-s2-c" class="story-text"></div>
+            <span class="story-text-arrow" data-goto="1-s2-2"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-6-c.png" alt="1-6-c scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-s2-2 -->
+    <div id="scene-1-s2-2" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-s2-2" data-goto="1-s3">
+            <div id="storyText-1-s2-2" class="story-text"></div>
+            <span class="story-text-arrow" data-goto="1-s3"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-6.png" alt="1-6 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-s3（dialogue，多段，帶動畫） -->
+    <div id="scene-1-s3" class="scene scene-dialogue">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-s3">
+            <div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div>
+            <div id="storyText-1-s3" class="story-text"></div>
+            <span class="story-text-arrow"></span>
+          </div>
+          <img id="animationImage" class="game-image" src="../../public/pictures/1-7-1.png" alt="1-7 animation scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-s4-1（多段文字） -->
+    <div id="scene-1-s4-1" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-s4-1">
+            <div id="storyText-1-s4-1" class="story-text"></div>
+            <span class="story-text-arrow"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-8.png" alt="1-8 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-s4-c（dialogue） -->
+    <div id="scene-1-s4-c" class="scene scene-dialogue">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-s4-c" data-goto="1-s4-2">
+            <div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div>
+            <div id="storyText-1-s4-c" class="story-text"></div>
+            <span class="story-text-arrow" data-goto="1-s4-2"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-8-c.png" alt="1-8-c scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-s4-2（結局：end_normal1） -->
+    <div id="scene-1-s4-2" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-s4-2" data-ending="end_normal1">
+            <div id="storyText-1-s4-2" class="story-text"></div>
+            <span class="story-text-arrow" data-ending="end_normal1"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-8.png" alt="1-8 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- ════════════════════════════════════════
+         第二段：1-2p2 → 1-2p2-choose → 循環
+         ════════════════════════════════════════ -->
+ 
+    <!-- 1-2p2（多段文字） -->
+    <div id="scene-1-2p2" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-2p2">
+            <div id="storyText-1-2p2" class="story-text"></div>
+            <span class="story-text-arrow"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-2.png" alt="1-2 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-2p2-choose -->
+    <div id="scene-1-2p2-choose" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="choices-container show" id="choicesContainer-1-2p2">
+            <div class="choices-title" data-zh="請選擇要如何保護你的子代：" data-en="Please choose how to protect your offspring:">請選擇要如何保護你的子代：</div>
+            <ul class="choices-list">
+              <li><button class="choice-button" data-choice="latent" data-zh="採取潛伏策略" data-en="Adopt a latent strategy">採取潛伏策略</button></li>
+              <li><button class="choice-button" data-choice="observe" data-zh="主動外出觀察周遭環境" data-en="Actively go out to observe the surroundings">主動外出觀察周遭環境</button></li>
+            </ul>
+          </div>
+          <img class="game-image" style="filter: blur(8px);" src="../../public/pictures/1-2-c.png" alt="1-2p2-choose scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-9（latent 結果，多段） -->
+    <div id="scene-1-9" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-9">
+            <div id="storyText-1-9" class="story-text"></div>
+            <span class="story-text-arrow"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-10.png" alt="1-10 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-10（observe 成功，多段） -->
+    <div id="scene-1-10" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-10">
+            <div id="storyText-1-10" class="story-text"></div>
+            <span class="story-text-arrow"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-9.png" alt="1-9 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-11-1（農藥失敗，多段，壞結局bad1） -->
+    <div id="scene-1-11-1" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-11-1" data-ending="end_bad1">
+            <div id="storyText-1-11-1" class="story-text"></div>
+            <span class="story-text-arrow" data-ending="end_bad1"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-11.png" alt="1-11 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-11-2（農藥抗性，多段，好結局good2） -->
+    <div id="scene-1-11-2" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-11-2" data-ending="end_good2">
+            <div id="storyText-1-11-2" class="story-text"></div>
+            <span class="story-text-arrow" data-ending="end_good2"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-11.png" alt="1-11 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- ════════════════════════════════════════
+         好結局 good1 支線：1-12-1 → 1-12-c(story) → 1-12-c(dialogue)
+                           → 1-12-c2(dialogue) → 1-12-3 → 1-12-c3(dialogue)
+         ════════════════════════════════════════ -->
+ 
+    <!-- 1-12-1（多段） -->
+    <div id="scene-1-12-1" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-12-1">
+            <div id="storyText-1-12-1" class="story-text"></div>
+            <span class="story-text-arrow"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/3-1.png" alt="3-1 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-12-c(story 多段) -->
+    <div id="scene-1-12-cs" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-12-cs">
+            <div id="storyText-1-12-cs" class="story-text"></div>
+            <span class="story-text-arrow"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-12.png" alt="1-12 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-12-c(dialogue) -->
+    <div id="scene-1-12-cd" class="scene scene-dialogue">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-12-cd" data-goto="1-12-c2">
+            <div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div>
+            <div id="storyText-1-12-cd" class="story-text"></div>
+            <span class="story-text-arrow" data-goto="1-12-c2"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-12-c.png" alt="1-12-c scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-12-c2(dialogue) -->
+    <div id="scene-1-12-c2" class="scene scene-dialogue">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-12-c2" data-goto="1-12-3">
+            <div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div>
+            <div id="storyText-1-12-c2" class="story-text"></div>
+            <span class="story-text-arrow" data-goto="1-12-3"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-12-c2.png" alt="1-12-c2 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-12-3（多段） -->
+    <div id="scene-1-12-3" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-12-3">
+            <div id="storyText-1-12-3" class="story-text"></div>
+            <span class="story-text-arrow"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-12.png" alt="1-12 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-12-c3(dialogue，結局 good1) -->
+    <div id="scene-1-12-c3" class="scene scene-dialogue">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-12-c3" data-ending="end_good1">
+            <div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div>
+            <div id="storyText-1-12-c3" class="story-text"></div>
+            <span class="story-text-arrow" data-ending="end_good1"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-12-c2.png" alt="1-12-c2 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- ════════════════════════════════════════
+         壞結局 bad4 支線：1-13-1 → 1-13-c → 1-13-2
+         ════════════════════════════════════════ -->
+ 
+    <!-- 1-13-1（多段） -->
+    <div id="scene-1-13-1" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-13-1">
+            <div id="storyText-1-13-1" class="story-text"></div>
+            <span class="story-text-arrow"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-13.png" alt="1-13 scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-13-c(dialogue) -->
+    <div id="scene-1-13-c" class="scene scene-dialogue">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-13-c" data-goto="1-13-2">
+            <div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div>
+            <div id="storyText-1-13-c" class="story-text"></div>
+            <span class="story-text-arrow" data-goto="1-13-2"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-13-c.png" alt="1-13-c scene" />
+        </div>
+      </div>
+    </div>
+ 
+    <!-- 1-13-2（結局 end_bad4） -->
+    <div id="scene-1-13-2" class="scene">
+      <div class="game-container">
+        <div class="image-relative-wrapper">
+          <div class="story-text-box" id="storyTextBox-1-13-2" data-ending="end_bad4">
+            <div id="storyText-1-13-2" class="story-text"></div>
+            <span class="story-text-arrow" data-ending="end_bad4"></span>
+          </div>
+          <img class="game-image" src="../../public/pictures/1-13.png" alt="1-13 scene" />
+        </div>
+      </div>
+    </div>
+ 
+  </div><!-- /sceneWrapper -->
+ 
+  <!-- ════════════════════════════════════════
+       JavaScript：shared-controls 內嵌
+       ════════════════════════════════════════ -->
+  <script>
+    /* ── shared-controls.js 內嵌 ── */
+    let isMusicOn = true;
+ 
+    function getPathPrefix() {
+      const pathname = window.location.pathname;
+      const pagesIndex = pathname.indexOf('/pages');
+      const afterPages = pathname.substring(pagesIndex + 6);
+      const slashCount = (afterPages.match(/\//g) || []).length;
+      let prefix = '';
+      for (let i = 0; i < slashCount; i++) prefix += '../';
+      return prefix + 'public/menu/';
+    }
+ 
+    document.addEventListener('DOMContentLoaded', () => {
+      const musicBtn = document.getElementById('musicBtn');
+      const langBtn  = document.getElementById('langBtn');
+      const langText = document.getElementById('langText');
+      const alignBtn = document.getElementById('alignBtn');
+      const sidebar  = document.getElementById('sidebar');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+      const alignIcon = document.getElementById('alignIcon');
+      const backBtn  = document.getElementById('backToGameBtn');
+ 
+      if (alignIcon) alignIcon.style.display = 'block';
+ 
+      if (musicBtn) {
+        musicBtn.addEventListener('click', function() {
+          isMusicOn = !isMusicOn;
+          const icon = document.getElementById('musicIcon');
+          const prefix = getPathPrefix();
+          if (icon) icon.src = isMusicOn ? prefix + 'music.svg' : prefix + 'music-slash.svg';
+        });
+      }
+ 
+      if (alignBtn && sidebar && sidebarOverlay) {
+        alignBtn.addEventListener('click', function() {
+          sidebar.classList.toggle('open');
+          sidebarOverlay.classList.toggle('show');
+          let closeIcon = document.getElementById('closeIcon');
+          if (sidebar.classList.contains('open')) {
+            if (alignIcon) alignIcon.style.display = 'none';
+            if (!closeIcon) {
+              closeIcon = document.createElement('img');
+              closeIcon.id = 'closeIcon';
+              closeIcon.src = getPathPrefix() + 'cross.svg';
+              closeIcon.alt = 'Close menu';
+              closeIcon.style.width = '24px';
+              closeIcon.style.height = '24px';
+              alignBtn.appendChild(closeIcon);
+            } else {
+              closeIcon.style.display = 'inline';
+            }
+          } else {
+            if (alignIcon) alignIcon.style.display = 'block';
+            const closeIcon2 = document.getElementById('closeIcon');
+            if (closeIcon2) closeIcon2.style.display = 'none';
+          }
+        });
+ 
+        sidebarOverlay.addEventListener('click', function() {
+          sidebar.classList.remove('open');
+          sidebarOverlay.classList.remove('show');
+          if (alignIcon) alignIcon.style.display = 'block';
+          const closeIcon = document.getElementById('closeIcon');
+          if (closeIcon) closeIcon.style.display = 'none';
+        });
+      }
+ 
+      if (backBtn) {
+        backBtn.addEventListener('click', (event) => {
+          const lastSavedPage = localStorage.getItem('currentGamePage');
+          if (lastSavedPage) {
+            event.preventDefault();
+            window.location.href = lastSavedPage;
+          }
+        });
+      }
+ 
+      function applyLanguage(lang) {
+        localStorage.setItem('gameLanguage', lang);
+        if (langText) langText.innerText = (lang === 'zh') ? 'EN' : 'ZH';
+        document.querySelectorAll('[data-zh]').forEach(el => {
+          el.textContent = lang === 'en'
+            ? (el.getAttribute('data-en') || el.textContent)
+            : (el.getAttribute('data-zh') || el.textContent);
+        });
+        const langEvent = new CustomEvent('languageChanged', { detail: { lang } });
+        window.dispatchEvent(langEvent);
+      }
+ 
+      const savedLang = localStorage.getItem('gameLanguage') || 'zh';
+      applyLanguage(savedLang);
+ 
+if (langBtn) {
+  langBtn.addEventListener('click', () => {
+    /* 停止打字機（只清自己的計時器，不再暴力清除所有 id） */
+    if (globalTypewriterTimer) { clearTimeout(globalTypewriterTimer); globalTypewriterTimer = null; }
+    const currentLang = localStorage.getItem('gameLanguage') || 'zh';
+    applyLanguage(currentLang === 'zh' ? 'en' : 'zh');
+  });
+}
+    });
+  </script>
+ 
+  <!-- ════════════════════════════════════════
+       JavaScript：typewriter 內嵌
+       ════════════════════════════════════════ -->
+  <script>
+    /* ── typewriter.js 內嵌 ── */
+    let globalTypewriterTimer = null;
+ 
+    function startTypewriter(text, options = {}) {
+      /* 優先使用 options.storyText，否則找場景內唯一的 storyText 元素 */
+      const storyText = options.storyText || document.getElementById('storyText');
+      const arrow     = options.arrow     || null; /* 不再自動抓 querySelector，避免抓錯 */
+      const typingSpeed = options.typingSpeed || 40;
+ 
+      if (globalTypewriterTimer) {
+        clearTimeout(globalTypewriterTimer);
+        globalTypewriterTimer = null;
+      }
+ 
+      if (!storyText) return;
+      storyText.textContent = '';
+      let charIndex = 0;
+ 
+      function typeCharacter() {
+        if (charIndex < text.length) {
+          storyText.textContent += text[charIndex];
+          charIndex++;
+          globalTypewriterTimer = setTimeout(typeCharacter, typingSpeed);
+        } else {
+          if (arrow) arrow.classList.add('show');
+          if (options.onComplete) options.onComplete();
+        }
+      }
+      typeCharacter();
+    }
+  </script>
+ 
+  <!-- ════════════════════════════════════════
+       JavaScript：場景資料 & 主邏輯
+       ════════════════════════════════════════ -->
+  <script>
+    /* ══════════════════════════════════════════
+       場景故事文字資料
+       格式：
+         單段    → { zh: '...', en: '...' }
+         多段    → { zh: ['...','...'], en: ['...','...'] }
+         dialogue → { zh: { name:'', text:'' }, en: { name:'', text:'' } }
+         多段dialogue → { zh: { name:'', text:[] }, en: { name:'', text:[] } }
+    ══════════════════════════════════════════ */
+    const SCENE_DATA = {
+      /* ── 原始場景 ── */
+      '1-1': {
+        zh: '夜幕降臨，你在二期稻田中徘徊。月光灑落在搖曳的稻穗上，微風帶來淡淡的植物氣味。',
+        en: 'As night falls, you wander through the second-phase rice fields. The moonlight falls on the swaying rice ears, and the breeze brings a faint scent of plants.'
+      },
+      '1-2': {
+        zh: '你是一隻羽化完成的瘤野螟，你的使命只有一個：找到適合的作物，完成傳宗接代的使命。',
+        en: 'You are a fully emerged leaffolder moth. You have only one mission: find a suitable crop and fulfill your purpose to reproduce.'
+      },
+      '1-2-c': {
+        type: 'dialogue',
+        zh: { name: '瘤野螟', text: '我在夜空中盤旋，聞到了不同稻田飄來的氣味。' },
+        en: { name: 'Cnaphalocrocis medinalis', text: 'I hovered in the night sky, smelling the scents drifting from different rice fields.' }
+      },
+      '1-3': {
+        zh: '空氣突然變得刺鼻，濃烈的氣味迅速瀰漫整片稻田。',
+        en: 'Suddenly, the air turns pungent, and a strong scent rapidly spreads across the entire rice field.'
+      },
+      '1-3-c1': {
+        type: 'dialogue',
+        zh: { name: '瘤野螟', text: '這感覺不太對，我本能地急忙拍動翅膀，試圖遠離農田以避開這氣味。' },
+        en: { name: 'Cnaphalocrocis medinalis', text: 'Something feels wrong. Instinctively, I flutter my wings in a hurry, trying to stay away from the field to avoid this smell.' }
+      },
+      '1-3-c2': {
+        type: 'dialogue',
+        zh: { name: '瘤野螟', text: '熟悉的稻田景色慢慢消失在身後，我只能拖著虛弱的身軀，勉強在陌生的空中前進。' },
+        en: { name: 'Cnaphalocrocis medinalis', text: 'The familiar view of the rice fields slowly fades behind me. I can only drag my weak body forward, struggling through the unfamiliar sky.' }
+      },
+      '1-4': {
+        zh: '恭喜你找到了柔嫩安全的葉片，你穩穩落下，產下了一部分的卵。',
+        en: 'Congratulations on finding a soft and safe leaf. You land steadily and lay a portion of your eggs.'
+      },
+      '1-5': {
+        zh: '你找到了剛好能夠產卵的葉片，成功產了一部分的卵。',
+        en: 'You found a leaf just right for laying eggs and successfully laid a portion of them.'
+      },
+ 
+      /* ── Special 支線 ── */
+      '1-s1': {
+        zh: [
+          '當你完成產卵後，正準備離開葉片——',
+          '空氣突然變得不對勁。',
+          '不是農藥，也不是檸檬烯，是一種陌生、難以辨識的氣味。'
+        ],
+        en: [
+          'Just as you finish laying your eggs and prepare to leave the leaf—',
+          'The air suddenly feels different.',
+          'It is not chemical pesticides, nor is it Limonene; it is an unfamiliar, unrecognizable scent.'
+        ]
+      },
+      '1-s2-1': {
+        zh: '微弱的光在田間閃動，你試圖振翅，想趕快飛走——',
+        en: 'Faint lights flicker across the field; you desperately flap your wings, trying to escape quickly—'
+      },
+      '1-s2-c': {
+        type: 'dialogue',
+        zh: { name: '瘤野螟', text: '啊啊啊啊啊啊啊' },
+        en: { name: 'Cnaphalocrocis medinalis', text: 'Aaaaaaargh!' }
+      },
+      '1-s2-2': {
+        zh: '你被捕捉了。',
+        en: 'You have been captured.'
+      },
+      '1-s3': {
+        type: 'dialogue',
+        zh: { name: '瘤野螟', text: ['我在哪…………？', '在不遠處，我感受到了熟悉的存在。'] },
+        en: { name: 'Cnaphalocrocis medinalis', text: ['Where am I...?', 'Not too far away, I can sense a familiar presence.'] }
+      },
+      '1-s4-1': {
+        zh: [
+          '被帶來的幾束稻米，靜靜地放置在花盆中。',
+          '遠方，人類的聲音變得規律而冷靜。',
+          '你停在葉片上，周圍安靜得異常，比起在農田，你發現這裡少了許多同類的身影。'
+        ],
+        en: [
+          'A few bundles of harvested rice rest quietly inside a flower pot.',
+          'In the distance, human voices sound rhythmic, calm, and distant.',
+          'As you perch upon a leaf, an unusual silence envelops you; you realize that, unlike in the open fields, there are far fewer of your kind here.'
+        ]
+      },
+      '1-s4-c': {
+        type: 'dialogue',
+        zh: { name: '瘤野螟', text: '好可怕………' },
+        en: { name: 'Cnaphalocrocis medinalis', text: 'So terrifying...' }
+      },
+      '1-s4-2': {
+        zh: '你還活著，但你知道，未來只會更艱難。',
+        en: 'You are still alive, but you know that the future will only grow more difficult.'
+      },
+ 
+      /* ── 第二段 ── */
+      '1-2p2': {
+        zh: [
+          '當你完成產卵後，夜色仍未散去。',
+          '你停在稻葉間，卵已經產下，',
+          '你的子代，能不能順利成長？'
+        ],
+        en: [
+          'When you finish laying eggs, the night has not yet faded.',
+          'You rest among the rice leaves, the eggs have been laid,',
+          'Will your offspring grow up successfully?'
+        ]
+      },
+      '1-9': {
+        zh: [
+          '你降低活動量，守護著卵。',
+          '雖然環境安全，但子代成長速度相對緩慢。'
+        ],
+        en: [
+          'You reduce your activity level and guard the eggs.',
+          'Although the environment is safe, the offspring grow relatively slowly.'
+        ]
+      },
+      '1-10': {
+        zh: [
+          '你在葉片間持續活動，成功讓更多子代獲得養分。',
+          '雖然累，但你的子代成長速度顯著提升。'
+        ],
+        en: [
+          'You stay active among the leaves, successfully providing nutrients to more offspring.',
+          'Though exhausting, your offspring grow significantly faster.'
+        ]
+      },
+      '1-11-1': {
+        zh: [
+          '農民使用了農藥，刺鼻氣味迅速瀰漫整片田地，葉面開始殘留藥劑。',
+          '你與你的子代長期暴露在農藥之中，身體逐漸變得虛弱。',
+          '原本遍布稻田的族群開始迅速減少，許多同伴無法撐過下一次噴灑。',
+          '曾經熱鬧的稻田，慢慢安靜下來，只剩幾個身影還在掙扎。'
+        ],
+        en: [
+          'The farmer applied chemical pesticides. The pungent smell quickly filled the entire field, leaving toxic chemical residues on the leaves.',
+          'You and your offspring are chronically exposed to pesticides, and your bodies gradually grow weaker.',
+          'The population that once filled the rice fields begins to dwindle rapidly, as many companions fail to survive the next spray.',
+          'The once bustling rice field slowly falls silent, leaving only a few figures still struggling to survive.'
+        ]
+      },
+      '1-11-2': {
+        zh: [
+          '農民使用了農藥，刺鼻氣味迅速瀰漫整片田地，葉面開始殘留藥劑。',
+          '你的子代成功倖存了下來，並在一次次的環境淘汰中逐漸對農藥產生抗性。',
+          '即使農田持續噴灑藥劑，你的族群依然能夠適應並繁衍下去。',
+          '隨著時間推移，族群數量不斷增加，活動範圍也越來越廣，最終成為稻田中難以被消滅的強大存在。'
+        ],
+        en: [
+          'The farmer applied chemical pesticides. The pungent smell quickly filled the entire field, leaving toxic chemical residues on the leaves.',
+          'Your offspring successfully survive, gradually developing resistance to the pesticides through waves of environmental elimination.',
+          'Even if the fields are repeatedly sprayed with chemical agents, your population continues to adapt and thrive.',
+          'As time passes, the population expands constantly and their territory spreads wider, ultimately turning into a formidable existence in the rice fields that is nearly impossible to eradicate.'
+        ]
+      },
+ 
+      /* ── 好結局 good1 ── */
+      '1-12-1': {
+        zh: [
+          '黎明將至，霧氣仍未散去。',
+          '你停在被啃食過的稻葉上，深吸了一口氣——',
+          '沒有刺鼻的農藥，也沒有讓你不適的檸檬烯。',
+          '那些曾經威脅你的氣味，變得微弱、甚至消失了。'
+        ],
+        en: [
+          'Dawn is approaching, yet the mist has not faded.',
+          'You rest on a chewed rice leaf and take a deep breath—',
+          'There are no pungent chemical pesticides, nor any irritating Limonene.',
+          'Those scents that once threatened you have weakened, or even vanished.'
+        ]
+      },
+      '1-12-cs': {
+        zh: [
+          '稻田裡，到處都是被啃食過的痕跡。',
+          '葉片捲曲、莖部中空。'
+        ],
+        en: [
+          'Throughout the rice field, signs of heavy feeding are visible everywhere.',
+          'Leaves are tightly folded, and the stems are left hollowed.'
+        ]
+      },
+      '1-12-cd': {
+        type: 'dialogue',
+        zh: { name: '瘤野螟', text: '哈哈哈，人類的防禦失效了！' },
+        en: { name: 'Cnaphalocrocis medinalis', text: 'Hahaha, humans\' defenses have completely failed!' }
+      },
+      '1-12-c2': {
+        type: 'dialogue',
+        zh: { name: '瘤野螟', text: '人類，我終於勝利啦！' },
+        en: { name: 'Cnaphalocrocis medinalis', text: 'Humans, I have finally triumphed!' }
+      },
+      '1-12-3': {
+        zh: [
+          '你的子代成功孵化，開始大口大口地吃。',
+          '牠們不再需要躲藏，也不再需要小心翼翼。'
+        ],
+        en: [
+          'Your offspring successfully hatch and begin to feed voraciously.',
+          'They no longer need to hide, nor do they need to be cautious anymore.'
+        ]
+      },
+      '1-12-c3': {
+        type: 'dialogue',
+        zh: { name: '瘤野螟', text: '孩子們，這是我們的世界了！' },
+        en: { name: 'Cnaphalocrocis medinalis', text: 'My children, this world belongs to us now!' }
+      },
+ 
+      /* ── 壞結局 bad4 ── */
+      '1-13-1': {
+        zh: [
+          '你開始感覺到不對勁。',
+          '視線模糊，翅膀越來越沉，再也抬不起來。'
+        ],
+        en: [
+          'You begin to feel that something is terribly wrong.',
+          'Your vision blurs, and your wings grow heavier and heavier, until you can no longer lift them.'
+        ]
+      },
+      '1-13-c': {
+        type: 'dialogue',
+        zh: { name: '瘤野螟', text: '再見了…世界……' },
+        en: { name: 'Cnaphalocrocis medinalis', text: 'Goodbye... cruel world...' }
+      },
+      '1-13-2': {
+        zh: '田地之中，只剩下一具再也不會振翅的軀殼。',
+        en: 'In the middle of the field, nothing remains but a lifeless shell that will never spread its wings again.'
+      }
+    };
+ 
+    /* ══════════════════════════════════════════
+       多段文字狀態（scene 切換時重置）
+    ══════════════════════════════════════════ */
+    let multiPartState = { parts: [], index: 0, nextScene: null };
+ 
+    /* 動畫計時器 */
+    let animationTimer = null;
+ 
+    /* ══════════════════════════════════════════
+       主切換函數
+    ══════════════════════════════════════════ */
+    let currentScene = null;
+ 
+    function goToScene(sceneId) {
+      /* 停止打字機 */
+      if (globalTypewriterTimer) { clearTimeout(globalTypewriterTimer); globalTypewriterTimer = null; }
+ 
+      /* 停止動畫 */
+      if (animationTimer) { clearInterval(animationTimer); animationTimer = null; }
+ 
+      /* 隱藏所有場景 */
+      document.querySelectorAll('.scene').forEach(s => s.style.display = 'none');
+ 
+      const target = document.getElementById('scene-' + sceneId);
+      if (!target) { console.warn('Scene not found:', sceneId); return; }
+      target.style.display = 'flex';
+ 
+      currentScene = sceneId;
+      /* 把「目前可回到遊戲的進度頁」存成可直接導航的網址（含 hash），
+         讓側邊欄「回到遊戲」可以準確回到玩家正在進行的那一格場景，
+         而不是回到固定的首頁。 */
+      const baseUrl = window.location.href.split('#')[0];
+      localStorage.setItem('currentGamePage', baseUrl + '#' + sceneId);
+ 
+      initScene(sceneId);
+    }
+ 
+    /* ══════════════════════════════════════════
+       場景初始化
+    ══════════════════════════════════════════ */
+    function initScene(sceneId) {
+      const lang = localStorage.getItem('gameLanguage') || 'zh';
+ 
+      /* 初始化數值（進入 1-2-c 時） */
+      if (sceneId === '1-2-c') {
+        localStorage.setItem('health', '15');
+        localStorage.setItem('breeding', '0');
+        localStorage.setItem('generation', '0');
+      }
+ 
+      if (sceneId === '1-2-choose') {
+        bindChoiceButtons_1_2();
+        applyLang(lang);
+        return;
+      }
+ 
+      if (sceneId === '1-2p2-choose') {
+        bindChoiceButtons_1_2p2();
+        applyLang(lang);
+        return;
+      }
+ 
+      /* 動畫場景 */
+      if (sceneId === '1-s3') {
+        startPingPongAnimation();
+      }
+ 
+      const data = SCENE_DATA[sceneId];
+      if (!data) { applyLang(lang); return; }
+ 
+      renderScene(sceneId, lang);
+      applyLang(lang);
+    }
+ 
+    /* ══════════════════════════════════════════
+       渲染場景文字
+    ══════════════════════════════════════════ */
+    function renderScene(sceneId, lang) {
+  const data = SCENE_DATA[sceneId];
+  if (!data) return;
+  const sceneEl = document.getElementById('scene-' + sceneId);
+  if (!sceneEl) return;
+
+  const isDialogue = (data.type === 'dialogue');
+  let texts;
+  if (isDialogue) {
+    const d = data[lang] || data['zh'];
+    texts = Array.isArray(d.text) ? d.text : [d.text];
+  } else {
+    const raw = data[lang] || data['zh'];
+    texts = Array.isArray(raw) ? raw : [raw];
+  }
+
+  const isMulti = texts.length > 1;
+
+  /* 重點修正：先 clone/換新節點、綁好事件，拿到「真正留在畫面上」的節點，
+     再讓打字機寫入這個節點。絕對不能在打字機啟動之後才 clone，
+     否則打字機會繼續寫入被換掉的舊節點，畫面就會卡住不動。 */
+  const fresh = isMulti
+    ? bindMultiPartArrow(sceneEl, sceneId)
+    : bindSimpleArrow(sceneEl, sceneId);
+
+  const storyTextEl = fresh.querySelector('[id^="storyText-"]');
+  const arrowEl     = fresh.querySelector('.story-text-arrow');
+  if (arrowEl) arrowEl.classList.remove('show');
+
+  if (isMulti) {
+    multiPartState = { parts: texts, index: 0, nextScene: getNextScene(sceneId) };
+    runTypewriter(storyTextEl, texts[0], arrowEl, false);
+    multiPartState.index = 1;
+    waitForTypewriterThenShowArrow(arrowEl);
+  } else {
+    multiPartState = { parts: [], index: 0, nextScene: null };
+    runTypewriter(storyTextEl, texts[0], arrowEl, true);
+  }
+}
+ 
+    /* ── 執行打字機 ── */
+let isTyping = false;
+
+function runTypewriter(el, text, arrowEl, showArrowOnDone) {
+  if (!el) return;
+  el.textContent = '';
+  if (globalTypewriterTimer) { clearTimeout(globalTypewriterTimer); globalTypewriterTimer = null; }
+  let charIndex = 0;
+  const speed = 40;
+  isTyping = true;
+  function type() {
+    if (charIndex < text.length) {
+      el.textContent += text[charIndex++];
+      globalTypewriterTimer = setTimeout(type, speed);
+    } else {
+      globalTypewriterTimer = null;
+      isTyping = false;
+      if (showArrowOnDone && arrowEl) arrowEl.classList.add('show');
+    }
+  }
+  type();
+}
+ 
+    /* ── 多段箭頭綁定 ── */
+    function bindMultiPartArrow(sceneEl, sceneId) {
+  const box = sceneEl.querySelector('.story-text-box');
+  if (!box) return null;
+  const fresh = box.cloneNode(true);
+  box.parentNode.replaceChild(fresh, box);
+
+  const freshArrow = fresh.querySelector('.story-text-arrow');
+  const freshText  = fresh.querySelector('[id^="storyText-"]');
+
+  fresh.addEventListener('click', (e) => {
+    e.stopPropagation();
+    handleMultiPartClick(freshText, freshArrow, sceneId);
+  });
+  if (freshArrow) {
+    freshArrow.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleMultiPartClick(freshText, freshArrow, sceneId);
+    });
+  }
+  return fresh;
+}
+ 
+    function handleMultiPartClick(storyTextEl, arrowEl, sceneId) {
+      if (multiPartState.index < multiPartState.parts.length) {
+        if (arrowEl) arrowEl.classList.remove('show');
+        const text = multiPartState.parts[multiPartState.index++];
+        runTypewriter(storyTextEl, text, arrowEl, false);
+        waitForTypewriterThenShowArrow(arrowEl);
+      } else {
+        /* 已是最後一段，跳到下一場景 */
+        const next = multiPartState.nextScene || getNextScene(sceneId);
+        if (next) {
+          if (next.startsWith('END:')) {
+            doEnding(next.replace('END:', ''));
+          } else {
+            goToScene(next);
+          }
+        }
+      }
+    }
+ 
+    /* 等打字機結束後顯示箭頭（輪詢） */
+function waitForTypewriterThenShowArrow(arrowEl) {
+  if (!arrowEl) return;
+  const check = setInterval(() => {
+    if (!isTyping) {
+      arrowEl.classList.add('show');
+      clearInterval(check);
+    }
+  }, 100);
+}
+ 
+    /* ── 單段箭頭綁定 ── */
+function bindSimpleArrow(sceneEl, sceneId) {
+  const box = sceneEl.querySelector('.story-text-box');
+  if (!box) return null;
+  const fresh = box.cloneNode(true);
+  box.parentNode.replaceChild(fresh, box);
+
+  fresh.addEventListener('click', (e) => {
+    e.stopPropagation();
+    handleSimpleClick(sceneId, fresh);
+  });
+  const freshArrow = fresh.querySelector('.story-text-arrow');
+  if (freshArrow) {
+    freshArrow.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleSimpleClick(sceneId, fresh);
+    });
+  }
+  return fresh;
+}
+ 
+    function handleSimpleClick(sceneId, boxEl) {
+      /* 結局場景 */
+      const ending = boxEl.getAttribute('data-ending') ||
+                     (boxEl.querySelector('[data-ending]') && boxEl.querySelector('[data-ending]').getAttribute('data-ending'));
+      if (ending) { doEnding(ending); return; }
+ 
+      const next = getNextScene(sceneId);
+      if (next) goToScene(next);
+    }
+ 
+    /* ══════════════════════════════════════════
+       場景流程表（下一個場景）
+    ══════════════════════════════════════════ */
+    function getNextScene(sceneId) {
+      const map = {
+        '1-1':     '1-2',
+        '1-2':     '1-2-c',
+        '1-2-c':   '1-2-choose',
+        '1-3':     '1-3-c1',
+        '1-3-c1':  '1-3-c2',
+        '1-3-c2':  'END:end_bad2',
+        '1-4':     '1-2-choose',
+        '1-5':     '1-2-choose',
+        /* special */
+        '1-s1':    '1-s2-1',
+        '1-s2-1':  '1-s2-c',
+        '1-s2-c':  '1-s2-2',
+        '1-s2-2':  '1-s3',
+        '1-s3':    '1-s4-1',
+        '1-s4-1':  '1-s4-c',
+        '1-s4-c':  '1-s4-2',
+        '1-s4-2':  'END:end_normal1',
+        /* 第二段 */
+        '1-2p2':   '1-2p2-choose',
+        '1-9':     '1-2p2-choose',
+        '1-10':    '1-2p2-choose',
+        '1-11-1':  'END:end_bad1',
+        '1-11-2':  'END:end_good2',
+        /* good1 */
+        '1-12-1':  '1-12-cs',
+        '1-12-cs': '1-12-cd',
+        '1-12-cd': '1-12-c2',
+        '1-12-c2': '1-12-3',
+        '1-12-3':  '1-12-c3',
+        '1-12-c3': 'END:end_good1',
+        /* bad4 */
+        '1-13-1':  '1-13-c',
+        '1-13-c':  '1-13-2',
+        '1-13-2':  'END:end_bad4'
+      };
+      return map[sceneId] || null;
+    }
+ 
+    /* ══════════════════════════════════════════
+       結局處理
+    ══════════════════════════════════════════ */
+    function doEnding(endingKey) {
+      localStorage.setItem(endingKey, 'true');
+      window.location.href = '../menu/star.html';
+    }
+ 
+    /* ══════════════════════════════════════════
+       動畫（1-s3 ping-pong）
+    ══════════════════════════════════════════ */
+    const ANIMATION_FRAMES = [
+      '../../public/pictures/1-7-1.png',
+      '../../public/pictures/1-7-2.png',
+      '../../public/pictures/1-7-3.png',
+      '../../public/pictures/1-7-4.png',
+      '../../public/pictures/1-7-5.png'
+    ];
+    let animFrameIndex = 0;
+    let animDirection  = 1;
+ 
+    function startPingPongAnimation() {
+      if (animationTimer) clearInterval(animationTimer);
+      animFrameIndex = 0;
+      animDirection  = 1;
+      const imgEl = document.getElementById('animationImage');
+      if (!imgEl) return;
+      animationTimer = setInterval(() => {
+        animFrameIndex += animDirection;
+        if (animFrameIndex === ANIMATION_FRAMES.length - 1) animDirection = -1;
+        else if (animFrameIndex === 0) animDirection = 1;
+        imgEl.src = ANIMATION_FRAMES[animFrameIndex];
+      }, 250);
+    }
+ 
+    /* ══════════════════════════════════════════
+       選擇按鈕：1-2-choose
+    ══════════════════════════════════════════ */
+    function bindChoiceButtons_1_2() {
+      const container = document.getElementById('choicesContainer-1-2');
+      if (!container) return;
+      container.querySelectorAll('.choice-button').forEach(btn => {
+        const fresh = btn.cloneNode(true);
+        btn.parentNode.replaceChild(fresh, btn);
+        fresh.addEventListener('click', function() {
+          let health   = parseInt(localStorage.getItem('health'))   || 15;
+          let breeding = parseInt(localStorage.getItem('breeding')) || 0;
+          const choice = this.getAttribute('data-choice');
+          let next = '';
+          let playedSpecial = localStorage.getItem('end_special') === 'true';
+ 
+          if (choice === 'high-nitrogen') {
+            if (Math.random() < 0.5) {
+              /* 50%：農民使用檸檬烯 → 走 1-3 劇情，最終在 1-3-c2 判定為壞2結局 */
+              goToScene('1-3');
+              return;
+            } else {
+              /* 50%：農民不用檸檬烯 → 健康-2 繁殖+50 */
+              health -= 2;
+              breeding += 50;
+              next = '1-4';
+            }
+          } else if (choice === 'normal-rice') {
+            /* 健康-1 繁殖+15 */
+            health -= 1;
+            breeding += 15;
+            next = '1-5';
+          }
+ 
+          /* 健康值<=0 優先判定為壞4結局（整個操作的前提條件） */
+          if (health <= 0) {
+            localStorage.setItem('health', health.toString());
+            localStorage.setItem('breeding', breeding.toString());
+            goToScene('1-13-1');
+            return;
+          }
+ 
+          /* 繁殖率滿100 → 進入下一階段（保留原有 Special 結局 50% 機率分支） */
+          if (breeding >= 100) {
+            localStorage.setItem('health', health.toString());
+            localStorage.setItem('breeding', breeding.toString());
+            if (!playedSpecial && Math.random() < 0.5) {
+              localStorage.setItem('end_special', 'true');
+              goToScene('1-s1');
+            } else {
+              goToScene('1-2p2');
+            }
+            return;
+          }
+ 
+          localStorage.setItem('health', health.toString());
+          localStorage.setItem('breeding', breeding.toString());
+          goToScene(next);
+        });
+      });
+    }
+ 
+    /* ══════════════════════════════════════════
+       選擇按鈕：1-2p2-choose
+    ══════════════════════════════════════════ */
+    function bindChoiceButtons_1_2p2() {
+      const container = document.getElementById('choicesContainer-1-2p2');
+      if (!container) return;
+      container.querySelectorAll('.choice-button').forEach(btn => {
+        const fresh = btn.cloneNode(true);
+        btn.parentNode.replaceChild(fresh, btn);
+        fresh.addEventListener('click', function() {
+          let health     = parseInt(localStorage.getItem('health'))     || 15;
+          let breeding   = parseInt(localStorage.getItem('breeding'))   || 0;
+          let generation = parseInt(localStorage.getItem('generation')) || 0;
+          const choice = this.getAttribute('data-choice');
+          let next = '';
+ 
+          if (choice === 'latent') {
+            /* 健康-1 成長+10 */
+            health -= 1;
+            generation += 10;
+            next = '1-9';
+          } else if (choice === 'observe') {
+            if (Math.random() < 0.5) {
+              /* 50%：農民使用農藥 → 50/50 壞1 或 好2 */
+              if (Math.random() < 0.5) {
+                next = '1-11-1'; /* 壞1結局 */
+              } else {
+                next = '1-11-2'; /* 好2結局 */
+              }
+            } else {
+              /* 50%：農民不用農藥 → 健康-2 成長+40 */
+              health -= 2;
+              generation += 40;
+              next = '1-10';
+            }
+          }
+ 
+          const isPesticideEnding = (next === '1-11-1' || next === '1-11-2');
+ 
+          /* 健康值<=0 優先判定為壞4結局（除非已經被農藥事件決定了結局） */
+          if (!isPesticideEnding && health <= 0) {
+            next = '1-13-1';
+          } else if (!isPesticideEnding && generation >= 100) {
+            /* 成長值滿100 → 好1結局 */
+            next = '1-12-1';
+          }
+ 
+          localStorage.setItem('health', health.toString());
+          localStorage.setItem('breeding', breeding.toString());
+          localStorage.setItem('generation', generation.toString());
+          goToScene(next);
+        });
+      });
+    }
+ 
+    /* ══════════════════════════════════════════
+       套用語言（data-zh / data-en）
+    ══════════════════════════════════════════ */
+    function applyLang(lang) {
+      document.querySelectorAll('[data-zh]').forEach(el => {
+        el.textContent = lang === 'en'
+          ? (el.getAttribute('data-en') || el.textContent)
+          : (el.getAttribute('data-zh') || el.textContent);
+      });
+    }
+ 
+    /* ══════════════════════════════════════════
+       語言切換 → 重新渲染當前場景
+    ══════════════════════════════════════════ */
+    window.addEventListener('languageChanged', (event) => {
+      const lang = event.detail.lang;
+      applyLang(lang);
+      if (currentScene && SCENE_DATA[currentScene]) {
+        renderScene(currentScene, lang);
+      }
+    });
+ 
+    /* ══════════════════════════════════════════
+       啟動：若網址帶有對應場景的 hash（例如從「回到遊戲」跳回來），
+       就從該場景繼續；否則從頭開始 1-1。
+    ══════════════════════════════════════════ */
+    const initialHash = window.location.hash ? window.location.hash.substring(1) : '';
+    const initialScene = (initialHash && document.getElementById('scene-' + initialHash)) ? initialHash : '1-1';
+    goToScene(initialScene);
+  </script>
+ 
+</body>
+</html>

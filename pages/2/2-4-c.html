@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2-2 故事</title>
+  <link rel="stylesheet" href="../../public/css/shared.css" />
+  <link rel="stylesheet" href="../../public/css/dialogue-box.css" />
+  <link rel="stylesheet" href="../../public/css/typewriter.css" />
+  <style>
+    .story-text-box {
+      background: rgba(127, 108, 54, 0.92);
+      color: white;
+    }
+
+    .story-text-box::before {
+      border-bottom: 12px solid rgba(127, 108, 54, 0.92);
+    }
+
+    .character-name {
+        background: rgba(206, 163, 43, 0.92);
+        color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="../index.html" id="backToGameBtn"><img src="../../public/menu/left.svg" alt="" class="menu-icon"/><span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span></a></li>
+      <li><a href="../menu/star.html"><img src="../../public/menu/star.svg" alt="" class="menu-icon"/><span data-zh="收集結局" data-en="Endings">收集結局</span></a></li>
+      <li><a href="../../menu/egg.html"><img src="../../public/menu/egg.svg" alt="" class="menu-icon"/><span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span></a></li>
+      <li><a href="../menu/doc.html"><img src="../../public/menu/doc.svg" class="menu-icon"/><span data-zh="相關資訊" data-en="Information">相關資訊</span></a></li>
+      <li><a href="../menu/info.html"><img src="../../public/menu/info.svg" alt="" class="menu-icon"/><span data-zh="關於我們" data-en="About Us">關於我們</span></a></li>
+    </ul>
+  </nav>
+<div class="top-left-controls">
+  <button class="btn" id="alignBtn" aria-label="Align left">
+    <img id="alignIcon" src="../../public/menu/align-left.svg" alt="Align left" />
+  </button>
+</div>
+<div class="controls">
+  <button class="btn" id="musicBtn" aria-label="Toggle music">
+    <img id="musicIcon" src="../../public/menu/music.svg" alt="Music" />
+  </button>
+  <button class="btn" id="langBtn" aria-label="Toggle language">
+    <span id="langText">EN</span>
+  </button>
+</div>
+  <div class="game-container" id="gameContainer">
+    <div class="image-relative-wrapper">
+      <div class="story-text-box" id="storyTextBox">
+        <div class="character-name" id="charName" data-zh="稻米" data-en="Rice">稻米</div>
+        <div id="storyText" class="story-text"></div>
+        <a href="#" class="story-text-arrow" id="nextArrow"></a>
+      </div>
+      <img class="game-image" src="../../public/pictures/2-4-c.png" alt="2-4-c scene" />
+    </div>
+  </div>
+
+<script src="../../public/js/shared-controls.js"></script>
+<script src="../../public/js/typewriter.js"></script>
+<script>
+  const textData = {
+    zh: ['嗯……我會面臨什麼結局呢？'],
+    en: ['Hmm... what kind of ending awaits me?']
+  };
+
+  let currentPart = 0;
+  let currentLang = localStorage.getItem('gameLanguage') || 'zh';
+  const arrow = document.getElementById('nextArrow');
+
+  // ✅ 建立 TypewriterEffect 實例
+  const typewriter = new TypewriterEffect({
+    storyText: document.getElementById('storyText'),
+    arrow: arrow
+  });
+
+  const showNextPart = () => {
+    const texts = textData[currentLang];
+    if (currentPart < texts.length) {
+      arrow.classList.remove('show');
+      typewriter.start(texts[currentPart], () => {
+        arrow.classList.add('show');
+      });
+      currentPart++;
+    } else {
+      window.location.href = '#';
+    }
+  };
+
+  let initialized = false;
+
+  window.addEventListener('languageChanged', (e) => {
+    currentLang = e.detail.lang;
+    document.querySelectorAll('[data-zh]').forEach(el => {
+      el.innerText = currentLang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-zh');
+    });
+    if (initialized) {
+      currentPart = 0;
+      showNextPart();
+    }
+  });
+
+  arrow.addEventListener('click', (e) => {
+    e.preventDefault();
+    showNextPart();
+  });
+
+  localStorage.setItem('currentGamePage', window.location.href);
+  initialized = true;
+  showNextPart();
+</script>
+</body>
+</html>

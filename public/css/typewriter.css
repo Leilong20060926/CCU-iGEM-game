@@ -1,0 +1,42 @@
+/* 
+ * 打字機效果模板
+ * 用途：故事文本的打字機動畫效果
+ * 使用方式：在 .html 文件的 <script> 中使用 startTypewriter() 函數
+ * 
+ * 該CSS文件提供打字機效果的基礎樣式
+ */
+
+/* 故事文本容器 */
+#storyText {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* 打字機效果下的箭頭 */
+.story-text-arrow {
+  cursor: pointer;
+}
+
+.story-text-arrow.show {
+  animation: pulse 1s infinite;
+}
+
+/* 脈衝動畫效果 */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* 文字框的模糊效果（用於顯示選項時） */
+.story-text-box.blur {
+  pointer-events: none;
+}
+
+.game-image.blur {
+  pointer-events: none;
+}

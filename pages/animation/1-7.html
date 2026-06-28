@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1-7 故事動畫</title>
+  <link rel="stylesheet" href="../../public/css/shared.css" />
+  <link rel="stylesheet" href="../../public/css/text-box.css" /> <link rel="stylesheet" href="../../public/css/typewriter.css" />
+  
+  <link rel="preload" href="../../public/pictures/1-7-1.png" as="image" />
+  <link rel="preload" href="../../public/pictures/1-7-2.png" as="image" />
+  <link rel="preload" href="../../public/pictures/1-7-3.png" as="image" />
+  <link rel="preload" href="../../public/pictures/1-7-4.png" as="image" />
+  <link rel="preload" href="../../public/pictures/1-7-5.png" as="image" />
+
+  <style>
+    .story-text-box {
+      background: rgba(169, 113, 68, 0.85);
+      color: white;
+    }
+
+    /* 確保核心黑框遊戲容器置中 */
+    .game-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li>
+        <a href="../index.html" id="backToGameBtn">
+          <img src="../../public/menu/left.svg" alt="" class="menu-icon"/>
+          <span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/star.html">
+          <img src="../../public/menu/star.svg" alt="" class="menu-icon"/>
+          <span data-zh="收集結局" data-en="Endings">收集結局</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/egg.html">
+          <img src="../../public/menu/egg.svg" alt="" class="menu-icon"/>
+          <span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/doc.html">
+          <img src="../../public/menu/doc.svg" class="menu-icon"/>
+          <span data-zh="相關資訊" data-en="Information">相關資訊</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/info.html">
+          <img src="../../public/menu/info.svg" alt="" class="menu-icon"/>
+          <span data-zh="關於我們" data-en="About Us">關於我們</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="top-left-controls">
+    <button class="btn" id="alignBtn" aria-label="Align left">
+      <img id="alignIcon" src="../../public/menu/align-left.svg" alt="Align left" />
+    </button>
+  </div>
+  <div class="controls">
+    <button class="btn" id="musicBtn" aria-label="Toggle music">
+      <img id="musicIcon" src="../../public/menu/music.svg" alt="Music" />
+    </button>
+    <button class="btn" id="langBtn" aria-label="Toggle language">
+      <span id="langText">EN</span>
+    </button>
+  </div>
+
+  <div class="game-container" id="gameContainer">
+    <div class="image-relative-wrapper">
+      
+      <div class="story-text-box" id="storyTextBox">
+        <div id="storyText" class="story-text"></div>
+        <a href="#" class="story-text-arrow"></a>
+      </div>
+
+      <img id="animationImage" class="game-image" src="../../public/pictures/1-7-1.png" alt="1-7 animation scene" />
+      
+    </div>
+  </div>
+
+  <script src="../../public/js/shared-controls.js"></script>
+  <script src="../../public/js/typewriter.js"></script>
+  
+  <script>
+    /* ==========================================================================
+       1. 乒乓循環動畫邏輯 (背景持續播放)
+       ========================================================================== */
+    const animationFrames = [
+      '../../public/pictures/1-7-1.png',
+      '../../public/pictures/1-7-2.png',
+      '../../public/pictures/1-7-3.png',
+      '../../public/pictures/1-7-4.png',
+      '../../public/pictures/1-7-5.png'
+    ];
+
+    let currentFrameIndex = 0;
+    let direction = 1;
+    const animImageElement = document.getElementById('animationImage');
+
+    function playPingPongAnimation() {
+      currentFrameIndex += direction;
+      if (currentFrameIndex === animationFrames.length - 1) {
+        direction = -1;
+      } else if (currentFrameIndex === 0) {
+        direction = 1;
+      }
+      animImageElement.src = animationFrames[currentFrameIndex];
+    }
+    const gamePage17AnimationTimer = setInterval(playPingPongAnimation, 250);
+
+
+    /* ==========================================================================
+       2. 多語言在地化文本數據 (多段純文字台詞)
+       ========================================================================== */
+    const localDialogueData = {
+      zh: {
+        text: [
+          '你剛剛所經歷的選擇，並不只是遊戲，而是正在世界各地發生的現實。'
+        ]
+      },
+      en: {
+        text: [
+          'The choices you just experienced are not just a game, but a reality happening all over the world.'
+        ]
+      }
+    };
+
+    let textParts = [];
+    let currentPart = 0;
+    let currentLang = 'zh';
+    let typewriterTimer = null;
+
+    const arrow = document.querySelector('.story-text-arrow');
+    const storyTextEl = document.getElementById('storyText');
+
+    // 播放下一段台詞的函式
+    function showNextPart() {
+        if (typewriterTimer) clearInterval(typewriterTimer);
+  if (storyTextEl && currentPart < textParts.length) {
+    storyTextEl.innerHTML = '';
+    
+    const onDone = () => {
+      arrow.classList.add('show'); // 打字機打完才顯示箭頭
+    };
+
+    if (typeof startTypewriter === 'function') {
+      startTypewriter(textParts[currentPart], { onComplete: onDone });
+    } else if (typeof TypewriterEffect !== 'undefined') {
+      const typewriter = new TypewriterEffect();
+      typewriter.start(textParts[currentPart], onDone);
+    } else {
+      storyTextEl.innerText = textParts[currentPart];
+      onDone();
+    }
+    currentPart++;
+}
+    }
+
+    // 根據目前語言初始化或更新故事內容
+    function renderStory(lang) {
+      currentLang = lang;
+      const data = localDialogueData[lang] || localDialogueData['zh'];
+      textParts = data.text;
+      currentPart = 0; // 切換語言時從頭播放
+      showNextPart();
+    }
+    
+    window.addEventListener('load', () => {
+        renderStory(currentLang);
+    });
+
+    // 網頁載入時自動初始化
+    window.addEventListener('load', () => {
+      renderStory(currentLang);
+    });
+
+    // 監聽箭頭（三角形）點擊事件
+    if (arrow) {
+      arrow.addEventListener('click', (e) => {
+  e.preventDefault();
+  arrow.classList.remove('show'); // 先隱藏，防止連點
+
+  if (currentPart < textParts.length) {
+    showNextPart(); // 內部完成後會再 show 回來
+  } else {
+    window.location.href = 'a1.html';
+  }
+      });
+    }
+  </script>
+</body>
+</html>

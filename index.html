@@ -1,0 +1,2465 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NoFold</title>
+  <style>
+    /* ══════════════════════════════════════════
+       Base / Shared
+    ══════════════════════════════════════════ */
+    html, body {
+      margin: 0; padding: 0;
+      width: 100%; height: 100%;
+      min-height: 100vh;
+      background: #252947;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+    body { display: flex; justify-content: center; align-items: center; }
+    img { max-width: 100vw; max-height: 100vh; object-fit: contain; display: block; }
+
+    /* Controls */
+    .controls { position: fixed; top: 15px; right: 15px; display: flex; gap: 12px; z-index: 3000; }
+    .top-left-controls { position: fixed; top: 15px; left: 15px; display: flex; gap: 12px; z-index: 3000; }
+    .btn {
+      width: 56px; height: 56px;
+      border: 1px solid #000; border-radius: 18px; cursor: pointer;
+      display: inline-flex; justify-content: center; align-items: center;
+      padding: 0; background: #FFEE91; color: #000000; font-weight: 700;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 16px 30px rgba(0,0,0,0.14); background: #ffe666; }
+    .btn:active { transform: translateY(0); }
+    .btn img { width: 24px; height: 24px; max-width: none; max-height: none; }
+    #langText { font-size: 1.1rem; letter-spacing: 0.06em; }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed; left: -280px; top: 0;
+      width: 280px; height: 100vh;
+      background: #F5C857; z-index: 2005;
+      transition: left 0.3s ease; padding-top: 95px;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+    .sidebar-menu li { padding: 0; }
+    .sidebar-menu a {
+      display: flex; align-items: center; gap: 12px; padding: 16px 24px;
+      color: #ffffff; text-decoration: none; font-size: 1rem; font-weight: 600;
+      border-left: 4px solid transparent; transition: all 0.2s ease; cursor: pointer;
+    }
+    .menu-icon { width: 24px; height: 24px; flex-shrink: 0; }
+    .sidebar-menu a:hover { background: rgba(255,255,255,0.1); border-left-color: #ffffff; padding-left: 28px; }
+    .sidebar-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0); z-index: 998;
+      transition: background 0.3s ease; pointer-events: none;
+    }
+    .sidebar-overlay.show { background: rgba(0,0,0,0.3); pointer-events: auto; }
+
+    /* Pages */
+    .page { display: none; width: 100%; height: 100%; position: relative; }
+    .page.active { display: flex; flex-direction: column; }
+
+    /* ══════════════════════════════════════════
+       Game Container / Image Wrapper
+    ══════════════════════════════════════════ */
+    .game-container {
+      position: relative; display: flex;
+      justify-content: center; align-items: center;
+      flex: 1; width: 100%; height: 100%;
+    }
+    .image-relative-wrapper {
+      position: relative; display: inline-block;
+      width: calc(100vw - 1002px); min-width: 270px;
+      max-width: calc(100vw - 1002px); margin: auto; box-sizing: border-box;
+    }
+    /* 選單頁（首頁/egg/doc/info）填滿 game-container */
+    #page-index .image-relative-wrapper,
+    #page-egg   .image-relative-wrapper,
+    #page-doc   .image-relative-wrapper,
+    #page-info  .image-relative-wrapper {
+      width: calc(100vw - 1002px) !important;
+      min-width: 270px;
+    }
+    .game-image {
+      display: block; width: 100%; height: auto;
+      border: 2px solid #000; box-sizing: border-box;
+      transition: filter 0.3s ease;
+    }
+    .game-image.blurred { filter: blur(8px); }
+
+    /* ══════════════════════════════════════════
+       Story Text Box (char 1 - green)
+    ══════════════════════════════════════════ */
+    .story-text-box {
+      position: absolute; bottom: 30px; left: 50%;
+      transform: translateX(-50%); width: 75%; min-height: 130px;
+      box-sizing: border-box; z-index: 50; overflow: visible;
+      transition: filter 0.3s ease;
+      background: rgba(60, 100, 60, 0.85); color: white;
+      border-radius: 10px; padding: 20px; font-size: 1rem;
+      line-height: 1.6; text-align: left;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3); cursor: pointer;
+    }
+    .story-text-box.blur { filter: blur(5px); opacity: 0.5; pointer-events: none; }
+    .story-text-arrow {
+      width: 0; height: 0;
+      border-left: 12px solid transparent; border-right: 12px solid transparent;
+      border-top: 12px solid white; margin: 15px auto 0; cursor: pointer;
+      opacity: 0; transition: opacity 0.5s ease-in-out; display: block;
+    }
+    .story-text-arrow.show { opacity: 1; }
+
+    /* Dialogue box style */
+    .scene-dialogue .story-text-box {
+      border-radius: 15px; bottom: 25px; width: 85%; min-height: 110px; padding: 12px 18px;
+    }
+    .scene-dialogue .story-text-box::before {
+      content: ''; position: absolute; top: -12px; left: 25px;
+      width: 0; height: 0;
+      border-left: 12px solid transparent; border-right: 0 solid transparent;
+    }
+    .character-name {
+      font-weight: bold; padding: 5px 12px; border-radius: 12px;
+      display: inline-block; margin-bottom: 8px; font-size: 0.85rem;
+    }
+    .character-name.hidden { display: none; }
+    .story-text { margin: 0; }
+
+    /* Char 1 (leaffolder) specific */
+    #page-char1 .story-text-box { background: rgba(60,100,60,0.85); color: white; }
+    #page-char1 .scene-dialogue .story-text-box { background: rgba(180,220,180,0.95); color: #333; }
+    #page-char1 .scene-dialogue .story-text-box::before { border-bottom-color: rgba(180,220,180,0.95); }
+    #page-char1 .scene-dialogue .story-text-arrow { border-top-color: #333; }
+    #page-char1 .character-name { background: rgba(100,180,100,0.9); color: white; }
+
+    /* Char 2 (rice) specific */
+    #page-char2 .story-text-box { background: rgba(127,108,54,0.92); color: white; }
+    #page-char2 .story-text-box:hover { background: rgba(140,120,60,0.95); }
+    #page-char2 .scene-dialogue .story-text-box { background: rgba(206,163,43,0.92); color: white; }
+    #page-char2 .scene-dialogue .story-text-box:hover { background: rgba(220,175,50,0.95); }
+    #page-char2 .scene-dialogue .story-text-box::before { border-bottom-color: rgba(206,163,43,0.92); }
+    #page-char2 .character-name { background: rgba(127,108,54,0.92); color: white; }
+    #page-char2 .story-text-arrow { border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid rgba(255,255,255,0.8); margin: 12px auto 0; pointer-events: none; }
+
+    /* Char 3 (farmer) specific */
+    #page-char3 .story-text-box { background: rgba(45,82,119,0.85); color: white; }
+    #page-char3 .story-text-box:hover { background: rgba(55,95,135,0.92); }
+    #page-char3 .scene-dialogue .story-text-box { background: rgba(83,164,207,0.92); color: white; }
+    #page-char3 .scene-dialogue .story-text-box:hover { background: rgba(95,178,220,0.95); }
+    #page-char3 .scene-dialogue .story-text-box::before { border-bottom-color: rgba(83,164,207,0.92); }
+    #page-char3 .character-name { background: rgba(45,99,160,0.92); color: white; }
+    #page-char3 .story-text-arrow { border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid rgba(255,255,255,0.8); margin: 12px auto 0; pointer-events: none; }
+
+    /* ══════════════════════════════════════════
+       Choices
+    ══════════════════════════════════════════ */
+    .choices-container {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); width: 90%; max-width: 420px;
+      border-radius: 15px; padding: 40px 30px; z-index: 2000;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5); display: none;
+    }
+    .choices-container.show { display: block; }
+    #page-char1 .choices-container { background: rgba(180,220,180,0.95); color: #333; }
+    #page-char2 .choices-container { background: rgba(127,108,54,0.95); color: white; }
+    #page-char3 .choices-container { background: rgba(35,65,95,0.95); color: white; max-width: 420px; }
+    .choices-title { font-size: 1.3rem; font-weight: bold; text-align: center; margin-bottom: 20px; line-height: 1.5; }
+    .choices-list { list-style: none; padding: 0; margin: 0; }
+    .choice-button {
+      display: block; width: 100%; padding: 16px; margin-bottom: 12px;
+      border-radius: 8px; font-size: 1.05rem; cursor: pointer;
+      text-align: center; font-family: inherit; font-weight: 500;
+      transition: all 0.3s ease; border: 2px solid;
+    }
+    #page-char1 .choice-button { background: rgba(100,180,100,0.3); border-color: rgba(100,180,100,0.6); color: #333; }
+    #page-char1 .choice-button:hover { background: rgba(100,180,100,0.4); border-color: rgba(100,180,100,0.8); transform: translateY(-2px); }
+    #page-char2 .choice-button { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); color: white; }
+    #page-char1 .choice-button:active { background: rgba(100,180,100,0.5); transform: translateY(0); }
+    #page-char2 .choice-button:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.5); transform: translateY(-2px); }
+    #page-char3 .choice-button { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white; }
+    #page-char2 .choice-button:active { background: rgba(255,255,255,0.35); transform: translateY(0); }
+    #page-char3 .choice-button:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.4); transform: translateY(-2px); }
+    #page-char3 .choice-button:active { background: rgba(255,255,255,0.3); transform: translateY(0); }
+
+    /* ══════════════════════════════════════════
+       INDEX page
+    ══════════════════════════════════════════ */
+    #page-index .image-relative-wrapper {
+      width: calc(100vw - 1002px); min-width: 270px;
+      position: relative; overflow: hidden;
+    }
+
+    .start-button {
+      position: absolute; left: 25%; top: 25%;
+      transform: translate(-50%, -50%); cursor: pointer; z-index: 2;
+      background: transparent; border: none; padding: 0;
+    }
+    .start-button:hover .png-button { transform: scale(1.04); }
+    .start-button:active .png-button { transform: scale(0.98); }
+    .png-button {
+      width: 85px; height: 53px;
+      background-image: url('public/buttoms/Homepage_buttom.PNG');
+      background-size: contain; background-repeat: no-repeat; background-color: transparent;
+      border: none; cursor: pointer; text-indent: -9999px; transition: transform 0.2s ease;
+    }
+    #characterScene { display: none; }
+    .character-buttons-container {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; justify-content: center; align-items: center;
+      z-index: 50; opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+    }
+    .character-buttons-container.show { opacity: 1; pointer-events: auto; }
+    .character-button {
+      cursor: pointer; background: transparent; border: none; padding: 0;
+      position: absolute; opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+    }
+    .character-button.show { opacity: 1; pointer-events: auto; }
+    .character-button-1 { left: 58%; top: 23.5%; transform: translate(-50%, -50%); z-index: 2; }
+    .character-button-2 { left: 72%; top: 61.3%; transform: translate(-50%, -50%); z-index: 2; }
+    .character-button-3 { left: 20%; top: 28.5%; transform: translate(-50%, -50%); z-index: 2; }
+    .character-img-button {
+      width: 83px; height: 45px; background-size: contain; background-repeat: no-repeat;
+      background-color: transparent; border: none; border-radius: 10px; cursor: pointer;
+      text-indent: -9999px; transition: transform 0.2s ease;
+    }
+    .character-button:hover .character-img-button { transform: scale(1.04); }
+    .character-button:active .character-img-button { transform: scale(0.98); }
+    .game-tip-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center;
+      z-index: 2000; opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
+    }
+    .game-tip-overlay.show { opacity: 1; pointer-events: auto; }
+    .game-tip-box {
+      background: white; border-radius: 20px; padding: 40px 30px 30px;
+      max-width: 300px; width: 85%; height: 360px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3); position: relative;
+      text-align: center; border: 1px solid #000;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .game-tip-icon {
+      width: 50px; height: 50px; background: #FFEE91; border: 1px solid #000;
+      border-radius: 50%; display: flex; justify-content: center; align-items: center;
+      font-size: 28px; color: black; font-weight: bold;
+      position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+    }
+    .game-tip-title { font-size: 1.2rem; font-weight: 700; color: #333; margin-bottom: 15px; margin-top: 10px; }
+    .game-tip-content { font-size: 0.95rem; line-height: 1.6; color: #666; margin-bottom: 20px; }
+    .game-tip-arrow {
+      width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent;
+      border-top: 12px solid #333; margin: 0 auto; cursor: pointer;
+    }
+
+    /* ══════════════════════════════════════════
+       Char1 scene wrapper
+    ══════════════════════════════════════════ */
+    #sceneWrapper1 { display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; }
+    .scene { display: none; width: 100%; height: 100%; justify-content: center; align-items: center; }
+
+    /* ══════════════════════════════════════════
+       MENU PAGES (star, egg, doc, info)
+    ══════════════════════════════════════════ */
+    .menu-page-wrapper {
+      max-width: 1200px; width: 90%;
+      max-height: calc(100vh - 120px);
+      margin: 80px auto 40px auto; padding: 25px;
+      background: rgba(255,255,255,0.15); backdrop-filter: blur(10px);
+      border-radius: 16px; border: 1px solid rgba(255,255,255,0.2);
+      box-sizing: border-box; overflow-y: auto; overflow-x: hidden;
+    }
+    .menu-page-wrapper::-webkit-scrollbar { width: 8px; }
+    .menu-page-wrapper::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); border-radius: 4px; }
+    .menu-page-wrapper::-webkit-scrollbar-thumb { background: rgba(46,90,46,0.4); border-radius: 4px; }
+    .wall-title {
+      text-align: center; color: #2e5a2e; font-size: 28px; margin-top: 0; margin-bottom: 30px;
+      font-weight: bold; text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+    }
+    .menu-content-title {
+      text-align: center; color: white; font-size: 22px; margin-top: 0; margin-bottom: 20px;
+      font-weight: bold;
+    }
+    .menu-content-body {
+      color: rgba(255,255,255,0.9); font-size: 1rem; line-height: 1.8;
+    }
+
+    /* Star / achievements */
+    .achieve-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); padding-bottom: 10px; gap: 15px;
+    }
+    .achieve-card {
+      background: rgba(255,255,255,0.85); border-radius: 12px; overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 2px solid #b4dcb4;
+      text-align: center; transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex; flex-direction: column;
+    }
+    .achieve-card:not(.locked) { cursor: pointer; }
+    .achieve-card:not(.locked):hover { transform: translateY(-5px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
+    .img-wrapper { position: relative; width: 100%; padding-top: 70%; background: #e0e0e0; overflow: hidden; }
+    .achieve-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: filter 0.3s ease; }
+    .achieve-name {
+      padding: 10px 6px; font-size: 14px; color: #333; font-weight: bold;
+      background: #f4fbf4; border-top: 1px solid #e2f2e2;
+      flex-grow: 1; display: flex; align-items: center; justify-content: center;
+    }
+    .achieve-card.locked .achieve-img { filter: grayscale(100%) blur(4px); opacity: 0.4; }
+    .lock-overlay {
+      display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 2; align-items: center; justify-content: center;
+      font-size: 36px; font-weight: bold; color: #888;
+    }
+    .achieve-card.locked .lock-overlay { display: flex; }
+    .achieve-card.locked .achieve-name { color: #999; background: #eaeaea; }
+    @media (max-width: 900px) { .achieve-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 600px) { .achieve-grid { grid-template-columns: repeat(1,1fr); } }
+
+    /* Modal */
+    :root {
+      --current-theme: #4caf50; --current-bg: #f5f7fa;
+      --current-light-theme: #fff9c4; --current-text: #f57f17;
+      --border-color: #e0e0e0;
+    }
+    .modal-overlay {
+      display: none; position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh; background: rgba(0,0,0,0.6);
+      z-index: 999; justify-content: center; align-items: center;
+      padding: 20px; box-sizing: border-box;
+    }
+    .result-card {
+      background-color: #ffffff; width: 100%; max-width: 420px; aspect-ratio: 9/16;
+      max-height: 85vh; border-radius: 20px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.25); overflow: hidden;
+      display: flex; flex-direction: column; gap: 10px; padding: 16px;
+      border: 3px solid var(--current-theme); box-sizing: border-box;
+      animation: modalFadeIn 0.3s ease;
+    }
+    @keyframes modalFadeIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .header-section { display: flex; border: 2px dashed var(--border-color); border-radius: 8px; height: 76px; overflow: hidden; flex-shrink: 0; }
+    .header-name { flex: 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; background-color: var(--current-bg); border-right: 2px dashed var(--border-color); color: #333; padding: 10px 12px; position: relative; overflow: hidden; }
+    .header-ending-title { font-size: 22px; font-weight: bold; color: #333; line-height: 1.2; margin-bottom: 4px; width: 100%; text-align: center; position: absolute; top: 50%; left: 0; transform: translateY(-60%); padding: 0 8px; box-sizing: border-box; }
+    .header-role-name { font-size: 11px; color: var(--current-text); font-weight: normal; position: relative; z-index: 1; }
+    .header-image { width: 76px; height: 76px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; overflow: hidden; }
+    .header-image img { width: 100%; height: 100%; object-fit: cover; }
+    .content-section { display: flex; gap: 10px; align-items: stretch; flex: 1; min-height: 0; }
+    .tags-container { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; gap: 5px; min-width: 0; }
+    .tag-item { background-color: var(--current-theme); color: white; padding: 5px 7px; border-radius: 20px; text-align: center; font-size: 10.5px; font-weight: 500; }
+    .text-section { flex: 2.2; border: 2px solid var(--border-color); border-radius: 8px; padding: 10px; overflow-y: auto; background-color: #ffffff; color: #444; font-size: 12.5px; line-height: 1.6; white-space: pre-line; box-sizing: border-box; }
+    .corresponding-wrapper { display: flex; flex-direction: column; border: 2px solid #222; border-radius: 10px; overflow: hidden; flex-shrink: 1; min-height: 0; }
+    .corresponding-header { background-color: #111; color: #fff; text-align: center; padding: 5px; font-size: 12px; font-weight: bold; letter-spacing: 1px; }
+    .corresponding-body { background-color: #fff; padding: 10px; display: flex; justify-content: center; align-items: center; gap: 12px; overflow-x: auto; overflow-y: hidden; flex-shrink: 1; min-height: 0; }
+    .sub-ending-item { display: flex; flex-direction: column; align-items: center; text-align: center; width: 76px; flex-shrink: 0; }
+    .sub-ending-img-box { width: 64px; height: 64px; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; background: #f9f9f9; margin-bottom: 4px; }
+    .sub-ending-img-box img { width: 100%; height: 100%; object-fit: cover; }
+    .sub-ending-img-box.sub-locked img { filter: grayscale(100%) blur(2px); opacity: 0.4; }
+    .sub-ending-name { display: none; }
+    .hint-box { flex-shrink: 0 !important; border: 2px dotted var(--current-theme); border-radius: 8px; background-color: #fafafa; color: var(--current-theme); font-size: 10.5px; font-weight: 500; text-align: center; padding: 6px 10px; line-height: 1.4; }
+    .buttons-row-only { display: flex; gap: 6px; flex-shrink: 0 !important; }
+    .template-btn { flex: 1; padding: 0 4px; height: 38px; border: none; border-radius: 8px; font-size: 11.5px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; white-space: nowrap; }
+    .btn-share { background-color: #ff9800; color: white; }
+    .btn-replay { background-color: #e0e0e0; color: #333; }
+    .btn-close { background-color: #bdbdbd; color: #333; }
+
+    /* Farmer overlay button */
+    .scene-overlay-btn {
+      position: absolute; left: 27%; top: 74%;
+      transform: translate(-50%, -50%); width: 120px; height: 50px;
+      background-image: url('public/buttoms/3-6_buttom.PNG');
+      background-size: contain; background-repeat: no-repeat;
+      background-color: transparent; border: none; cursor: pointer; z-index: 10;
+      transition: transform 0.2s ease;
+    }
+    .scene-overlay-btn:hover { transform: translate(-50%, -50%) scale(1.04); }
+    .scene-overlay-btn:active { transform: translate(-50%, -50%) scale(0.98); }
+    .scene-overlay-btn.hidden { display: none; }
+
+    /* Google 登入 Overlay */
+    .google-login-overlay {
+      display: none; position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh; background: rgba(0,0,0,0.55);
+      z-index: 9999; justify-content: center; align-items: center;
+    }
+    .google-login-overlay.show { display: flex; }
+    .google-login-box {
+      background: #fff; border-radius: 16px; padding: 32px 28px 24px;
+      max-width: 360px; width: 90%; box-shadow: 0 12px 40px rgba(0,0,0,0.28);
+      display: flex; flex-direction: column; align-items: center; gap: 0;
+      border: 1px solid #e0e0e0; position: relative;
+    }
+    .gl-step { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .gl-step.hidden { display: none; }
+    .gl-google-logo { width: 40px; height: 40px; margin-bottom: 4px; }
+    .gl-title { font-size: 1.1rem; font-weight: 700; color: #202124; text-align: center; margin: 0; }
+    .gl-subtitle { font-size: 0.85rem; color: #5f6368; text-align: center; margin: 0; line-height: 1.55; }
+    .gl-divider { width: 100%; height: 1px; background: #e8eaed; }
+    .gl-sign-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 11px 16px; border-radius: 8px;
+      border: 1px solid #dadce0; background: #fff; cursor: pointer;
+      font-size: 0.95rem; font-weight: 600; color: #3c4043;
+      transition: background 0.15s, box-shadow 0.15s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .gl-sign-btn:hover { background: #f8f9fa; box-shadow: 0 2px 6px rgba(0,0,0,0.13); }
+    .gl-sign-btn img { width: 20px; height: 20px; }
+    .gl-cancel {
+      font-size: 0.85rem; color: #5f6368; background: none; border: none;
+      cursor: pointer; padding: 4px 10px; border-radius: 6px; transition: background 0.15s;
+    }
+    .gl-cancel:hover { background: #f1f3f4; }
+    .gl-avatar {
+      width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid #e0e0e0;
+    }
+    .gl-avatar-placeholder {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: #4285f4; display: flex; align-items: center; justify-content: center;
+      font-size: 28px; color: #fff; font-weight: 700;
+    }
+    .gl-user-name { font-size: 1.05rem; font-weight: 700; color: #202124; margin: 0; text-align: center; }
+    .gl-user-email { font-size: 0.85rem; color: #5f6368; margin: 0; text-align: center; }
+    .gl-confirm-btn {
+      width: 100%; padding: 12px; border-radius: 8px; border: none;
+      background: #4285f4; color: #fff; font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .gl-confirm-btn:hover { background: #3367d6; }
+    .gl-switch-btn {
+      font-size: 0.82rem; color: #4285f4; background: none; border: none;
+      cursor: pointer; padding: 2px 6px; text-decoration: underline;
+    }
+
+    /* ── SHARE SHEET ── */
+    .ss-retro    { background: #2e7d32; }
+
+
+  </style>
+</head>
+<body>
+
+  <!-- Google 登入 Overlay (兩步驟) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <div class="google-login-overlay" id="googleLoginOverlay">
+    <div class="google-login-box">
+      <!-- Step 1: 提示登入 -->
+      <div class="gl-step" id="glStep1">
+        <img class="gl-google-logo" src="https://www.google.com/favicon.ico" alt="Google" />
+        <p class="gl-title" id="glTitle1">登入以繼續分享</p>
+        <p class="gl-subtitle" id="glSubtitle1">請先登入你的 Google 帳號，才能分享結局卡片。</p>
+        <div class="gl-divider"></div>
+        <button class="gl-sign-btn" id="glSignBtn">
+          <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google" />
+          <span id="glSignBtnText">使用 Google 帳號登入</span>
+        </button>
+        <button class="gl-cancel" id="glCancelBtn">取消</button>
+      </div>
+      <!-- Step 2: 確認帳號 -->
+      <div class="gl-step hidden" id="glStep2">
+        <img class="gl-google-logo" src="https://www.google.com/favicon.ico" alt="Google" />
+        <p class="gl-title" id="glTitle2">確認帳號</p>
+        <div id="glAvatarWrap"></div>
+        <p class="gl-user-name" id="glUserName"></p>
+        <p class="gl-user-email" id="glUserEmail"></p>
+        <div class="gl-divider"></div>
+        <p class="gl-subtitle" id="glSubtitle2">以此帳號繼續分享結局卡片？</p>
+        <button class="gl-confirm-btn" id="glConfirmBtn">確認繼續</button>
+        <button class="gl-switch-btn" id="glSwitchBtn">切換帳號</button>
+        <button class="gl-cancel" id="glCancelBtn2">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SHARE SHEET OVERLAY
+  ══════════════════════════════════════════ -->
+
+  <!-- ══════════════════════════════════════════
+       Shared UI (Sidebar + Controls)
+  ══════════════════════════════════════════ -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li><a onclick="resumeGame()" id="backToGameBtn"><img src="public/menu/left.svg" alt="" class="menu-icon"/><span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span></a></li>
+      <li><a onclick="navTo('star')"><img src="public/menu/star.svg" alt="" class="menu-icon"/><span data-zh="收集結局" data-en="Endings">收集結局</span></a></li>
+      <li><a onclick="navTo('egg')"><img src="public/menu/egg.svg" alt="" class="menu-icon"/><span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span></a></li>
+      <li><a onclick="navTo('doc')"><img src="public/menu/doc.svg" alt="" class="menu-icon"/><span data-zh="相關資訊" data-en="Information">相關資訊</span></a></li>
+      <li><a onclick="navTo('info')"><img src="public/menu/info.svg" alt="" class="menu-icon"/><span data-zh="關於我們" data-en="About Us">關於我們</span></a></li>
+    </ul>
+  </nav>
+  <div class="top-left-controls">
+    <button class="btn" id="alignBtn" aria-label="Align left">
+      <img id="alignIcon" src="public/menu/align-left.svg" alt="Align left" />
+    </button>
+  </div>
+  <div class="controls">
+    <button class="btn" id="musicBtn" aria-label="Toggle music">
+      <img id="musicIcon" src="public/menu/music.svg" alt="Music" />
+    </button>
+    <button class="btn" id="langBtn" aria-label="Toggle language">
+      <span id="langText">EN</span>
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PAGE: INDEX
+  ══════════════════════════════════════════ -->
+  <div id="page-index" class="page active">
+    <div class="game-tip-overlay" id="gameTipOverlay">
+      <div class="game-tip-box">
+        <div class="game-tip-icon">!</div>
+        <div class="game-tip-title" data-zh="遊戲提示" data-en="Game Tips">遊戲提示</div>
+        <div class="game-tip-content" id="tipContent1"></div>
+        <div class="game-tip-arrow" id="tipArrow1"></div>
+      </div>
+    </div>
+    <div class="game-tip-overlay" id="gameTipOverlay2">
+      <div class="game-tip-box">
+        <div class="game-tip-icon">!</div>
+        <div class="game-tip-title" data-zh="遊戲提示" data-en="Game Tips">遊戲提示</div>
+        <div class="game-tip-content" id="tipContent2"></div>
+        <div class="game-tip-arrow" id="tipArrow2"></div>
+      </div>
+    </div>
+    <div class="game-container" id="gameContainerIndex">
+      <div class="image-relative-wrapper" style="width:calc(100vw - 1002px);min-width:270px;position:relative;overflow:hidden;">
+
+        <div id="homepageScene">
+          <img class="game-image" src="public/pictures/homepage.PNG" alt="homepage" />
+          <a class="start-button" id="startBtn" href="#">
+            <button class="png-button">前往下一頁</button>
+          </a>
+        </div>
+        <div id="characterScene">
+          <div class="character-buttons-container" id="characterButtonsContainer">
+            <a class="character-button show character-button-1" href="#" onclick="navTo('char1');return false;">
+              <button class="character-img-button" style="background-image: url('public/buttoms/Character1.PNG');"></button>
+            </a>
+            <a class="character-button show character-button-2" href="#" onclick="navTo('char2');return false;">
+              <button class="character-img-button" style="background-image: url('public/buttoms/Character2.PNG');"></button>
+            </a>
+            <a class="character-button show character-button-3" href="#" onclick="navTo('char3');return false;">
+              <button class="character-img-button" style="background-image: url('public/buttoms/Character3.PNG');"></button>
+            </a>
+          </div>
+          <img class="game-image" id="characterImage" src="public/pictures/characters.PNG" alt="characters" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PAGE: CHARACTER 1 (瘤野螟)
+  ══════════════════════════════════════════ -->
+  <div id="page-char1" class="page">
+    <div id="sceneWrapper1">
+      <!-- 1-1 -->
+      <div id="scene-1-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-1" data-goto="1-2"><div id="storyText-1-1" class="story-text"></div><span class="story-text-arrow" data-goto="1-2"></span></div>
+        <img class="game-image" src="public/pictures/1-1.png" alt="1-1" />
+      </div></div></div>
+      <!-- 1-2 -->
+      <div id="scene-1-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-2" data-goto="1-2-c"><div id="storyText-1-2" class="story-text"></div><span class="story-text-arrow" data-goto="1-2-c"></span></div>
+        <img class="game-image" src="public/pictures/1-2.png" alt="1-2" />
+      </div></div></div>
+      <!-- 1-2-c dialogue -->
+      <div id="scene-1-2-c" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-2-c" data-goto="1-2-choose"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-2-c" class="story-text"></div><span class="story-text-arrow" data-goto="1-2-choose"></span></div>
+        <img class="game-image" src="public/pictures/1-2-c.png" alt="1-2-c" />
+      </div></div></div>
+      <!-- 1-2-choose -->
+      <div id="scene-1-2-choose" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="choices-container show" id="choicesContainer-1-2">
+          <div class="choices-title" data-zh="請選擇要繁殖於哪一種稻作：" data-en="Please choose which rice crop to reproduce on:">請選擇要繁殖於哪一種稻作：</div>
+          <ul class="choices-list">
+            <li><button class="choice-button" data-choice="high-nitrogen" data-zh="繁殖於高氮密集的稻作" data-en="Reproduce on nitrogen-dense rice crops">繁殖於高氮密集的稻作</button></li>
+            <li><button class="choice-button" data-choice="normal-rice" data-zh="繁殖於綠意漸褪的稻作" data-en="Reproduce on fading green rice crops">繁殖於綠意漸褪的稻作</button></li>
+          </ul>
+        </div>
+        <img class="game-image" style="filter:blur(8px);" src="public/pictures/1-2-c.png" alt="1-2-c" />
+      </div></div></div>
+      <!-- 1-3 -->
+      <div id="scene-1-3" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-3" data-goto="1-3-c1"><div id="storyText-1-3" class="story-text"></div><span class="story-text-arrow" data-goto="1-3-c1"></span></div>
+        <img class="game-image" src="public/pictures/1-3.png" alt="1-3" />
+      </div></div></div>
+      <!-- 1-3-c1 -->
+      <div id="scene-1-3-c1" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-3-c1" data-goto="1-3-c2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-3-c1" class="story-text"></div><span class="story-text-arrow" data-goto="1-3-c2"></span></div>
+        <img class="game-image" src="public/pictures/1-3-c.png" alt="1-3-c" />
+      </div></div></div>
+      <!-- 1-3-c2 -->
+      <div id="scene-1-3-c2" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-3-c2" data-ending="end_bad2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-3-c2" class="story-text"></div><span class="story-text-arrow" data-ending="end_bad2"></span></div>
+        <img class="game-image" src="public/pictures/1-3-c.png" alt="1-3-c" />
+      </div></div></div>
+      <!-- 1-4 -->
+      <div id="scene-1-4" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-4" data-goto="1-2-choose"><div id="storyText-1-4" class="story-text"></div><span class="story-text-arrow" data-goto="1-2-choose"></span></div>
+        <img class="game-image" src="public/pictures/1-4.png" alt="1-4" />
+      </div></div></div>
+      <!-- 1-5 -->
+      <div id="scene-1-5" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-5" data-goto="1-2-choose"><div id="storyText-1-5" class="story-text"></div><span class="story-text-arrow" data-goto="1-2-choose"></span></div>
+        <img class="game-image" src="public/pictures/1-5.png" alt="1-5" />
+      </div></div></div>
+      <!-- 1-s1 -->
+      <div id="scene-1-s1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-s1"><div id="storyText-1-s1" class="story-text"></div><span class="story-text-arrow"></span></div>
+        <img class="game-image" src="public/pictures/1-1.png" alt="1-s1" />
+      </div></div></div>
+      <!-- 1-s2-1 -->
+      <div id="scene-1-s2-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-s2-1" data-goto="1-s2-c"><div id="storyText-1-s2-1" class="story-text"></div><span class="story-text-arrow" data-goto="1-s2-c"></span></div>
+        <img class="game-image" src="public/pictures/1-6.png" alt="1-s2-1" />
+      </div></div></div>
+      <!-- 1-s2-c -->
+      <div id="scene-1-s2-c" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-s2-c" data-goto="1-s2-2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-s2-c" class="story-text"></div><span class="story-text-arrow" data-goto="1-s2-2"></span></div>
+        <img class="game-image" src="public/pictures/1-6-c.png" alt="1-s2-c" />
+      </div></div></div>
+      <!-- 1-s2-2 -->
+      <div id="scene-1-s2-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-s2-2" data-goto="1-s3"><div id="storyText-1-s2-2" class="story-text"></div><span class="story-text-arrow" data-goto="1-s3"></span></div>
+        <img class="game-image" src="public/pictures/1-6.png" alt="1-s2-2" />
+      </div></div></div>
+      <!-- 1-s3 animation -->
+      <div id="scene-1-s3" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-s3"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-s3" class="story-text"></div><span class="story-text-arrow"></span></div>
+        <img class="game-image" id="animationImage" src="public/pictures/1-7-1.png" alt="animation" />
+      </div></div></div>
+      <!-- 1-s4-1 -->
+      <div id="scene-1-s4-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-s4-1"><div id="storyText-1-s4-1" class="story-text"></div><span class="story-text-arrow"></span></div>
+        <img class="game-image" src="public/pictures/1-8.png" alt="1-s4-1" />
+      </div></div></div>
+      <!-- 1-s4-c -->
+      <div id="scene-1-s4-c" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-s4-c" data-goto="1-s4-2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-s4-c" class="story-text"></div><span class="story-text-arrow" data-goto="1-s4-2"></span></div>
+        <img class="game-image" src="public/pictures/1-8-c.png" alt="1-s4-c" />
+      </div></div></div>
+      <!-- 1-s4-2 -->
+      <div id="scene-1-s4-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-s4-2" data-ending="end_special1"><div id="storyText-1-s4-2" class="story-text"></div><span class="story-text-arrow" data-ending="end_special1"></span></div>
+        <img class="game-image" src="public/pictures/1-8.png" alt="1-s4-2" />
+      </div></div></div>
+      <!-- 1-2p2 -->
+      <div id="scene-1-2p2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-2p2"><div id="storyText-1-2p2" class="story-text"></div><span class="story-text-arrow"></span></div>
+        <img class="game-image" src="public/pictures/1-2.png" alt="1-2p2" />
+      </div></div></div>
+      <!-- 1-2p2-choose -->
+      <div id="scene-1-2p2-choose" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="choices-container show" id="choicesContainer-1-2p2">
+          <div class="choices-title" data-zh="請選擇要如何保護你的子代：" data-en="Please choose how to protect your offspring:">請選擇要如何保護你的子代：</div>
+          <ul class="choices-list">
+            <li><button class="choice-button" data-choice="latent" data-zh="採取潛伏策略" data-en="Adopt a latent strategy">採取潛伏策略</button></li>
+            <li><button class="choice-button" data-choice="observe" data-zh="主動外出觀察周遭環境" data-en="Actively go out to observe the surroundings">主動外出觀察周遭環境</button></li>
+          </ul>
+        </div>
+        <img class="game-image" style="filter:blur(8px);" src="public/pictures/1-2-c.png" alt="1-2p2-choose" />
+      </div></div></div>
+      <!-- 1-9 -->
+      <div id="scene-1-9" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-9"><div id="storyText-1-9" class="story-text"></div><span class="story-text-arrow"></span></div>
+        <img class="game-image" src="public/pictures/1-10.png" alt="1-10" />
+      </div></div></div>
+      <!-- 1-10 -->
+      <div id="scene-1-10" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-10"><div id="storyText-1-10" class="story-text"></div><span class="story-text-arrow"></span></div>
+        <img class="game-image" src="public/pictures/1-9.png" alt="1-9" />
+      </div></div></div>
+      <!-- 1-11-1 -->
+      <div id="scene-1-11-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-11-1" data-ending="end_bad1"><div id="storyText-1-11-1" class="story-text"></div><span class="story-text-arrow" data-ending="end_bad1"></span></div>
+        <img class="game-image" src="public/pictures/1-11.png" alt="1-11" />
+      </div></div></div>
+      <!-- 1-11-2 -->
+      <div id="scene-1-11-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-11-2" data-ending="end_good2"><div id="storyText-1-11-2" class="story-text"></div><span class="story-text-arrow" data-ending="end_good2"></span></div>
+        <img class="game-image" src="public/pictures/1-11.png" alt="1-11" />
+      </div></div></div>
+      <!-- 1-12-1 -->
+      <div id="scene-1-12-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-12-1"><div id="storyText-1-12-1" class="story-text"></div><span class="story-text-arrow"></span></div>
+        <img class="game-image" src="public/pictures/3-1.png" alt="3-1" />
+      </div></div></div>
+      <!-- 1-12-cs -->
+      <div id="scene-1-12-cs" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-12-cs"><div id="storyText-1-12-cs" class="story-text"></div><span class="story-text-arrow"></span></div>
+        <img class="game-image" src="public/pictures/1-12.png" alt="1-12" />
+      </div></div></div>
+      <!-- 1-12-cd -->
+      <div id="scene-1-12-cd" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-12-cd" data-goto="1-12-c2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-12-cd" class="story-text"></div><span class="story-text-arrow" data-goto="1-12-c2"></span></div>
+        <img class="game-image" src="public/pictures/1-12-c.png" alt="1-12-c" />
+      </div></div></div>
+      <!-- 1-12-c2 -->
+      <div id="scene-1-12-c2" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-12-c2" data-goto="1-12-3"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-12-c2" class="story-text"></div><span class="story-text-arrow" data-goto="1-12-3"></span></div>
+        <img class="game-image" src="public/pictures/1-12-c2.png" alt="1-12-c2" />
+      </div></div></div>
+      <!-- 1-12-3 -->
+      <div id="scene-1-12-3" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-12-3"><div id="storyText-1-12-3" class="story-text"></div><span class="story-text-arrow"></span></div>
+        <img class="game-image" src="public/pictures/1-12.png" alt="1-12" />
+      </div></div></div>
+      <!-- 1-12-c3 -->
+      <div id="scene-1-12-c3" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-12-c3" data-ending="end_good1"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-12-c3" class="story-text"></div><span class="story-text-arrow" data-ending="end_good1"></span></div>
+        <img class="game-image" src="public/pictures/1-12-c2.png" alt="1-12-c2" />
+      </div></div></div>
+      <!-- 1-13-1 -->
+      <div id="scene-1-13-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-13-1"><div id="storyText-1-13-1" class="story-text"></div><span class="story-text-arrow"></span></div>
+        <img class="game-image" src="public/pictures/1-13.png" alt="1-13" />
+      </div></div></div>
+      <!-- 1-13-c -->
+      <div id="scene-1-13-c" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-13-c" data-goto="1-13-2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-13-c" class="story-text"></div><span class="story-text-arrow" data-goto="1-13-2"></span></div>
+        <img class="game-image" src="public/pictures/1-13-c.png" alt="1-13-c" />
+      </div></div></div>
+      <!-- 1-13-2 -->
+      <div id="scene-1-13-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="story-text-box" id="storyTextBox-1-13-2" data-ending="end_bad4"><div id="storyText-1-13-2" class="story-text"></div><span class="story-text-arrow" data-ending="end_bad4"></span></div>
+        <img class="game-image" src="public/pictures/1-13.png" alt="1-13" />
+      </div></div></div>
+    </div><!-- /sceneWrapper1 -->
+  </div><!-- /page-char1 -->
+
+  <!-- ══════════════════════════════════════════
+       PAGE: CHARACTER 2 (水稻)
+  ══════════════════════════════════════════ -->
+  <div id="page-char2" class="page">
+    <div class="choices-container" id="choicesContainer2">
+      <div class="choices-title" id="choicesTitle2"></div>
+      <ul class="choices-list" id="choicesList2"></ul>
+    </div>
+    <div class="game-container">
+      <div class="image-relative-wrapper" id="sceneWrapper2">
+        <div class="story-text-box" id="storyTextBox2">
+          <div class="character-name hidden" id="charName2"></div>
+          <div id="storyText2" class="story-text"></div>
+          <span class="story-text-arrow" id="nextArrow2"></span>
+        </div>
+        <img class="game-image" id="gameImage2" src="public/pictures/2-10.png" alt="scene" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PAGE: CHARACTER 3 (農民)
+  ══════════════════════════════════════════ -->
+  <div id="page-char3" class="page">
+    <div class="choices-container" id="choicesContainer3">
+      <div class="choices-title" id="choicesTitle3"></div>
+      <ul class="choices-list" id="choicesList3"></ul>
+    </div>
+    <div class="game-container">
+      <div class="image-relative-wrapper" id="sceneWrapper3">
+        <div class="story-text-box" id="storyTextBox3">
+          <div class="character-name hidden" id="charName3"></div>
+          <div id="storyText3" class="story-text"></div>
+          <span class="story-text-arrow" id="nextArrow3"></span>
+        </div>
+        <button class="scene-overlay-btn hidden" id="sceneOverlayBtn3"></button>
+        <img class="game-image" id="gameImage3" src="public/pictures/3-1.png" alt="scene" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PAGE: ENDING ANIMATION (第一次結局動畫)
+  ══════════════════════════════════════════ -->
+  <div id="page-ending-anim" class="page">
+    <div class="game-container">
+      <div class="image-relative-wrapper">
+        <div class="story-text-box" id="endingAnimTextBox" style="background:rgba(169,113,68,0.85);color:white;cursor:pointer;user-select:none;">
+          <div id="endingAnimText" class="story-text"></div>
+          <span class="story-text-arrow" id="endingAnimArrow"></span>
+        </div>
+        <img id="endingAnimImage" class="game-image" src="public/pictures/1-7-1.png" alt="animation scene" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PAGE: STAR (收集結局)
+  ══════════════════════════════════════════ -->
+  <div id="page-star" class="page">
+    <div class="achieve-wall-container menu-page-wrapper">
+      <h2 class="wall-title"></h2>
+      <div class="achieve-grid">
+        <div class="achieve-card locked" id="card_1_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-g1.png" /></div><div class="achieve-name" id="name_1_g1">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-g2.png" /></div><div class="achieve-name" id="name_1_g2">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-b1.png" /></div><div class="achieve-name" id="name_1_b1">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-b2.png" /></div><div class="achieve-name" id="name_1_b2">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-b3.png" /></div><div class="achieve-name" id="name_1_b3">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_b4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-b4.png" /></div><div class="achieve-name" id="name_1_b4">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-b1.png" /></div><div class="achieve-name" id="name_2_b1">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-b2.png" /></div><div class="achieve-name" id="name_2_b2">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-b3.png" /></div><div class="achieve-name" id="name_2_b3">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-g1.png" /></div><div class="achieve-name" id="name_2_g1">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-g2.png" /></div><div class="achieve-name" id="name_2_g2">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_g3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-g3.png" /></div><div class="achieve-name" id="name_2_g3">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_g4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-g4.png" /></div><div class="achieve-name" id="name_2_g4">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-b1.png" /></div><div class="achieve-name" id="name_3_b1">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-b2.png" /></div><div class="achieve-name" id="name_3_b2">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-b3.png" /></div><div class="achieve-name" id="name_3_b3">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_b4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-b4.png" /></div><div class="achieve-name" id="name_3_b4">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-g1.png" /></div><div class="achieve-name" id="name_3_g1">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-g2.png" /></div><div class="achieve-name" id="name_3_g2">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_g3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-g3.png" /></div><div class="achieve-name" id="name_3_g3">？？？</div></div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal-overlay" id="resultModal">
+      <div class="result-card" id="modalCardNode">
+        <div class="header-section">
+          <div class="header-name"><span class="header-ending-title" id="modalEndingName">結局名稱</span><span class="header-role-name" id="modalRoleName">角色</span></div>
+          <div class="header-image" id="modalMainImgBox"></div>
+        </div>
+        <div class="content-section">
+          <div class="tags-container" id="modalTagsContainer"></div>
+          <div class="text-section" id="modalDescription"></div>
+        </div>
+        <div class="corresponding-wrapper">
+          <div class="corresponding-header" data-zh="相應結局" data-en="Corresponding Endings">相應結局</div>
+          <div class="corresponding-body" id="modalCorrespondingBody"></div>
+        </div>
+        <div class="hint-box" id="modalHintBox"></div>
+        <div class="buttons-row-only">
+          <button class="template-btn btn-share" id="modalShareBtn" data-zh="分享圖片" data-en="Share Image">分享圖片</button>
+          <button class="template-btn btn-replay" id="modalReplayBtn" data-zh="再玩一次" data-en="Replay">再玩一次</button>
+          <button class="template-btn btn-close" id="modalCloseBtn" data-zh="關閉" data-en="Close">關閉</button>
+        </div>
+        <!-- 隱藏的舊按鈕，保持 JS 相容 -->
+        <button id="modalDownloadBtn" data-zh="下載圖片" data-en="Download" style="display:none"></button>
+        <button id="modalCopyBtn" data-zh="複製圖片" data-en="Copy Image" style="display:none"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PAGE: EGG (遊戲彩蛋)
+  ══════════════════════════════════════════ -->
+  <div id="page-egg" class="page">
+    <div class="game-container">
+    <div class="image-relative-wrapper" id="eggBox" style="width:calc(100vw - 1002px);min-width:270px;overflow-y:auto;max-height:100vh;background:#fcfcfc;border:2px solid #000;padding:25px;color:#333;box-sizing:border-box;display:block;position:relative;">
+      <style>
+        #page-egg .egg-section-title {
+          font-size: 16pt; font-weight: bold; color: #000;
+          margin-top: 25px; margin-bottom: 15px; padding-bottom: 4px;
+          display: inline-block; border-bottom: 4px solid #ffcc00;
+        }
+        #page-egg .egg-section-title:first-child { margin-top: 5px; }
+        #page-egg .egg-body-text {
+          font-size: 11pt; line-height: 1.85; color: #333; margin-bottom: 20px;
+        }
+        #page-egg .egg-wallpaper-grid {
+          display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-top: 8px;
+        }
+        #page-egg .egg-wallpaper-card {
+          position: relative; border-radius: 8px; overflow: hidden;
+          border: 2px solid #e0e0e0; cursor: pointer;
+          transition: transform 0.15s, box-shadow 0.15s;
+        }
+        #page-egg .egg-wallpaper-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+        #page-egg .egg-wallpaper-card img { width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover; }
+        #page-egg .egg-dl-label {
+          position: absolute; bottom: 0; left: 0; right: 0;
+          background: rgba(0,0,0,0.6); color: #fff;
+          font-size: 0.8rem; font-weight: 700; text-align: center;
+          padding: 6px; opacity: 0; transition: opacity 0.15s;
+        }
+        #page-egg .egg-wallpaper-card:hover .egg-dl-label { opacity: 1; }
+      </style>
+
+      <!-- ── 鎖定 overlay（fixed，浮在畫面正中間）── -->
+      <div id="eggLocked" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:2000;background:rgba(0,0,0,0.3);justify-content:center;align-items:center;">
+        <div class="game-tip-box" style="position:relative;">
+          <div class="game-tip-icon">!</div>
+          <div class="game-tip-title" data-zh="彩蛋尚未開放" data-en="Easter Egg Locked">彩蛋尚未開放</div>
+          <div class="game-tip-content" data-zh="尚未解鎖全部結局，先收集完所有結局再回來吧。" data-en="You haven't unlocked all endings yet. Collect all endings first and come back!">尚未解鎖全部結局，先收集完所有結局再回來吧。</div>
+          <div class="game-tip-arrow"></div>
+        </div>
+      </div>
+
+      <!-- ── 已完成：桌布下載 ── -->
+      <div id="eggUnlocked" style="display:none;">
+        <div class="egg-section-title" data-zh="遊戲彩蛋" data-en="Easter Egg">遊戲彩蛋</div>
+        <p class="egg-body-text"
+          data-zh="恭喜完成所有結局！<br>你成功體驗了每位角色的選擇與命運。<br>作為獎勵，點擊以下團隊設計的桌布即可下載圖片！"
+          data-en="Congratulations on completing all endings!<br>You have experienced the choices and fate of every character.<br>As a reward, click on the wallpapers below designed by our team to download!">
+          恭喜完成所有結局！<br>你成功體驗了每位角色的選擇與命運。<br>作為獎勵，點擊以下團隊設計的桌布即可下載圖片！
+        </p>
+        <div class="egg-wallpaper-grid" id="eggWallpaperGrid">
+          <div class="egg-wallpaper-card" data-src="public/egg/wallpaper1.png" data-name="NoFold_wallpaper1.png">
+            <img src="public/egg/wallpaper1.png" alt="桌布 1" />
+            <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
+          </div>
+          <div class="egg-wallpaper-card" data-src="public/egg/wallpaper2.png" data-name="NoFold_wallpaper2.png">
+            <img src="public/egg/wallpaper2.png" alt="桌布 2" />
+            <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
+          </div>
+          <div class="egg-wallpaper-card" data-src="public/egg/wallpaper3.png" data-name="NoFold_wallpaper3.png">
+            <img src="public/egg/wallpaper3.png" alt="桌布 3" />
+            <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
+          </div>
+          <div class="egg-wallpaper-card" data-src="public/egg/wallpaper4.png" data-name="NoFold_wallpaper4.png">
+            <img src="public/egg/wallpaper4.png" alt="桌布 4" />
+            <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PAGE: DOC (相關資訊)
+  ══════════════════════════════════════════ -->
+  <div id="page-doc" class="page">
+    <div class="game-container">
+    <div class="image-relative-wrapper" style="width:calc(100vw - 1002px);min-width:270px;overflow-y:auto;max-height:100vh;background:#fcfcfc;border:2px solid #000;padding:25px;color:#333;box-sizing:border-box;display:block;">
+      <style>
+        #page-doc .doc-news-title {
+          font-size: 16pt; font-weight: bold; color: #000;
+          margin-top: 25px; margin-bottom: 15px; padding-bottom: 4px;
+          display: inline-block; border-bottom: 4px solid #ffcc00;
+        }
+        #page-doc .doc-news-title:first-child { margin-top: 5px; }
+        #page-doc .doc-news-list { list-style-type: none !important; padding-left: 0 !important; margin-bottom: 20px; width: 100%; }
+        #page-doc .doc-news-list li {
+          font-size: 11pt; line-height: 1.7; position: relative;
+          padding-left: 20px; margin-bottom: 12px; text-align: left; color: #333;
+        }
+        #page-doc .doc-news-list li::before {
+          content: "■"; position: absolute; left: 0;
+          color: #ffcc00; font-size: 9pt; top: 2px;
+        }
+        #page-doc .doc-video-box {
+          background: #f0f0f0; border: 1px solid #ddd; padding: 20px;
+          text-align: center; margin-top: 25px; border-radius: 4px; width: 100%; box-sizing: border-box;
+        }
+      </style>
+
+      <div class="doc-news-title" data-zh="瘤野螟的破壞" data-en="The Damage of Striped Rice Borers">瘤野螟的破壞</div>
+      <ul class="doc-news-list">
+        <li data-zh="瘤野螟為水稻二期作重要害蟲之一，也是亞洲所有稻作生態系中最具破壞性的害蟲之一。" data-en="The striped rice borer is one of the most important pests in the second crop of rice, and one of the most destructive pests across all rice ecosystems in Asia.">瘤野螟為水稻二期作重要害蟲之一，也是亞洲所有稻作生態系中最具破壞性的害蟲之一。</li>
+        <li data-zh="若慣行稻不使用農藥，瘤野螟幼蟲會將葉片捲起並藏匿其中啃食稻葉，這會導致水稻產生嚴重的白葉情況，使稻穗無法結實而無法收成。" data-en="Without pesticides, the larvae roll up rice leaves and hide inside to feed on them, causing severe white leaf symptoms that prevent the rice from forming grains and make harvest impossible.">若慣行稻不使用農藥，瘤野螟幼蟲會將葉片捲起並藏匿其中啃食稻葉，這會導致水稻產生嚴重的白葉情況，使稻穗無法結實而無法收成。</li>
+      </ul>
+
+      <div class="doc-news-title" data-zh="農藥的危害" data-en="The Hazards of Pesticides">農藥的危害</div>
+      <ul class="doc-news-list">
+        <li data-zh="致癌風險：有實驗顯示，在美國農業密集的區域，農民以及居住在農田附近裡的居民，因環境中的農藥殘留（隨風飄散、水源污染），面臨極高的致癌風險。" data-en="Cancer Risk: Studies show that in intensive farming areas in the United States, farmers and nearby residents face extremely high cancer risks due to pesticide residues spread through wind and water contamination.">致癌風險：有實驗顯示，在美國農業密集的區域，農民以及居住在農田附近裡的居民，因環境中的農藥殘留（隨風飄散、水源污染），面臨極高的致癌風險。</li>
+        <li data-zh="惡性循環：化學農藥與抗藥性形成惡性循環，導致農業生產過程中不斷地交替用藥、混合。" data-en="Vicious Cycle: Chemical pesticides and resistance form a vicious cycle, leading to the continuous alternation and mixing of chemicals in agricultural production.">惡性循環：化學農藥與抗藥性形成惡性循環，導致農業生產過程中不斷地交替用藥、混合。</li>
+        <li data-zh="蜂群破壞：長期農藥的累積會使新女王蜂的產量暴跌 85%，對整體蜂群生態造成毀滅性破壞。" data-en="Bee Colony Collapse: Long-term pesticide accumulation can cause new queen bee production to plummet by 85%, causing devastating damage to entire bee colony ecosystems.">蜂群破壞：長期農藥的累積會使新女王蜂的產量暴跌 85%，對整體蜂群生態造成毀滅性破壞。</li>
+        <li data-zh="生態衝擊：農藥毒殺野生授粉昆蟲，甚至嚴重影響瀕危物種（如兩棲類樹蛙）的生存空間。" data-en="Ecological Impact: Pesticides poison wild pollinating insects and seriously threaten the survival of endangered species such as amphibious tree frogs.">生態衝擊：農藥毒殺野生授粉昆蟲，甚至嚴重影響瀕危物種（如兩棲類樹蛙）的生存空間。</li>
+      </ul>
+
+      <div class="doc-news-title" data-zh="我們能做些什麼" data-en="What Can We Do">我們能做些什麼</div>
+      <ul class="doc-news-list">
+        <li data-zh="支持有機稻米，保護整體自然環境、同時保護自身健康。" data-en="Support organic rice to protect the natural environment and your own health at the same time.">支持有機稻米，保護整體自然環境、同時保護自身健康。</li>
+        <li data-zh="支持環保標章，在日常生活中優先購買並選用環保包裝的產品。" data-en="Support eco-labels and prioritize purchasing products with environmentally friendly packaging in your daily life.">支持環保標章，在日常生活中優先購買並選用環保包裝的產品。</li>
+      </ul>
+
+      <div class="doc-news-title" id="docVideoTitle">CCU iGEM10<br>稻米研究紀錄</div>
+      <div class="doc-video-box">
+        <video controls style="width:100%;border-radius:4px;">
+          <source src="public/video/grow.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       PAGE: INFO (關於我們)
+  ══════════════════════════════════════════ -->
+  <div id="page-info" class="page">
+    <div class="game-container">
+    <div class="image-relative-wrapper" style="width:calc(100vw - 1002px);min-width:270px;overflow-y:auto;max-height:100vh;background:#fcfcfc;border:2px solid #000;padding:25px;color:#333;box-sizing:border-box;display:block;">
+      <style>
+        #page-info .info-news-title {
+          font-size: 16pt; font-weight: bold; color: #000;
+          margin-top: 25px; margin-bottom: 15px; padding-bottom: 4px;
+          display: inline-block; border-bottom: 4px solid #ffcc00;
+        }
+        #page-info .info-news-title:first-child { margin-top: 5px; }
+        #page-info .info-news-body { font-size: 11pt; line-height: 1.8; color: #333; margin-bottom: 20px; text-align: left; }
+        #page-info .info-link-buttons { display: flex; flex-direction: row; gap: 14px; margin-top: 10px; margin-bottom: 20px; }
+        #page-info .info-link-btn {
+          display: flex; align-items: center; justify-content: center;
+          padding: 14px; background: #FFEE91; border: 1px solid #000;
+          border-radius: 18px; cursor: pointer; text-decoration: none;
+          color: #000; font-weight: 700; font-size: 1rem;
+          box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+          transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        #page-info .info-link-btn:hover { transform: translateY(-1px); box-shadow: 0 16px 30px rgba(0,0,0,0.14); background: #ffe666; }
+        #page-info .info-link-btn:active { transform: translateY(0); }
+        #page-info .info-link-btn img { width: 28px; height: 28px; flex-shrink: 0; }
+      </style>
+
+      <div class="info-news-title" data-zh="簡介" data-en="About Us">簡介</div>
+      <p class="info-news-body" data-zh="我們是 No Fold，CCU-Taiwan iGEM 團隊，由國立中正大學各學院的學生所組成，涵蓋理學院、工學院、社會科學院、文學院，以及跨領域學士學位學程的同學。" data-en="We are No Fold, the CCU-Taiwan iGEM team, composed of students from various colleges at National Chung Cheng University, including the College of Science, College of Engineering, College of Social Sciences, College of Humanities, and the Interdisciplinary Bachelor's Degree Program.">我們是 No Fold，CCU-Taiwan iGEM 團隊，由國立中正大學各學院的學生所組成，涵蓋理學院、工學院、社會科學院、文學院，以及跨領域學士學位學程的同學。</p>
+      <p class="info-news-body" data-zh="我們團隊計畫利用生物合成學的方式，開發可用於驅趕農業害蟲瘤野螟的系統，希望大家了解農藥對世界的危害以及增進大眾對有機稻米的認知。" data-en="Our team plans to use synthetic biology to develop a system that can repel the agricultural pest striped rice borer. We hope to raise awareness about the harm pesticides cause to the world and promote public understanding of organic rice.">我們團隊計畫利用生物合成學的方式，開發可用於驅趕農業害蟲瘤野螟的系統，希望大家了解農藥對世界的危害以及增進大眾對有機稻米的認知。</p>
+
+      <div class="info-news-title" data-zh="相關連結" data-en="Related Links">相關連結</div>
+      <div class="info-link-buttons">
+        <a class="info-link-btn" href="https://www.instagram.com/ccuigem/" target="_blank">
+          <img src="https://cdn-icons-png.flaticon.com/512/3621/3621435.png" alt="Instagram" />
+        </a>
+        <a class="info-link-btn" href="https://igem.ccu.edu.tw" target="_blank">
+          <img src="https://cdn-icons-png.flaticon.com/512/17724/17724849.png" alt="Website" />
+        </a>
+        <a class="info-link-btn" href="https://www.youtube.com/@ccutaiwanigemteam133/featured" target="_blank">
+          <img src="https://cdn-icons-png.flaticon.com/512/5968/5968852.png" alt="YouTube" />
+        </a>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+  <script>
+  /* ══════════════════════════════════════════
+     ROUTER / NAVIGATION
+  ══════════════════════════════════════════ */
+  let currentPage = 'index';
+  const pages = ['index','char1','char2','char3','ending-anim','star','egg','doc','info'];
+
+  function resumeGame() {
+    const saved = localStorage.getItem('currentGamePage');
+    if (!saved) { navTo('index'); return; }
+
+    // char1 格式：'char1#sceneId'
+    if (saved.startsWith('char1#')) {
+      const sceneId = saved.replace('char1#', '');
+      navTo('char1');
+      setTimeout(() => char1GoToScene(sceneId), 0);
+      return;
+    }
+
+    // 裸字串格式（舊格式或選單頁覆蓋過的）→ 從頭開始對應角色
+    if (saved === 'char1') { navTo('char1'); return; }
+    if (saved === 'char2') { navTo('char2'); return; }
+    if (saved === 'char3') { navTo('char3'); return; }
+
+    // char2/char3 格式：'...html#char2|sceneKey|choiceKey' 或 'char2|sceneKey'
+    const hashMatch = saved.match(/#(char[23])\|(.+)$/);
+    if (hashMatch) {
+      const charId    = hashMatch[1];   // 'char2' or 'char3'
+      const parts     = hashMatch[2].split('|');
+      const sceneKey  = parts[0];
+      const choiceKey = parts[1] || null;
+
+      if (charId === 'char2') {
+        navTo('char2');   // initChar2 內部有自己的存檔還原
+        setTimeout(() => {
+          const s = char2LoadStats();
+          if (s) {
+            char2Stats.quality      = s.quality      || 0;
+            char2Stats.pestResist   = (typeof s.pestResist === 'number') ? s.pestResist : 50;
+            char2Stats.growth       = s.growth       || 0;
+            char2Stats.pesticideUsed= s.pesticideUsed|| 0;
+            char2FinalEnding        = s.finalEnding  || null;
+          }
+          if (choiceKey && CHOICES2[choiceKey]) {
+            char2RunScene(sceneKey);
+            setTimeout(() => char2GoChoice(choiceKey), 50);
+          } else {
+            char2RunScene(sceneKey);
+          }
+        }, 0);
+        return;
+      }
+
+      if (charId === 'char3') {
+        // 先切換頁面（不走 initChar3 重置），再還原進度
+        document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+        const el = document.getElementById('page-char3');
+        if (el) { el.classList.add('active'); el.style.display = 'flex'; }
+        currentPage = 'char3';
+        closeSidebar();
+
+        const s = char3LoadStats();
+        if (s && SCENES3[sceneKey]) {
+          char3Stats.money      = (typeof s.money      === 'number') ? s.money      : 50;
+          char3Stats.health     = (typeof s.health     === 'number') ? s.health     : 50;
+          char3Stats.stress     = (typeof s.stress     === 'number') ? s.stress     : 0;
+          char3Stats.reputation = (typeof s.reputation === 'number') ? s.reputation : 0;
+          char3FinalEnding      = s.finalEnding || null;
+          char3CurrentChoiceKey = null;
+
+          // 綁定文字框點擊（initChar3 通常做這件事）
+          const stb = char3StoryTextBox();
+          stb.onclick = () => { if (char3ChoicesBox().classList.contains('show')) return; char3ShowNextLine(); };
+
+          if (choiceKey && CHOICES3[choiceKey]) {
+            char3RunScene(sceneKey);
+            setTimeout(() => char3GoChoice(choiceKey), 50);
+          } else {
+            char3RunScene(sceneKey);
+          }
+        } else {
+          // 無法還原存檔，從頭開始
+          initChar3();
+        }
+        return;
+      }
+    }
+
+    // 其他舊格式或無法解析 → 回首頁
+    navTo('index');
+  }
+
+  function navTo(page) {
+    document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+    const el = document.getElementById('page-' + page);
+    if (el) { el.classList.add('active'); el.style.display = 'flex'; }
+    currentPage = page;
+    closeSidebar();
+    // Page-specific init
+    if (page === 'star') initStarPage();
+    if (page === 'egg')  initEggPage();
+    if (page === 'ending-anim') initEndingAnim();
+    if (page === 'char1') { resetChar1(); char1GoToScene('1-1'); }
+    if (page === 'char2') initChar2();
+    if (page === 'char3') initChar3();
+    // currentGamePage 由各角色的 saveProgress / char1GoToScene 自行寫入，navTo 不覆蓋
+  }
+
+  /* ══════════════════════════════════════════
+     SHARED CONTROLS
+  ══════════════════════════════════════════ */
+  let isMusicOn = true;
+  let gameLang  = localStorage.getItem('gameLanguage') || 'zh';
+
+  function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const alignIcon = document.getElementById('alignIcon');
+    const closeIcon = document.getElementById('closeIcon');
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+    if (alignIcon) alignIcon.style.display = 'block';
+    if (closeIcon) closeIcon.style.display = 'none';
+  }
+
+  function applyLang(lang) {
+    gameLang = lang;
+    localStorage.setItem('gameLanguage', lang);
+    const langText = document.getElementById('langText');
+    if (langText) langText.innerText = lang === 'zh' ? 'EN' : 'ZH';
+    document.querySelectorAll('[data-zh]').forEach(el => {
+      el.innerHTML = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+    });
+    window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Init pages hidden
+    document.querySelectorAll('.page').forEach(p => { if (!p.classList.contains('active')) p.style.display = 'none'; });
+
+    const musicBtn = document.getElementById('musicBtn');
+    const langBtn  = document.getElementById('langBtn');
+    const alignBtn = document.getElementById('alignBtn');
+    const sidebar  = document.getElementById('sidebar');
+    const overlay  = document.getElementById('sidebarOverlay');
+    const alignIcon= document.getElementById('alignIcon');
+
+    musicBtn.addEventListener('click', () => {
+      isMusicOn = !isMusicOn;
+      const icon = document.getElementById('musicIcon');
+      icon.src = isMusicOn ? 'public/menu/music.svg' : 'public/menu/music-slash.svg';
+    });
+
+    alignBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+      let closeIcon = document.getElementById('closeIcon');
+      if (sidebar.classList.contains('open')) {
+        alignIcon.style.display = 'none';
+        if (!closeIcon) {
+          closeIcon = document.createElement('img');
+          closeIcon.id = 'closeIcon'; closeIcon.src = 'public/menu/cross.svg';
+          closeIcon.alt = 'Close'; closeIcon.style.width = '24px'; closeIcon.style.height = '24px';
+          alignBtn.appendChild(closeIcon);
+        } else { closeIcon.style.display = 'inline'; }
+      } else {
+        alignIcon.style.display = 'block';
+        const ci = document.getElementById('closeIcon');
+        if (ci) ci.style.display = 'none';
+      }
+    });
+
+    overlay.addEventListener('click', closeSidebar);
+
+    langBtn.addEventListener('click', () => {
+      if (globalTypewriterTimer1) { clearTimeout(globalTypewriterTimer1); globalTypewriterTimer1 = null; }
+      if (globalTypewriterTimer2) { clearTimeout(globalTypewriterTimer2); globalTypewriterTimer2 = null; }
+      if (globalTypewriterTimer3) { clearTimeout(globalTypewriterTimer3); globalTypewriterTimer3 = null; }
+      applyLang(gameLang === 'zh' ? 'en' : 'zh');
+    });
+
+    applyLang(gameLang);
+    initIndexPage();
+  });
+
+  /* ══════════════════════════════════════════
+     INDEX PAGE
+  ══════════════════════════════════════════ */
+  function initIndexPage() {
+    const startBtn = document.getElementById('startBtn');
+    const gameTipOverlay  = document.getElementById('gameTipOverlay');
+    const gameTipOverlay2 = document.getElementById('gameTipOverlay2');
+    const tipArrow1 = document.getElementById('tipArrow1');
+    const tipArrow2 = document.getElementById('tipArrow2');
+    const homepageScene = document.getElementById('homepageScene');
+    const characterScene= document.getElementById('characterScene');
+    const characterImage= document.getElementById('characterImage');
+    const characterButtonsContainer = document.getElementById('characterButtonsContainer');
+
+    const localTextData = {
+      tip1: { zh: '歡迎遊玩《NoFold》！<br><br>這是一款以瘤野螟、稻米與農民三種不同視角出發，體驗稻米生產過程的劇情式遊戲。<br><br>遊戲中包含多種結局，試著解鎖所有結局，看看不同選擇將會帶來怎樣的結果吧！', en: 'Welcome to NoFold!<br><br>This is a story-driven game that explores rice cultivation from three distinct perspectives: the Cnaphalocrocis medinalis, the rice plant, and the farmer.<br><br>Multiple endings await. Try to unlock them all and see where your choices lead!' },
+      tip2: { zh: '即將踏入稻田，<br>請選擇一位角色展開全新的冒險吧！', en: 'About to step into the paddy field...<br>Please choose a character to start your new adventure!' }
+    };
+
+    function updateIndexLang(lang) {
+      const t1 = document.getElementById('tipContent1');
+      const t2 = document.getElementById('tipContent2');
+      if (t1) t1.innerHTML = localTextData.tip1[lang] || localTextData.tip1['zh'];
+      if (t2) t2.innerHTML = localTextData.tip2[lang] || localTextData.tip2['zh'];
+    }
+    updateIndexLang(gameLang);
+    window.addEventListener('languageChanged', e => updateIndexLang(e.detail.lang));
+
+    startBtn.addEventListener('click', e => {
+      e.preventDefault();
+      homepageScene.style.display = 'none';
+      characterScene.style.display = 'block';
+      characterImage.classList.add('blurred');
+      gameTipOverlay.classList.add('show');
+    });
+
+    function tip1ToTip2() {
+      gameTipOverlay.classList.remove('show');
+      gameTipOverlay2.classList.add('show');
+    }
+    tipArrow1.addEventListener('click', tip1ToTip2);
+    gameTipOverlay.addEventListener('click', e => { if (e.target === gameTipOverlay) tip1ToTip2(); });
+
+    function tip2Done() {
+      gameTipOverlay2.classList.remove('show');
+      characterImage.classList.remove('blurred');
+      characterButtonsContainer.classList.add('show');
+    }
+    tipArrow2.addEventListener('click', tip2Done);
+    gameTipOverlay2.addEventListener('click', e => { if (e.target === gameTipOverlay2) tip2Done(); });
+
+
+  }
+
+  /* ══════════════════════════════════════════
+     CHARACTER 1 (瘤野螟) LOGIC
+  ══════════════════════════════════════════ */
+  let globalTypewriterTimer1 = null;
+  let isTyping1 = false;
+  let multiPartState1 = { parts: [], index: 0, nextScene: null };
+  let animationTimer1 = null;
+  let currentScene1   = null;
+
+  const ANIMATION_FRAMES1 = ['public/pictures/1-7-1.png','public/pictures/1-7-2.png','public/pictures/1-7-3.png','public/pictures/1-7-4.png','public/pictures/1-7-5.png'];
+
+  function resetChar1() {
+    if (globalTypewriterTimer1) { clearTimeout(globalTypewriterTimer1); globalTypewriterTimer1 = null; }
+    if (animationTimer1) { clearInterval(animationTimer1); animationTimer1 = null; }
+    document.querySelectorAll('#page-char1 .scene').forEach(s => s.style.display = 'none');
+    currentScene1 = null;
+    multiPartState1 = { parts: [], index: 0, nextScene: null };
+  }
+
+  const SCENE_DATA1 = {
+    '1-1': { zh: '夜幕降臨，你在二期稻田中徘徊。月光灑落在搖曳的稻穗上，微風帶來淡淡的植物氣味。', en: 'As night falls, you wander through the second-phase rice fields. The moonlight falls on the swaying rice ears, and the breeze brings a faint scent of plants.' },
+    '1-2': { zh: '你是一隻羽化完成的瘤野螟，你的使命只有一個：找到適合的作物，完成傳宗接代的使命。', en: 'You are a fully emerged leaffolder moth. You have only one mission: find a suitable crop and fulfill your purpose to reproduce.' },
+    '1-2-c': { type:'dialogue', zh:{name:'瘤野螟',text:'我在夜空中盤旋，聞到了不同稻田飄來的氣味。'}, en:{name:'Cnaphalocrocis medinalis',text:'I hovered in the night sky, smelling the scents drifting from different rice fields.'} },
+    '1-3': { zh: '空氣突然變得刺鼻，濃烈的氣味迅速瀰漫整片稻田。', en: 'Suddenly, the air turns pungent, and a strong scent rapidly spreads across the entire rice field.' },
+    '1-3-c1': { type:'dialogue', zh:{name:'瘤野螟',text:'這感覺不太對，我本能地急忙拍動翅膀，試圖遠離農田以避開這氣味。'}, en:{name:'Cnaphalocrocis medinalis',text:'Something feels wrong. Instinctively, I flutter my wings in a hurry, trying to stay away from the field to avoid this smell.'} },
+    '1-3-c2': { type:'dialogue', zh:{name:'瘤野螟',text:'熟悉的稻田景色慢慢消失在身後，我只能拖著虛弱的身軀，勉強在陌生的空中前進。'}, en:{name:'Cnaphalocrocis medinalis',text:'The familiar view of the rice fields slowly fades behind me. I can only drag my weak body forward, struggling through the unfamiliar sky.'} },
+    '1-4': { zh: '恭喜你找到了柔嫩安全的葉片，你穩穩落下，產下了一部分的卵。', en: 'Congratulations on finding a soft and safe leaf. You land steadily and lay a portion of your eggs.' },
+    '1-5': { zh: '你找到了剛好能夠產卵的葉片，成功產了一部分的卵。', en: 'You found a leaf just right for laying eggs and successfully laid a portion of them.' },
+    '1-s1': { zh:['當你完成產卵後，正準備離開葉片——','空氣突然變得不對勁。','不是農藥，也不是檸檬烯，是一種陌生、難以辨識的氣味。'], en:['Just as you finish laying your eggs and prepare to leave the leaf—','The air suddenly feels different.','It is not chemical pesticides, nor is it Limonene; it is an unfamiliar, unrecognizable scent.'] },
+    '1-s2-1': { zh:'微弱的光在田間閃動，你試圖振翅，想趕快飛走——', en:'Faint lights flicker across the field; you desperately flap your wings, trying to escape quickly—' },
+    '1-s2-c': { type:'dialogue', zh:{name:'瘤野螟',text:'啊啊啊啊啊啊啊'}, en:{name:'Cnaphalocrocis medinalis',text:'Aaaaaaargh!'} },
+    '1-s2-2': { zh:'你被捕捉了。', en:'You have been captured.' },
+    '1-s3': { type:'dialogue', zh:{name:'瘤野螟',text:['我在哪…………？','在不遠處，我感受到了熟悉的存在。']}, en:{name:'Cnaphalocrocis medinalis',text:['Where am I...?','Not too far away, I can sense a familiar presence.']} },
+    '1-s4-1': { zh:['被帶來的幾束稻米，靜靜地放置在花盆中。','遠方，人類的聲音變得規律而冷靜。','你停在葉片上，周圍安靜得異常，比起在農田，你發現這裡少了許多同類的身影。'], en:['A few bundles of harvested rice rest quietly inside a flower pot.','In the distance, human voices sound rhythmic, calm, and distant.','As you perch upon a leaf, an unusual silence envelops you; you realize that, unlike in the open fields, there are far fewer of your kind here.'] },
+    '1-s4-c': { type:'dialogue', zh:{name:'瘤野螟',text:'好可怕………'}, en:{name:'Cnaphalocrocis medinalis',text:'So terrifying...'} },
+    '1-s4-2': { zh:'你還活著，但你知道，未來只會更艱難。', en:'You are still alive, but you know that the future will only grow more difficult.' },
+    '1-2p2': { zh:['當你完成產卵後，夜色仍未散去。','你停在稻葉間，卵已經產下，','你的子代，能不能順利成長？'], en:['When you finish laying eggs, the night has not yet faded.','You rest among the rice leaves, the eggs have been laid,','Will your offspring grow up successfully?'] },
+    '1-9': { zh:['你降低活動量，守護著卵。','雖然環境安全，但子代成長速度相對緩慢。'], en:['You reduce your activity level and guard the eggs.','Although the environment is safe, the offspring grow relatively slowly.'] },
+    '1-10': { zh:['你在葉片間持續活動，成功讓更多子代獲得養分。','雖然累，但你的子代成長速度顯著提升。'], en:['You stay active among the leaves, successfully providing nutrients to more offspring.','Though exhausting, your offspring grow significantly faster.'] },
+    '1-11-1': { zh:['農民使用了農藥，刺鼻氣味迅速瀰漫整片田地，葉面開始殘留藥劑。','你與你的子代長期暴露在農藥之中，身體逐漸變得虛弱。','原本遍布稻田的族群開始迅速減少，許多同伴無法撐過下一次噴灑。','曾經熱鬧的稻田，慢慢安靜下來，只剩幾個身影還在掙扎。'], en:['The farmer applied chemical pesticides. The pungent smell quickly filled the entire field, leaving toxic chemical residues on the leaves.','You and your offspring are chronically exposed to pesticides, and your bodies gradually grow weaker.','The population that once filled the rice fields begins to dwindle rapidly, as many companions fail to survive the next spray.','The once bustling rice field slowly falls silent, leaving only a few figures still struggling to survive.'] },
+    '1-11-2': { zh:['農民使用了農藥，刺鼻氣味迅速瀰漫整片田地，葉面開始殘留藥劑。','你的子代成功倖存了下來，並在一次次的環境淘汰中逐漸對農藥產生抗性。','即使農田持續噴灑藥劑，你的族群依然能夠適應並繁衍下去。','隨著時間推移，族群數量不斷增加，活動範圍也越來越廣，最終成為稻田中難以被消滅的強大存在。'], en:['The farmer applied chemical pesticides. The pungent smell quickly filled the entire field, leaving toxic chemical residues on the leaves.','Your offspring successfully survive, gradually developing resistance to the pesticides through waves of environmental elimination.','Even if the fields are repeatedly sprayed with chemical agents, your population continues to adapt and thrive.','As time passes, the population expands constantly and their territory spreads wider, ultimately turning into a formidable existence in the rice fields that is nearly impossible to eradicate.'] },
+    '1-12-1': { zh:['黎明將至，霧氣仍未散去。','你停在被啃食過的稻葉上，深吸了一口氣——','沒有刺鼻的農藥，也沒有讓你不適的檸檬烯。','那些曾經威脅你的氣味，變得微弱、甚至消失了。'], en:['Dawn is approaching, yet the mist has not faded.','You rest on a chewed rice leaf and take a deep breath—','There are no pungent chemical pesticides, nor any irritating Limonene.','Those scents that once threatened you have weakened, or even vanished.'] },
+    '1-12-cs': { zh:['稻田裡，到處都是被啃食過的痕跡。','葉片捲曲、莖部中空。'], en:['Throughout the rice field, signs of heavy feeding are visible everywhere.','Leaves are tightly folded, and the stems are left hollowed.'] },
+    '1-12-cd': { type:'dialogue', zh:{name:'瘤野螟',text:'哈哈哈，人類的防禦失效了！'}, en:{name:'Cnaphalocrocis medinalis',text:"Hahaha, humans' defenses have completely failed!"} },
+    '1-12-c2': { type:'dialogue', zh:{name:'瘤野螟',text:'人類，我終於勝利啦！'}, en:{name:'Cnaphalocrocis medinalis',text:'Humans, I have finally triumphed!'} },
+    '1-12-3': { zh:['你的子代成功孵化，開始大口大口地吃。','牠們不再需要躲藏，也不再需要小心翼翼。'], en:['Your offspring successfully hatch and begin to feed voraciously.','They no longer need to hide, nor do they need to be cautious anymore.'] },
+    '1-12-c3': { type:'dialogue', zh:{name:'瘤野螟',text:'孩子們，這是我們的世界了！'}, en:{name:'Cnaphalocrocis medinalis',text:'My children, this world belongs to us now!'} },
+    '1-13-1': { zh:['你開始感覺到不對勁。','視線模糊，翅膀越來越沉，再也抬不起來。'], en:['You begin to feel that something is terribly wrong.','Your vision blurs, and your wings grow heavier and heavier, until you can no longer lift them.'] },
+    '1-13-c': { type:'dialogue', zh:{name:'瘤野螟',text:'再見了…世界……'}, en:{name:'Cnaphalocrocis medinalis',text:'Goodbye... cruel world...'} },
+    '1-13-2': { zh:'田地之中，只剩下一具再也不會振翅的軀殼。', en:'In the middle of the field, nothing remains but a lifeless shell that will never spread its wings again.' }
+  };
+
+  function char1GetNextScene(id) {
+    const map = {
+      '1-1':'1-2','1-2':'1-2-c','1-2-c':'1-2-choose',
+      '1-3':'1-3-c1','1-3-c1':'1-3-c2','1-3-c2':'END:end_bad2',
+      '1-4':'1-2-choose','1-5':'1-2-choose',
+      '1-s1':'1-s2-1','1-s2-1':'1-s2-c','1-s2-c':'1-s2-2','1-s2-2':'1-s3',
+      '1-s3':'1-s4-1','1-s4-1':'1-s4-c','1-s4-c':'1-s4-2','1-s4-2':'END:end_special1',
+      '1-2p2':'1-2p2-choose','1-9':'1-2p2-choose','1-10':'1-2p2-choose',
+      '1-11-1':'END:end_bad1','1-11-2':'END:end_good2',
+      '1-12-1':'1-12-cs','1-12-cs':'1-12-cd','1-12-cd':'1-12-c2','1-12-c2':'1-12-3','1-12-3':'1-12-c3','1-12-c3':'END:end_good1',
+      '1-13-1':'1-13-c','1-13-c':'1-13-2','1-13-2':'END:end_bad4'
+    };
+    return map[id] || null;
+  }
+
+  function char1DoEnding(key) {
+    localStorage.setItem(key, 'true');
+    localStorage.setItem('last_ending', key);
+    localStorage.setItem('came_from_ending', 'true');
+    if (!localStorage.getItem('first_ending_seen')) {
+      localStorage.setItem('first_ending_seen', 'true');
+      navTo('ending-anim');
+    } else {
+      navTo('star');
+    }
+  }
+
+  function char1GoToScene(id) {
+    if (globalTypewriterTimer1) { clearTimeout(globalTypewriterTimer1); globalTypewriterTimer1 = null; }
+    if (animationTimer1) { clearInterval(animationTimer1); animationTimer1 = null; }
+    document.querySelectorAll('#page-char1 .scene').forEach(s => s.style.display = 'none');
+    const target = document.getElementById('scene-' + id);
+    if (!target) { console.warn('Scene not found:', id); return; }
+    target.style.display = 'flex';
+    currentScene1 = id;
+    localStorage.setItem('currentGamePage', 'char1#' + id);
+    char1InitScene(id);
+  }
+
+  function char1InitScene(id) {
+    if (id === '1-2-c') {
+      localStorage.setItem('health','15'); localStorage.setItem('breeding','0'); localStorage.setItem('generation','0');
+    }
+    if (id === '1-2-choose') { char1BindChoices_1_2(); char1ApplyLang(gameLang); return; }
+    if (id === '1-2p2-choose') { char1BindChoices_1_2p2(); char1ApplyLang(gameLang); return; }
+    if (id === '1-s3') char1StartAnimation();
+    const data = SCENE_DATA1[id];
+    if (!data) { char1ApplyLang(gameLang); return; }
+    char1RenderScene(id, gameLang);
+    char1ApplyLang(gameLang);
+  }
+
+  function char1ApplyLang(lang) {
+    document.querySelectorAll('#page-char1 [data-zh]').forEach(el => {
+      el.textContent = lang === 'en' ? (el.getAttribute('data-en') || el.textContent) : (el.getAttribute('data-zh') || el.textContent);
+    });
+  }
+
+  function char1StartAnimation() {
+    if (animationTimer1) clearInterval(animationTimer1);
+    let idx = 0, dir = 1;
+    const imgEl = document.getElementById('animationImage');
+    if (!imgEl) return;
+    animationTimer1 = setInterval(() => {
+      idx += dir;
+      if (idx === ANIMATION_FRAMES1.length - 1) dir = -1;
+      else if (idx === 0) dir = 1;
+      imgEl.src = ANIMATION_FRAMES1[idx];
+    }, 250);
+  }
+
+  function char1RunTypewriter(el, text, arrowEl, showOnDone) {
+    if (!el) return;
+    el.textContent = '';
+    if (globalTypewriterTimer1) { clearTimeout(globalTypewriterTimer1); globalTypewriterTimer1 = null; }
+    let i = 0; isTyping1 = true;
+    function type() {
+      if (i < text.length) { el.textContent += text[i++]; globalTypewriterTimer1 = setTimeout(type, 40); }
+      else { globalTypewriterTimer1 = null; isTyping1 = false; if (showOnDone && arrowEl) arrowEl.classList.add('show'); }
+    }
+    type();
+  }
+
+  function char1WaitArrow(arrowEl) {
+    if (!arrowEl) return;
+    const check = setInterval(() => { if (!isTyping1) { arrowEl.classList.add('show'); clearInterval(check); } }, 100);
+  }
+
+  function char1RenderScene(id, lang) {
+    const data = SCENE_DATA1[id];
+    if (!data) return;
+    const sceneEl = document.getElementById('scene-' + id);
+    if (!sceneEl) return;
+
+    const isDialogue = data.type === 'dialogue';
+    let texts;
+    if (isDialogue) { const d = data[lang] || data['zh']; texts = Array.isArray(d.text) ? d.text : [d.text]; }
+    else { const raw = data[lang] || data['zh']; texts = Array.isArray(raw) ? raw : [raw]; }
+
+    const isMulti = texts.length > 1;
+    const fresh = isMulti ? char1BindMultiArrow(sceneEl, id) : char1BindSimpleArrow(sceneEl, id);
+    const textEl  = fresh.querySelector('[id^="storyText-"]');
+    const arrowEl = fresh.querySelector('.story-text-arrow');
+    if (arrowEl) arrowEl.classList.remove('show');
+
+    if (isMulti) {
+      multiPartState1 = { parts: texts, index: 0, nextScene: char1GetNextScene(id) };
+      char1RunTypewriter(textEl, texts[0], arrowEl, false);
+      multiPartState1.index = 1;
+      char1WaitArrow(arrowEl);
+    } else {
+      multiPartState1 = { parts: [], index: 0, nextScene: null };
+      char1RunTypewriter(textEl, texts[0], arrowEl, true);
+    }
+  }
+
+  function char1BindMultiArrow(sceneEl, id) {
+    const box = sceneEl.querySelector('.story-text-box');
+    if (!box) return box;
+    const fresh = box.cloneNode(true); box.parentNode.replaceChild(fresh, box);
+    const freshArrow = fresh.querySelector('.story-text-arrow');
+    const freshText  = fresh.querySelector('[id^="storyText-"]');
+    fresh.addEventListener('click', e => { e.stopPropagation(); char1HandleMulti(freshText, freshArrow, id); });
+    if (freshArrow) freshArrow.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); char1HandleMulti(freshText, freshArrow, id); });
+    return fresh;
+  }
+
+  function char1HandleMulti(textEl, arrowEl, id) {
+    if (multiPartState1.index < multiPartState1.parts.length) {
+      if (arrowEl) arrowEl.classList.remove('show');
+      const text = multiPartState1.parts[multiPartState1.index++];
+      char1RunTypewriter(textEl, text, arrowEl, false);
+      char1WaitArrow(arrowEl);
+    } else {
+      const next = multiPartState1.nextScene || char1GetNextScene(id);
+      if (next) { if (next.startsWith('END:')) char1DoEnding(next.replace('END:','')); else char1GoToScene(next); }
+    }
+  }
+
+  function char1BindSimpleArrow(sceneEl, id) {
+    const box = sceneEl.querySelector('.story-text-box');
+    if (!box) return box;
+    const fresh = box.cloneNode(true); box.parentNode.replaceChild(fresh, box);
+    fresh.addEventListener('click', e => { e.stopPropagation(); char1HandleSimple(id, fresh); });
+    const a = fresh.querySelector('.story-text-arrow');
+    if (a) a.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); char1HandleSimple(id, fresh); });
+    return fresh;
+  }
+
+  function char1HandleSimple(id, boxEl) {
+    const ending = boxEl.getAttribute('data-ending') || (boxEl.querySelector('[data-ending]') && boxEl.querySelector('[data-ending]').getAttribute('data-ending'));
+    if (ending) { char1DoEnding(ending); return; }
+    const next = char1GetNextScene(id);
+    if (next) { if (next.startsWith('END:')) char1DoEnding(next.replace('END:','')); else char1GoToScene(next); }
+  }
+
+  function char1BindChoices_1_2() {
+    const container = document.getElementById('choicesContainer-1-2');
+    if (!container) return;
+    container.querySelectorAll('.choice-button').forEach(btn => {
+      const fresh = btn.cloneNode(true); btn.parentNode.replaceChild(fresh, btn);
+      fresh.addEventListener('click', function() {
+        let health = parseInt(localStorage.getItem('health')) || 15;
+        let breeding = parseInt(localStorage.getItem('breeding')) || 0;
+        const choice = this.getAttribute('data-choice');
+        let next = '';
+        let playedSpecial = localStorage.getItem('end_special') === 'true';
+        if (choice === 'high-nitrogen') {
+          if (Math.random() < 0.5) { char1GoToScene('1-3'); return; }
+          else { health -= 2; breeding += 50; next = '1-4'; }
+        } else if (choice === 'normal-rice') { health -= 1; breeding += 15; next = '1-5'; }
+        if (health <= 0) { localStorage.setItem('health',health); localStorage.setItem('breeding',breeding); char1GoToScene('1-13-1'); return; }
+        if (breeding >= 100) {
+          localStorage.setItem('health',health); localStorage.setItem('breeding',breeding);
+          if (!playedSpecial && Math.random() < 0.5) { localStorage.setItem('end_special','true'); char1GoToScene('1-s1'); }
+          else char1GoToScene('1-2p2');
+          return;
+        }
+        localStorage.setItem('health',health); localStorage.setItem('breeding',breeding);
+        char1GoToScene(next);
+      });
+    });
+  }
+
+  function char1BindChoices_1_2p2() {
+    const container = document.getElementById('choicesContainer-1-2p2');
+    if (!container) return;
+    container.querySelectorAll('.choice-button').forEach(btn => {
+      const fresh = btn.cloneNode(true); btn.parentNode.replaceChild(fresh, btn);
+      fresh.addEventListener('click', function() {
+        let health = parseInt(localStorage.getItem('health')) || 15;
+        let breeding = parseInt(localStorage.getItem('breeding')) || 0;
+        let generation = parseInt(localStorage.getItem('generation')) || 0;
+        const choice = this.getAttribute('data-choice');
+        let next = '';
+        if (choice === 'latent') { health -= 1; generation += 10; next = '1-9'; }
+        else if (choice === 'observe') {
+          if (Math.random() < 0.5) { next = Math.random() < 0.5 ? '1-11-1' : '1-11-2'; }
+          else { health -= 2; generation += 40; next = '1-10'; }
+        }
+        const isPest = (next === '1-11-1' || next === '1-11-2');
+        if (!isPest && health <= 0) next = '1-13-1';
+        else if (!isPest && generation >= 100) next = '1-12-1';
+        localStorage.setItem('health',health); localStorage.setItem('breeding',breeding); localStorage.setItem('generation',generation);
+        char1GoToScene(next);
+      });
+    });
+  }
+
+  window.addEventListener('languageChanged', e => {
+    if (currentPage === 'char1') { char1ApplyLang(e.detail.lang); if (currentScene1 && SCENE_DATA1[currentScene1]) char1RenderScene(currentScene1, e.detail.lang); }
+  });
+
+  /* ══════════════════════════════════════════
+     CHARACTER 2 (水稻) LOGIC
+  ══════════════════════════════════════════ */
+  let globalTypewriterTimer2 = null;
+  let isTyping2 = false;
+  let char2CurrentScene = null, char2CurrentTexts = [], char2CurrentPart = 0, char2CurrentChoiceKey = null, char2SpecialReturnChoice = null, char2FinalEnding = null;
+
+  const char2Arrow = () => document.getElementById('nextArrow2');
+  const char2CharNameEl = () => document.getElementById('charName2');
+  const char2GameImageEl = () => document.getElementById('gameImage2');
+  const char2ChoicesBox = () => document.getElementById('choicesContainer2');
+  const char2ChoicesTitle = () => document.getElementById('choicesTitle2');
+  const char2ChoicesList = () => document.getElementById('choicesList2');
+  const char2StoryTextBox = () => document.getElementById('storyTextBox2');
+  const char2StoryTextEl = () => document.getElementById('storyText2');
+  const char2SceneWrapper = () => document.getElementById('sceneWrapper2');
+
+  const char2Stats = { quality:0, pestResist:50, growth:0, pesticideUsed:0,
+    add(k,v){ this[k]=(this[k]||0)+v; },
+    getEnding(){ if(this.pestResist<=0)return'bad1'; if(this.pesticideUsed>=60){const r=Math.random();if(r<0.5)return'bad2';if(r<0.75)return'bad3';return'good1';}if(this.quality>=100)return'good2';return'good3'; }
+  };
+
+  function char2RunTypewriter(text, arrowEl, onComplete) {
+    const el = char2StoryTextEl();
+    if (!el) return;
+    if (!text) { if(arrowEl)arrowEl.classList.add('show'); if(onComplete)onComplete(); return; }
+    if(globalTypewriterTimer2){clearTimeout(globalTypewriterTimer2);globalTypewriterTimer2=null;}
+    el.textContent=''; let i=0; isTyping2=true;
+    if(arrowEl)arrowEl.classList.remove('show');
+    function type(){
+      if(i<text.length){el.textContent+=text[i++];globalTypewriterTimer2=setTimeout(type,40);}
+      else{globalTypewriterTimer2=null;isTyping2=false;if(arrowEl)arrowEl.classList.add('show');if(onComplete)onComplete();}
+    }
+    type();
+  }
+
+  function char2FinishTypewriter(text, arrowEl) {
+    if(globalTypewriterTimer2){clearTimeout(globalTypewriterTimer2);globalTypewriterTimer2=null;}
+    const el = char2StoryTextEl();
+    if(el)el.textContent=text; isTyping2=false; if(arrowEl)arrowEl.classList.add('show');
+  }
+
+  const ANIM_FRAMES2 = ['public/pictures/1-7-1.png','public/pictures/1-7-2.png','public/pictures/1-7-3.png','public/pictures/1-7-4.png','public/pictures/1-7-5.png'];
+  let animTimer2 = null;
+  function char2StartSpecialAnim(){ char2StopSpecialAnim(); let fi=0,dir=1; char2GameImageEl().src=ANIM_FRAMES2[0]; animTimer2=setInterval(()=>{fi+=dir;if(fi===ANIM_FRAMES2.length-1)dir=-1;else if(fi===0)dir=1;char2GameImageEl().src=ANIM_FRAMES2[fi];},250); }
+  function char2StopSpecialAnim(){ if(animTimer2){clearInterval(animTimer2);animTimer2=null;} }
+
+  function char2SaveProgress(sk,ck){ const base=window.location.href.split('#')[0]; const hash=ck?sk+'|'+ck:sk; localStorage.setItem('currentGamePage',base+'#char2|'+hash); }
+  function char2SaveStats(){ localStorage.setItem('rice_game_stats',JSON.stringify({quality:char2Stats.quality,pestResist:char2Stats.pestResist,growth:char2Stats.growth,pesticideUsed:char2Stats.pesticideUsed,finalEnding:char2FinalEnding})); }
+  function char2LoadStats(){ try{const r=localStorage.getItem('rice_game_stats');return r?JSON.parse(r):null;}catch(e){return null;} }
+  function char3LoadStats(){ try{const r=localStorage.getItem('farmer_game_stats');return r?JSON.parse(r):null;}catch(e){return null;} }
+
+  function char2BeginSalePeriod(){ char2FinalEnding=char2Stats.getEnding(); char2RunScene('s_sale1'); }
+  function char2TriggerBad1(){ char2FinalEnding='bad1'; char2RunScene('s_bad1'); }
+  function char2FinishEnding(){
+    localStorage.setItem('last_ending','rice_'+char2FinalEnding);
+    localStorage.setItem('rice_'+char2FinalEnding,'true');
+    localStorage.setItem('came_from_ending','true');
+    if (!localStorage.getItem('first_ending_seen')) {
+      localStorage.setItem('first_ending_seen', 'true');
+      navTo('ending-anim');
+    } else {
+      navTo('star');
+    }
+  }
+
+  function char2TryTriggerSpecial(afterScene, returnChoice){
+    const unlocked = localStorage.getItem('rice_good4')==='true';
+    if(!unlocked && Math.random()<0.5){ char2SpecialReturnChoice=returnChoice; char2RunScene('sp1'); }
+    else char2RunScene(afterScene);
+  }
+
+  const SCENES2 = {
+    's1':{image:'2-10.png',charName:null,texts:{zh:['清晨的陽光灑落在稻田之上。露水沿著葉尖緩緩滑落，微風吹過，整片稻田泛起層層綠浪。'],en:['The morning sun casts its golden light across the paddy field. Dewdrops gently slide down the tips of the leaves, and as a soft breeze blows, ripples of green waves cascade through the rice.']},next:()=>'s2'},
+    's2':{image:'2-1.png',charName:null,texts:{zh:['你是一株剛進入生長期的水稻，你的使命只有一個：成長並結出健康的稻穗，獲得標章或被農民賣出。','但你能感覺到環境並不單純。','風中，帶著不同的訊號：化學氣味、昆蟲活動、還有人類的干預。','你無法移動，只能選擇「如何成長」。'],en:['You are a rice plant that has just entered its growth phase. You have but one purpose: to mature and bear healthy grains, earning certification or being sold by the farmer.','Yet, you can sense that the environment is far from simple.','Carried on the wind are distinct signals: chemical odors, insect movements, and human interventions.','Stationary and rooted, your only choice is "how to grow".']},next:()=>{char2GoChoice('choose1');return null;}},
+    'story_stable1':{image:'2-2.png',charName:null,texts:{zh:['你選擇順應自然，慢慢吸收養分。','沒有額外干預，但你能感覺到周圍的威脅正在增加。'],en:["You choose to follow nature's course, slowly absorbing nutrients.",'Without external intervention, you can feel the surrounding threats beginning to increase.']},next:()=>{char2GoChoice('choose1');return null;}},
+    'story_pest1':{image:'2-2.png',charName:null,texts:{zh:['刺鼻的氣味覆蓋葉面。','你感受到外來物質進入體內，昆蟲的氣息逐漸減少。'],en:['A pungent odor covers the surface of your leaves.','You feel foreign substances entering your body as the presence of insects gradually fades away.']},next:()=>{char2GoChoice('choose2');return null;}},
+    'story_lim1_narr':{image:'2-2.png',charName:null,texts:{zh:['空氣中出現清新的氣味。','你感受到某種天然的保護，同時維持著自身的品質。'],en:['A fresh, crisp scent fills the air.','You feel a sense of natural protection washing over you while maintaining your overall quality.']},next:()=>'story_lim1_dia'},
+    'story_lim1_dia':{image:'2-2.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['好特別，是什麼味道？！居然讓那些蟲都遠離我了'],en:["How unique, what is this smell?! It's actually keeping all those bugs away from me!"]},next:()=>{char2GoChoice('choose3');return null;}},
+    'story_stable2':{image:'2-2.png',charName:null,texts:{zh:['你選擇順應自然，慢慢吸收養分。','沒有額外干預，但你能感覺到周圍的威脅正在增加。'],en:["You choose to follow nature's course, slowly absorbing nutrients.",'Without external intervention, you can feel the surrounding threats beginning to increase.']},next:()=>{char2GoChoice('choose2');return null;}},
+    'story_oldpest_dia':{image:'2-2.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['又有東西撒在我身上了……'],en:['Something is being sprayed on me again...']},next:()=>'story_oldpest_narr'},
+    'story_oldpest_narr':{image:'2-2.png',charName:null,texts:{zh:['熟悉的氣味再次出現。','你感受到外來物質進入體內，昆蟲的氣息逐漸減少。'],en:['A familiar odor covers you once again.','You feel foreign substances entering your body as the presence of insects gradually fades away.']},next:()=>{char2GoChoice('choose2');return null;}},
+    'story_newpest':{image:'2-2.png',charName:null,texts:{zh:['熟悉的氣味再次出現。','但這一次，效果似乎不如以往。'],en:['A familiar odor covers you once again.',"However, this time, the effects don't seem to be as potent as they used to be."]},next:()=>{char2GoChoice('choose2');return null;}},
+    'story_stable3':{image:'2-2.png',charName:null,texts:{zh:['你選擇順應自然，慢慢吸收養分。','沒有額外干預，但你能感覺到周圍的威脅正在增加。'],en:["You choose to follow nature's course, slowly absorbing nutrients.",'Without external intervention, you can feel the surrounding threats beginning to increase.']},next:()=>{char2GoChoice('choose3');return null;}},
+    'story_lim2_narr':{image:'2-2.png',charName:null,texts:{zh:['氣味持續存在。'],en:['The scent continues to linger in the air.']},next:()=>'story_lim2_dia'},
+    'story_lim2_dia':{image:'2-2.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['現在的感覺真棒！'],en:['This feels absolutely amazing right now!']},next:()=>{char2GoChoice('choose3');return null;}},
+    's_sale1':{image:'2-4.png',charName:null,texts:{zh:['夕陽逐漸染紅整片稻田。','經過漫長的生長後，田間即將迎來人類的評價。','人們再次踏入田間，'],en:['The setting sun gradually dyes the entire rice field crimson.','After a long period of growth, the field is about to face human evaluation.','People step into the field once again.']},next:()=>'s_sale1_dia'},
+    's_sale1_dia':{image:'2-4-c.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['嗯……我會面臨什麼結局呢？'],en:["Hmm... what kind of ending awaits me?"]},next:()=>{const map={bad2:'s5_1',bad3:'s6_1',good1:'s8_1',good2:'s9_1',good3:'s7_1'};return map[char2FinalEnding]||'s7_1';}},
+    's_bad1':{image:'2-6.png',charName:null,texts:{zh:['你的抗蟲率徹底歸零。','螟蟲開始大規模侵入你的體內結構，不斷啃食莖部與葉片，留下無法修復的傷痕。','原本穩定的生長逐漸被破壞、被中斷，脆弱的身體也開始失去支撐。','你試著撐起逐漸枯黃的葉片，試著維持最後的生命力。','但那些損傷，早已無法恢復。','最終，你的生長提前停止。'],en:['Your power to fight bugs is completely gone.','The bugs start to move deep inside your body in big groups. They keep eating your stems and leaves, leaving hurts that can never be fixed.','Your steady growth is broken and stopped. Your weak body begins to lose its strength to stand.','You try hard to hold up your turning-yellow leaves, trying to keep your last bit of life.','But the damage is already too bad to fix.','In the end, you stop growing too soon.']},next:()=>{char2FinishEnding();return null;}},
+    's5_1':{image:'2-5.png',charName:null,texts:{zh:['檢測人員進入田間，開始抽查。','「無法販售。」','原本等待運出的稻米，被一袋袋堆放進昏暗的倉庫。','嘆息聲遍布整個農田......'],en:['Inspectors enter the field and begin conducting random checks.','\"These cannot be sold.\"','The rice that was originally waiting to be shipped is stacked bag by bag in a dim warehouse.','Sighs echoed across the entire farmland...']},next:()=>'s5_dia'},
+    's5_dia':{image:'2-5-c.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['怎麼大家都在嘆息…'],en:['Why is everyone sighing...?']},next:()=>'s5_2'},
+    's5_2':{image:'2-5.png',charName:null,texts:{zh:['人類無力地望著堆積如山的稻米。','而你只能靜靜留在原地，等待著不知道是否還會到來的未來。'],en:['The farmers stare helplessly at the mountain of unsellable rice.','As for you, all you can do is remain where you are, quietly waiting for a future that may never come.']},next:()=>{char2FinishEnding();return null;}},
+    's6_1':{image:'2-6.png',charName:null,texts:{zh:['螟蟲因為對農藥產生抗藥性而存活，甚至開始擴散。'],en:['The rice leafrollers survive after developing resistance to pesticides and begin spreading across the fields.']},next:()=>'s6_dia'},
+    's6_dia':{image:'2-6-c.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['我的身上都是農藥…','好多蟲都咬我…'],en:["I'm covered in pesticide residues...",'So many insects are feeding on me...']},next:()=>'s6_2'},
+    's6_2':{image:'2-6.png',charName:null,texts:{zh:['你的身體同時承受到農藥殘留與蟲害破壞。','原本飽滿的你，失去光澤，','市場拒絕了你，田間也早已來不及補救。','最後，你被留倉庫角落，等待著被世界遺忘。'],en:['Your body suffers from both pesticide contamination and insect damage.','Once plump and healthy, you gradually lose your shine.','The market rejects you, and by the time the damage is noticed, it is already too late for the farmers to save the harvest.','In the end, you are left in a dark corner of the warehouse, waiting to be forgotten by the world.']},next:()=>{char2FinishEnding();return null;}},
+    's8_1':{image:'2-8.png',charName:null,texts:{zh:['沒有任何異常被通報。','外觀正常的你，順利通過檢測，進入了市場。'],en:['No anomalies were reported.','Appearing completely normal on the outside, you smoothly pass inspection and enter the market.']},next:()=>'s8_dia'},
+    's8_dia':{image:'2-8-c.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['咦？我竟然通過檢測了嗎？'],en:['Huh? I actually passed the inspection?']},next:()=>'s8_2'},
+    's8_2':{image:'2-8.png',charName:null,texts:{zh:['人們照常搬運、販售、購買，沒有人察覺那些隱藏在表面之下的問題。','這是一場沒有被發現的風險。'],en:['People carry, sell, and buy just as they always do. No one notices the issues hidden beneath the surface.','This is a risk that went entirely undetected.']},next:()=>{char2FinishEnding();return null;}},
+    's9_1':{image:'2-9.png',charName:null,texts:{zh:['你在整個生長過程中始終維持著最佳狀態。','飽滿的稻穗隨風搖曳，葉片健康而完整，在陽光下泛著成熟的光澤。'],en:['You stayed in your best shape during the whole growing time.','Your heavy rice ears swing in the wind. Your leaves are healthy and whole, shining under the bright sun.']},next:()=>'s9_dia'},
+    's9_dia':{image:'2-9-c.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['大家快看我快看我！'],en:['Everyone, Look at me!']},next:()=>'s9_2'},
+    's9_2':{image:'2-9.png',charName:null,texts:{zh:['收成時，人們讚賞的聲音與欣慰的目光，落在你與整片稻田之上。','你的存在，被人們認可。','而你，也成為了這片田間最理想的典範。'],en:['During harvest time, people look at you and the whole field with happy smiles and praise you.','People accept and love who you are.','And you become the most perfect example for this field.']},next:()=>{char2FinishEnding();return null;}},
+    's7_1':{image:'2-7.png',charName:null,texts:{zh:['沒有遭遇極端的風險，也沒有留下特別耀眼的成果。','你順利被收割、包裝，最後送往市場販售。','沒有人特別記住你，卻也沒有任何人將你淘汰。','這或許不是最亮眼的一年，但至少一切都平穩地落下了帷幕。'],en:['You did not face any big dangers, but you also did not make anything amazing.','You are harvested, packed, and sent to the market to be sold without any trouble.','No one remembers you in a special way, but no one throws you away either.','This may not be the brightest year, but at least everything ends in a quiet, peaceful way.']},next:()=>{char2FinishEnding();return null;}},
+    'sp1':{image:'2-3.png',charName:null,texts:{zh:['突然，你感受到異常的震動。','你的部分組織，被人類帶離田間。'],en:['Suddenly, you feel an unusual vibration.','A part of your tissue is taken away from the field by humans.']},next:()=>'sp2'},
+    'sp2':{image:'1-7-1.png',animated:true,charName:{zh:'稻米',en:'Rice'},texts:{zh:['這….這是哪？','怎麼沒有熟悉的泥土，也沒有原本的氣味？'],en:['Where... where am I?','Why is there no familiar soil, and no original home?']},next:()=>'sp3'},
+    'sp3':{image:'1-8.png',charName:null,texts:{zh:['你被移植到另一個環境。'],en:['You have been transplanted into a completely different environment.']},next:()=>'sp3_dia'},
+    'sp3_dia':{image:'1-8.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['發生了什麼事…..？'],en:['What just happened...?']},next:()=>'sp4'},
+    'sp4':{image:'1-8.png',charName:null,texts:{zh:['你的成長，已經不再屬於自然。'],en:['Your growth no longer belongs to nature.']},next:()=>{char2FinalEnding='good4';char2FinishEnding();return null;}}
+  };
+
+  const CHOICES2 = {
+    choose1:{title:{zh:'請選擇你的生長方式：',en:'Choose your growth strategy:'},options:[
+      {zh:'穩定生長',en:'Stable Growth',action(){char2Stats.add('quality',20);char2Stats.add('pestResist',-20);char2Stats.add('growth',20);if(char2Stats.pestResist<=0){char2TriggerBad1();return;}char2RunScene('story_stable1');}},
+      {zh:'使用農藥',en:'Apply Pesticides',action(){char2Stats.add('pestResist',20);char2Stats.add('pesticideUsed',30);char2Stats.add('growth',20);char2TryTriggerSpecial('story_pest1','choose2');}},
+      {zh:'使用檸檬烯',en:'Synthesize Limonene',action(){char2Stats.add('quality',20);char2Stats.add('pestResist',10);char2Stats.add('growth',10);char2TryTriggerSpecial('story_lim1_narr','choose3');}}
+    ]},
+    choose2:{title:{zh:'請選擇你的生長方式：',en:'Choose your growth strategy:'},options:[
+      {zh:'穩定生長',en:'Stable Growth',action(){char2Stats.add('quality',20);char2Stats.add('pestResist',-20);char2Stats.add('growth',20);if(char2Stats.pestResist<=0){char2TriggerBad1();return;}char2RunScene('story_stable2');}},
+      {zh:'使用十年前的農藥',en:'Apply Pesticides from Ten Years Ago',action(){char2Stats.add('pestResist',20);char2Stats.add('pesticideUsed',30);char2Stats.add('growth',20);char2RunScene('story_oldpest_dia');}},
+      {zh:'使用近期的農藥',en:'Apply Modern-Day Pesticides',action(){char2Stats.add('pesticideUsed',30);char2Stats.add('growth',10);char2RunScene('story_newpest');}}
+    ]},
+    choose3:{title:{zh:'請選擇你的生長方式：',en:'Choose your growth strategy:'},options:[
+      {zh:'穩定生長',en:'Stable Growth',action(){char2Stats.add('quality',20);char2Stats.add('pestResist',-20);char2Stats.add('growth',20);if(char2Stats.pestResist<=0){char2TriggerBad1();return;}char2RunScene('story_stable3');}},
+      {zh:'使用檸檬烯',en:'Apply Limonene',action(){char2Stats.add('quality',20);char2Stats.add('pestResist',10);char2Stats.add('growth',10);char2RunScene('story_lim2_narr');}}
+    ]}
+  };
+
+  function char2RunScene(key){
+    const scene=SCENES2[key]; if(!scene)return;
+    char2CurrentScene=key; char2CurrentPart=0;
+    char2CurrentTexts=scene.texts[gameLang]||scene.texts['zh'];
+    char2StopSpecialAnim();
+    if(scene.animated)char2StartSpecialAnim();
+    else char2GameImageEl().src='public/pictures/'+scene.image;
+    if(scene.charName){char2CharNameEl().classList.remove('hidden');char2CharNameEl().innerText=gameLang==='en'?scene.charName.en:scene.charName.zh;char2SceneWrapper().classList.add('scene-dialogue');}
+    else{char2CharNameEl().classList.add('hidden');char2SceneWrapper().classList.remove('scene-dialogue');}
+    char2ChoicesBox().classList.remove('show');
+    char2StoryTextBox().classList.remove('blur');
+    char2GameImageEl().style.filter='';
+    char2CurrentChoiceKey=null;
+    char2SaveProgress(key,null);
+    char2ShowNextLine();
+  }
+
+  function char2ShowNextLine(){
+    if(char2CurrentPart<char2CurrentTexts.length){
+      const text=char2CurrentTexts[char2CurrentPart++];
+      char2RunTypewriter(text,char2Arrow(),null);
+    } else {
+      const scene=SCENES2[char2CurrentScene];
+      const nextKey=scene.next();
+      if(nextKey)char2RunScene(nextKey);
+      else if(char2SpecialReturnChoice){const c=char2SpecialReturnChoice;char2SpecialReturnChoice=null;char2GoChoice(c);}
+    }
+  }
+
+  function char2GoChoice(key){
+    if(char2Stats.pestResist<=0){char2TriggerBad1();return;}
+    if(char2Stats.growth>=100){char2BeginSalePeriod();return;}
+    const data=CHOICES2[key]; if(!data)return;
+    char2CurrentChoiceKey=key;
+    char2SaveProgress(char2CurrentScene,key);
+    char2ChoicesBox().classList.add('show');
+    char2StoryTextBox().classList.add('blur');
+    char2GameImageEl().style.filter='blur(8px)';
+    char2Arrow().classList.remove('show');
+    char2ChoicesTitle().innerText=data.title[gameLang]||data.title['zh'];
+    char2ChoicesList().innerHTML='';
+    data.options.forEach(opt=>{
+      const li=document.createElement('li'),btn=document.createElement('button');
+      btn.className='choice-button'; btn.innerText=gameLang==='en'?opt.en:opt.zh;
+      btn.addEventListener('click',()=>opt.action()); li.appendChild(btn); char2ChoicesList().appendChild(li);
+    });
+  }
+
+  function initChar2(){
+    char2Stats.quality=0;char2Stats.pestResist=50;char2Stats.growth=0;char2Stats.pesticideUsed=0;
+    char2FinalEnding=null; char2CurrentChoiceKey=null; char2SpecialReturnChoice=null;
+    char2RunScene('s1');
+    const stb=char2StoryTextBox();
+    stb.onclick=()=>{if(char2ChoicesBox().classList.contains('show'))return;char2ShowNextLine();};
+  }
+
+  window.addEventListener('languageChanged',e=>{
+    if(currentPage==='char2'){
+      const l=e.detail.lang;
+      if(char2CurrentChoiceKey)char2GoChoice(char2CurrentChoiceKey);
+      else if(char2CurrentScene)char2RunScene(char2CurrentScene);
+    }
+  });
+  </script>
+  <script>
+  /* ══════════════════════════════════════════
+     CHARACTER 3 (農民) LOGIC
+  ══════════════════════════════════════════ */
+  let globalTypewriterTimer3 = null;
+  let isTyping3 = false;
+  let char3CurrentScene=null, char3CurrentTexts=[], char3CurrentPart=0, char3CurrentChoiceKey=null, char3FinalEnding=null;
+
+  const char3Arrow=()=>document.getElementById('nextArrow3');
+  const char3CharNameEl=()=>document.getElementById('charName3');
+  const char3GameImageEl=()=>document.getElementById('gameImage3');
+  const char3ChoicesBox=()=>document.getElementById('choicesContainer3');
+  const char3ChoicesTitle=()=>document.getElementById('choicesTitle3');
+  const char3ChoicesList=()=>document.getElementById('choicesList3');
+  const char3StoryTextBox=()=>document.getElementById('storyTextBox3');
+  const char3StoryTextEl=()=>document.getElementById('storyText3');
+  const char3SceneWrapper=()=>document.getElementById('sceneWrapper3');
+  const char3OverlayBtn=()=>document.getElementById('sceneOverlayBtn3');
+
+  const char3Stats={money:50,health:50,stress:0,reputation:0,
+    add(k,v){this[k]=(this[k]||0)+v;},
+    isHealthy(){return this.health>0&&this.stress<100;},
+    rollBadEnding(){const r=Math.random();if(r<0.2)return'bad2';if(r<0.6)return'bad3';return'bad4';},
+    harvestEnding(){if(this.reputation<-50)return'bad2';if(this.reputation>100)return'good1';return'good2';}
+  };
+
+  function char3RunTypewriter(text,arrowEl,onComplete){
+    const el=char3StoryTextEl();
+    if(!el)return;
+    if(!text){if(arrowEl)arrowEl.classList.add('show');if(onComplete)onComplete();return;}
+    if(globalTypewriterTimer3){clearTimeout(globalTypewriterTimer3);globalTypewriterTimer3=null;}
+    el.textContent='';let i=0;isTyping3=true;
+    if(arrowEl)arrowEl.classList.remove('show');
+    function type(){
+      if(i<text.length){el.textContent+=text[i++];globalTypewriterTimer3=setTimeout(type,40);}
+      else{globalTypewriterTimer3=null;isTyping3=false;if(arrowEl)arrowEl.classList.add('show');if(onComplete)onComplete();}
+    }
+    type();
+  }
+
+  function char3FinishTypewriter(text,arrowEl){
+    if(globalTypewriterTimer3){clearTimeout(globalTypewriterTimer3);globalTypewriterTimer3=null;}
+    const el=char3StoryTextEl();if(el)el.textContent=text;isTyping3=false;if(arrowEl)arrowEl.classList.add('show');
+  }
+
+  function char3SaveProgress(sk,ck){const base=window.location.href.split('#')[0];const hash=ck?sk+'|'+ck:sk;localStorage.setItem('currentGamePage',base+'#char3|'+hash);}
+  function char3SaveStats(){localStorage.setItem('farmer_game_stats',JSON.stringify({money:char3Stats.money,health:char3Stats.health,stress:char3Stats.stress,reputation:char3Stats.reputation,finalEnding:char3FinalEnding}));}
+  function char3LoadStats(){try{const raw=localStorage.getItem('farmer_game_stats');return raw?JSON.parse(raw):null;}catch(e){return null;}}
+
+  function char3FinishEnding(ending){
+    char3FinalEnding=ending;
+    localStorage.setItem('last_ending','farmer_'+ending);
+    localStorage.setItem('farmer_'+ending,'true');
+    localStorage.setItem('came_from_ending','true');
+    char3SaveStats();
+    if (!localStorage.getItem('first_ending_seen')) {
+      localStorage.setItem('first_ending_seen', 'true');
+      navTo('ending-anim');
+    } else {
+      navTo('star');
+    }
+  }
+
+  function afterChoice3(pk){return afterChoicePeriodLock3(pk,pk);}
+  function afterChoicePeriodLock3(cur,next){
+    char3SaveStats();
+    if(char3Stats.money<=0)return'bad1';
+    if(!char3Stats.isHealthy())return char3Stats.rollBadEnding();
+    if(char3Stats.money>=300)return's_harvest_start';
+    char3GoChoice(next);return null;
+  }
+  function afterChoicePeriodLockOrShortcut3(cur,next){
+    char3SaveStats();
+    if(char3Stats.money<=0)return'bad1';
+    if(!char3Stats.isHealthy())return char3Stats.rollBadEnding();
+    if(char3Stats.money>=300)return's_harvest_start';
+    if(!localStorage.getItem('farmer_good3')&&Math.random()<0.5){localStorage.setItem('farmer_good3','true');return'g3_1';}
+    char3GoChoice(next);return null;
+  }
+
+  const SCENES3={
+    's1':{image:'3-1.png',charName:null,texts:{zh:['清晨五點，天還沒完全亮，你踩進濕冷的田裡，鞋底沾滿泥水。'],en:['It is 5 AM, the sky has not yet fully brightened. You step into the cold, damp field, your shoes caked in mud.']},next:()=>'s2'},
+    's2':{image:'3-2.png',charName:null,texts:{zh:['空中傳來細微的振翅聲。'],en:['A faint sound of flapping wings comes from the air.']},next:()=>'c1'},
+    'c1':{image:'3-2.png',charName:{zh:'農民',en:'Farmer'},texts:{zh:['唉，又是瘤野螟......'],en:['Sigh, rice leaffolders again...']},next:()=>'nibble'},
+    'nibble':{image:'3-2.png',charName:null,texts:{zh:['你伸手撥開稻葉，發現部分稻米葉面上殘留著被啃食過的痕跡。'],en:['You reach out to part the rice leaves, only to find traces of nibbling on the surface of some of the leaves.']},next:()=>'c2'},
+    'c2':{image:'3-2.png',charName:{zh:'農民',en:'Farmer'},texts:{zh:['瘤野螟，你完蛋了！'],en:['Rice leaffolder, you are done for!']},next:()=>'goal'},
+    'goal':{image:'3-2.png',charName:null,texts:{zh:['為了避免讓瘤野螟大量繁殖，破壞整片稻田，你內心只有一個目標：斬殺瘤野螟，成功收成，賺到滿滿的錢。','接下來，輪到你，接下這片田。'],en:['To prevent the rice leaffolders from multiplying and destroying the entire paddy, your goal is singular: eradicate them, secure a successful harvest, and make a fortune.','Now, it is your turn to take over this field.']},next:()=>{char3GoChoice('period1');return null;}},
+    'p1_stable':{image:'3-2.png',charName:null,texts:{zh:['你按照了你的老方法來種植，想說至少還能控制。'],en:['You follow your usual farming method, hoping at least to maintain control.']},next:()=>afterChoice3('period1')},
+    'p1_pesticide':{image:'3-2.png',charName:null,texts:{zh:['你知道這不是長久之計，但現在沒有時間猶豫，先活下來再說吧！'],en:["You know this isn't a long-term solution, but there is no time to hesitate. Survive first."]},next:()=>afterChoicePeriodLockOrShortcut3('period1','period2')},
+    'p1_limonene':{image:'3-2.png',charName:null,texts:{zh:['你聽說這種方法比較安全，想著先試試看吧！好像還滿不錯的！'],en:["You've heard this method is safer, so you decide to give it a try. It actually seems pretty good."]},next:()=>afterChoicePeriodLockOrShortcut3('period1','period3')},
+    'p1_borrow':{image:'3-3.png',charName:null,texts:{zh:['沒錢了，你決定先借錢投資，晚一點再考慮稻米。'],en:['You have no money left, so you decide to borrow money and invest first, and deal with the rice later.']},next:()=>afterChoice3('period1')},
+    'p1_rest':{image:'3-4.png',charName:null,texts:{zh:['你決定休息，給水稻們自己造化，反正船到橋頭自然直。'],en:['You decide to rest and let the rice plants take their own course. After all, things will work out when the time comes.']},next:()=>afterChoice3('period1')},
+    'p2_stable':{image:'3-2.png',charName:null,texts:{zh:['用穩定的方式種植，穩穩的種出新的稻米。'],en:['You return to a steady farming method, producing new rice calmly and consistently.']},next:()=>afterChoice3('period2')},
+    'p2_pesticide':{image:'3-2.png',charName:null,texts:{zh:['這次使出絕命毒殺技，使出農藥絕殺！'],en:['This time you unleash an "ultimate pesticide strike," fully committing to chemical control.']},next:()=>afterChoice3('period2')},
+    'p2_borrow':{image:'3-3.png',charName:null,texts:{zh:['沒錢了，你決定先借錢投資，晚一點再考慮稻米。'],en:['You have no money left, so you decide to borrow money and invest first, and deal with the rice later.']},next:()=>afterChoice3('period2')},
+    'p2_rest':{image:'3-4.png',charName:null,texts:{zh:['你決定休息，給水稻們自己造化，反正船到橋頭自然直。'],en:['You decide to rest and let the rice plants take their own course. After all, things will work out when the time comes.']},next:()=>afterChoice3('period2')},
+    'p3_stable':{image:'3-2.png',charName:null,texts:{zh:['用穩定的方式種植，穩穩的種出新的稻米。'],en:['You return to a steady farming method, producing new rice calmly and consistently.']},next:()=>afterChoice3('period3')},
+    'p3_limonene':{image:'3-2.png',charName:null,texts:{zh:['走在水稻時尚前端的你，決定試試這新款的檸檬烯！'],en:["Staying at the forefront of rice farming trends, you decide to try this new limonene-based approach."]},next:()=>afterChoice3('period3')},
+    'p3_borrow':{image:'3-3.png',charName:null,texts:{zh:['沒錢了，你決定先借錢投資，晚一點再考慮稻米。'],en:['You have no money left, so you decide to borrow money and invest first, and deal with the rice later.']},next:()=>afterChoice3('period3')},
+    'p3_rest':{image:'3-4.png',charName:null,texts:{zh:['你決定休息，給水稻們自己造化，反正船到橋頭自然直。'],en:['You decide to rest and let the rice plants take their own course. After all, things will work out when the time comes.']},next:()=>afterChoice3('period3')},
+    's_harvest_start':{image:'2-4.png',charName:null,texts:{zh:['收割開始了，機器進入田間，一排一排稻穗被整齊割下。','你先前的努力即將揭曉。'],en:["The harvest begins. Machines enter the field, and rows of rice stalks are neatly cut down one by one.","Everything you've done so far is about to be revealed."]},next:()=>{if(char3Stats.reputation<-50)return'harvest_bad2_1';if(char3Stats.reputation>100)return'good1_1';return'good2';}},
+    'harvest_bad2_1':{image:'3-5.png',charName:null,texts:{zh:['市場早已對你的稻米失去信任。','即使完成收成，仍無法順利進入販售流程。','部分稻米被退回，部分滯留倉庫。','田地仍在運作，但產出不再被認可。'],en:['The market has already lost trust in your rice.','Even after the harvest is completed, it still cannot smoothly enter the sales process.','Some of the rice is returned, while some remains stuck in storage warehouses.','The fields continue to operate, but the produce is no longer recognized.']},next:()=>'harvest_bad2_c'},
+    'harvest_bad2_c':{image:'3-2.png',charName:{zh:'農民',en:'Farmer'},texts:{zh:['怎麼會這樣......'],en:['How did it come to this...']},next:()=>'harvest_bad2_2'},
+    'harvest_bad2_2':{image:'3-5.png',charName:null,texts:{zh:['過去的選擇累積成結果，影響的不只是這一季的收成。'],en:["Past choices have accumulated into consequences, affecting not just this season's harvest."]},next:()=>{char3FinishEnding('bad2');return null;}},
+    'g3_1':{image:'3-5.png',charName:null,texts:{zh:['你在整理收成資料時，手機裡冒出了一則通知。'],en:['While you are organizing the harvest data, a notification suddenly pops up on your phone.']},next:()=>'g3_2'},
+    'g3_2':{image:'3-6.png',charName:null,buttonScene:true,texts:{zh:[],en:[]},next:()=>'g3_3'},
+    'g3_3':{image:'3-5.png',charName:null,texts:{zh:['隔天，你與IGEM 10團隊聊了許多稻田的種種與研究的內容。'],en:['The next day, you spend a long time talking with iGEM Team 10 about rice fields and their research.']},next:()=>'g3_4'},
+    'g3_4':{image:'3-2.png',charName:{zh:'農民',en:'Farmer'},texts:{zh:['這些秧苗給你們，一起來捕捉瘤野螟吧！'],en:["Here are the seedlings for you. Let's capture the rice leafrollers together!"]},next:()=>'g3_5'},
+    'g3_5':{image:'3-5.png',charName:null,texts:{zh:['稻米被裝進了紙箱中，瘤野螟的幼蟲與成蟲則被裝進了昆蟲箱。'],en:['The rice plants are carefully packed into cardboard boxes, while the larvae and adult rice leafrollers are placed into insect containers for study.']},next:()=>'g3_6'},
+    'g3_6':{image:'3-2.png',charName:{zh:'農民',en:'Farmer'},texts:{zh:['再見！我相信你們可以的！'],en:['Goodbye! I believe you can do it!']},next:()=>'g3_7'},
+    'g3_7':{image:'2-8.png',charName:null,texts:{zh:['你在田埂上和他們道別並加以鼓勵。','風吹過稻浪，田裡恢復安靜，','但你知道，有些答案，正在遠方被慢慢拼出來。'],en:['You say farewell on the edge of the field, offering them encouragement.','The wind passes through the waves of rice plants, and the field falls quiet once again.','But you know—some answers are still being slowly pieced together somewhere far away.']},next:()=>{char3FinishEnding('good3');return null;}},
+    'bad1':{image:'3-4.png',charName:null,texts:{zh:['帳戶裡的數字終於歸零。','借不到錢、賣不出稻米，這片田你再也撐不下去了。','你只能黯然放棄這次的耕種。'],en:['The number in your account finally hits zero.','Unable to borrow more or sell any rice, you cannot keep this field going any longer.','You have no choice but to give up this harvest.']},next:()=>{char3FinishEnding('bad1');return null;}},
+    'bad2':{image:'2-5.png',charName:null,texts:{zh:['你持續借錢擴張並大量使用農藥。','田區開始被外部檢查介入。','用藥紀錄與異常數據被放大檢視。','最終，收成被封存，無法販售，信任中斷，一切停止。'],en:['You keep borrowing money to grow bigger and use a large amount of pesticides.','Outside inspectors start to step into your fields.','Your spray records and strange data are put under a big magnifying glass.','In the end, your harvest is sealed away and cannot be sold. Trust is broken, and everything stops.']},next:()=>{char3FinishEnding('bad2');return null;}},
+    'good2':{image:'2-7.png',charName:null,texts:{zh:['收成與販售過程順利完成。','未出現重大問題，也未有特別突出的成果。','整體維持基本穩定。','田地持續運作，資源得以延續至下一季。','本季以平穩的狀態結束。'],en:['The harvest and sales process are completed smoothly.','No major problems occur, but there are also no particularly outstanding results.','Overall, things remain basically stable.','The field continues to operate, and resources are carried over to the next season.','This season ends in a steady, uneventful state.']},next:()=>{char3FinishEnding('good2');return null;}},
+    'good1_1':{image:'2-8.png',charName:null,texts:{zh:['整體種植過程穩定，品質與管理受到肯定。','產品順利通過市場檢驗，並獲得良好評價。','收成後的產品不僅成功完成販售，也逐漸累積了市場信任，為下一季的合作與機會奠定基礎。'],en:['The overall cultivation process remained stable, and both quality and management were well recognized.','The product successfully passed market inspections and received positive evaluations.','After harvest, the rice was not only successfully sold but also gradually built market trust, laying the foundation for future cooperation and opportunities.']},next:()=>'good1_c'},
+    'good1_c':{image:'2-8.png',charName:{zh:'農民',en:'Farmer'},texts:{zh:['好欸，成功達成目標了！'],en:['Yes, I did it—I reached my goal!']},next:()=>'good1_2'},
+    'good1_2':{image:'2-8.png',charName:null,texts:{zh:['最終，本季的表現被視為一次成功的種植案例。'],en:['In the end, this season was regarded as a successful farming case study.']},next:()=>{char3FinishEnding('good1');return null;}},
+    'bad3':{image:'2-5.png',charName:null,texts:{zh:['你持續借錢擴張並大量使用農藥。','你的身體開始無法負荷長期壓力與化學暴露。'],en:['You keep borrowing money to grow bigger and use a large amount of pesticides.','Your body begins to break down from the long-term stress and the chemicals.']},next:()=>'bad3_c'},
+    'bad3_c':{image:'2-5.png',charName:{zh:'農民',en:'Farmer'},texts:{zh:['咳咳咳......'],en:['Cough, cough, cough...']},next:()=>'bad3_2'},
+    'bad3_2':{image:'2-5.png',charName:null,texts:{zh:['田還在，但你已經無法長時間停留。'],en:['The field is still there, but you can no longer stay in it for long.']},next:()=>{char3FinishEnding('bad3');return null;}},
+    'bad4':{image:'2-6.png',charName:null,texts:{zh:['你持續借錢擴張並大量使用農藥。','螟蟲逐漸適應並擴散，田間失去控制。','生態崩壞，產量與品質同步下滑。'],en:['You keep borrowing money to grow bigger and use a large amount of pesticides.','The bugs slowly get used to the chemicals and spread, and the field goes out of control.','The nature around you breaks down, and both your harvest amount and its quality drop at the same time.']},next:()=>{char3FinishEnding('bad4');return null;}}
+  };
+
+  const CHOICES3={
+    period1:{title:{zh:'請選擇你的種植方式：',en:'Choose your cultivation method:'},options:[
+      {zh:'穩定種植',en:'Stable Cultivation',action(){char3Stats.add('money',20);char3Stats.add('health',5);char3Stats.add('stress',-5);char3Stats.add('reputation',5);char3RunScene('p1_stable');}},
+      {zh:'使用農藥',en:'Use Pesticides',action(){char3Stats.add('money',60);char3Stats.add('health',-25);char3Stats.add('stress',20);char3Stats.add('reputation',-10);char3RunScene('p1_pesticide');}},
+      {zh:'使用檸檬烯',en:'Use Limonene',action(){char3Stats.add('money',20);char3Stats.add('health',5);char3Stats.add('stress',5);char3Stats.add('reputation',15);char3RunScene('p1_limonene');}},
+      {zh:'借錢投資',en:'Borrow Money for Investment',action(){char3Stats.add('money',100);char3Stats.add('stress',60);char3RunScene('p1_borrow');}},
+      {zh:'休息',en:'Rest',action(){char3Stats.add('health',20);char3Stats.add('stress',-20);char3Stats.add('money',-20);char3RunScene('p1_rest');}}
+    ]},
+    period2:{title:{zh:'請選擇你的種植方式：',en:'Choose your cultivation method:'},options:[
+      {zh:'穩定種植',en:'Stable Cultivation',action(){char3Stats.add('money',20);char3Stats.add('health',5);char3Stats.add('stress',-5);char3Stats.add('reputation',5);char3RunScene('p2_stable');}},
+      {zh:'使用農藥',en:'Use Pesticides',action(){char3Stats.add('money',60);char3Stats.add('health',-25);char3Stats.add('stress',20);char3Stats.add('reputation',-10);char3RunScene('p2_pesticide');}},
+      {zh:'借錢投資',en:'Borrow Money for Investment',action(){char3Stats.add('money',100);char3Stats.add('stress',60);char3RunScene('p2_borrow');}},
+      {zh:'休息',en:'Rest',action(){char3Stats.add('health',20);char3Stats.add('stress',-20);char3Stats.add('money',-20);char3RunScene('p2_rest');}}
+    ]},
+    period3:{title:{zh:'請選擇你的種植方式：',en:'Choose your cultivation method:'},options:[
+      {zh:'穩定種植',en:'Stable Cultivation',action(){char3Stats.add('money',20);char3Stats.add('health',5);char3Stats.add('stress',-5);char3Stats.add('reputation',5);char3RunScene('p3_stable');}},
+      {zh:'使用檸檬烯',en:'Use Limonene',action(){char3Stats.add('money',20);char3Stats.add('health',5);char3Stats.add('stress',5);char3Stats.add('reputation',15);char3RunScene('p3_limonene');}},
+      {zh:'借錢投資',en:'Borrow Money for Investment',action(){char3Stats.add('money',100);char3Stats.add('stress',60);char3RunScene('p3_borrow');}},
+      {zh:'休息',en:'Rest',action(){char3Stats.add('health',20);char3Stats.add('stress',-20);char3Stats.add('money',-20);char3RunScene('p3_rest');}}
+    ]}
+  };
+
+  function char3RunScene(key){
+    const scene=SCENES3[key];if(!scene)return;
+    char3CurrentScene=key;char3CurrentPart=0;
+    char3CurrentTexts=scene.texts[gameLang]||scene.texts['zh'];
+    char3GameImageEl().src='public/pictures/'+scene.image;
+    if(scene.charName){char3CharNameEl().classList.remove('hidden');char3CharNameEl().innerText=gameLang==='en'?scene.charName.en:scene.charName.zh;char3SceneWrapper().classList.add('scene-dialogue');}
+    else{char3CharNameEl().classList.add('hidden');char3SceneWrapper().classList.remove('scene-dialogue');}
+    char3ChoicesBox().classList.remove('show');
+    char3StoryTextBox().classList.remove('blur');
+    char3GameImageEl().style.filter='';
+    char3CurrentChoiceKey=null;
+    char3SaveProgress(key,null);
+    if(scene.buttonScene){
+      char3StoryTextBox().style.display='none';char3OverlayBtn().classList.remove('hidden');
+      char3OverlayBtn().onclick=()=>{char3OverlayBtn().classList.add('hidden');char3StoryTextBox().style.display='';const nk=scene.next();if(nk)char3RunScene(nk);};
+      return;
+    }
+    char3OverlayBtn().classList.add('hidden');char3StoryTextBox().style.display='';
+    char3ShowNextLine();
+  }
+
+  function char3ShowNextLine(){
+    if(char3CurrentPart<char3CurrentTexts.length){
+      const text=char3CurrentTexts[char3CurrentPart++];
+      char3RunTypewriter(text,char3Arrow(),null);
+    } else {
+      const scene=SCENES3[char3CurrentScene];
+      const nk=scene.next();if(nk)char3RunScene(nk);
+    }
+  }
+
+  function char3GoChoice(key){
+    const data=CHOICES3[key];if(!data)return;
+    char3CurrentChoiceKey=key;
+    char3SaveProgress(char3CurrentScene,key);
+    char3ChoicesBox().classList.add('show');
+    char3StoryTextBox().classList.add('blur');
+    char3GameImageEl().style.filter='blur(8px)';
+    char3Arrow().classList.remove('show');
+    char3ChoicesTitle().innerText=data.title[gameLang]||data.title['zh'];
+    char3ChoicesList().innerHTML='';
+    data.options.forEach(opt=>{
+      const li=document.createElement('li'),btn=document.createElement('button');
+      btn.className='choice-button';btn.innerText=gameLang==='en'?opt.en:opt.zh;
+      btn.addEventListener('click',()=>opt.action());li.appendChild(btn);char3ChoicesList().appendChild(li);
+    });
+  }
+
+  function initChar3(){
+    char3Stats.money=50;char3Stats.health=50;char3Stats.stress=0;char3Stats.reputation=0;
+    char3FinalEnding=null;char3CurrentChoiceKey=null;
+    char3RunScene('s1');
+    const stb=char3StoryTextBox();
+    stb.onclick=()=>{if(char3ChoicesBox().classList.contains('show'))return;char3ShowNextLine();};
+  }
+
+  window.addEventListener('languageChanged',e=>{
+    if(currentPage==='char3'){
+      if(char3CurrentChoiceKey)char3GoChoice(char3CurrentChoiceKey);
+      else if(char3CurrentScene)char3RunScene(char3CurrentScene);
+    }
+  });
+
+  /* ══════════════════════════════════════════
+     ENDING ANIMATION PAGE (a.html 邏輯)
+  ══════════════════════════════════════════ */
+  const ENDING_ANIM_SCENES = [
+    {
+      id: '1-7',
+      frames: ['public/pictures/1-7-1.png','public/pictures/1-7-2.png','public/pictures/1-7-3.png','public/pictures/1-7-4.png','public/pictures/1-7-5.png'],
+      interval: 250, next: 'a1',
+      zh: ['你剛剛所經歷的選擇，並不只是遊戲，而是正在世界各地發生的現實。'],
+      en: ['The choices you just experienced are not just a game, but a reality happening all over the world.']
+    },
+    {
+      id: 'a1',
+      frames: ['public/animation/a1-1.png','public/animation/a1-2.png','public/animation/a1-3.png','public/animation/a1-4.png','public/animation/a1-5.png','public/animation/a1-6.png','public/animation/a1-7.png','public/animation/a1-8.png','public/animation/a1-9.png'],
+      interval: 250, next: 'a2',
+      zh: ['你知道嗎？全球超過一半的人口，都以稻米作為主要糧食來源。','而亞洲，更是世界上最大的稻米消費與生產地區。','然而，在保護稻米產量的背後，卻隱藏著一個越來越嚴重的問題——'],
+      en: ['Do you know that more than half of the global population relies on rice as a staple food source.','Asia, in particular, is the largest region for both rice consumption and production in the world.','However, behind the effort to protect rice yields, there lies a growing and increasingly serious problem—']
+    },
+    {
+      id: 'a2',
+      frames: ['public/animation/a2-1.png','public/animation/a2-2.png','public/animation/a2-3.png','public/animation/a2-4.png','public/animation/a2-5.png','public/animation/a2-6.png','public/animation/a2-7.png','public/animation/a2-8.png','public/animation/a2-9.png','public/animation/a2-10.png'],
+      interval: 250, next: 'a3',
+      zh: ['農藥。','研究指出，長期生活在農藥頻繁噴灑區域附近的人，或長時間接觸農藥的人，罹患癌症的風險會明顯提高。','不僅如此，農藥還會導致蜂后數量減少85%，殺死蜜蜂等重要的授粉昆蟲，危害樹蛙等瀕危物種，甚至破壞土壤肥力，使土地失去原本的生命力。','聯合國糧農組織警告說，如果這樣的情況持續下去，未來我們面對的，將不只是環境問題，更可能是糧食短缺與生態崩潰。'],
+      en: ['Pesticides.','Studies have shown that people who live near areas with frequent pesticide spraying, or those who are regularly exposed to pesticides over long periods, face a significantly higher risk of developing cancer.','In addition, pesticides have been found to reduce queen bee populations by up to 85%, kill essential pollinators such as bees, threaten endangered species like tree frogs, and even degrade soil fertility, stripping the land of its natural vitality.','The Food and Agriculture Organization of the United Nations has warned that if this situation continues, what we may face in the future is not only an environmental crisis, but also potential food shortages and ecological collapse.']
+    },
+    {
+      id: 'a3',
+      frames: ['public/animation/a3-1.png','public/animation/a3-2.png','public/animation/a3-3.png','public/animation/a3-4.png','public/animation/a3-5.png','public/animation/a3-6.png','public/animation/a3-7.png','public/animation/a3-8.png'],
+      interval: 250, next: 'a4',
+      zh: ['透過對農民的採訪和實地調查，我們也了解到另一個殘酷的現實。','因為氣候變遷加劇，病蟲害問題越來越嚴重，許多農民為了保護收成，只能噴灑更多農藥。這形成了一個惡性循環：','農藥使用越多，環境破壞越嚴重。'],
+      en: ['Through interviews with farmers and on-site field investigations, we also came to understand another harsh reality.','Due to the worsening impacts of climate change, pest and disease problems are becoming increasingly severe. Many farmers, in order to protect their harvests, are forced to use more pesticides. This creates a vicious cycle:','The more pesticides are used, the more severe the environmental damage becomes.']
+    },
+    {
+      id: 'a4',
+      frames: ['public/animation/a4-1.png','public/animation/a4-2.png','public/animation/a4-3.png','public/animation/a4-4.png','public/animation/a4-5.png'],
+      interval: 250, next: 'a5',
+      zh: ['因此，我們開始思考：','有沒有一種方式，能夠保護作物，同時也保護人體健康與環境？','在研究過程中，我們發現了大自然早已提供答案。','當水稻受到害蟲攻擊時，植物本身其實會自然釋放一種物質——檸檬烯。','檸檬烯就像植物發出的警訊，能夠幫助驅趕害蟲，其中包括水稻最具破壞性的害蟲之一——瘤野螟。','於是，我們希望透過合成生物學生產檸檬烯。','相比傳統農藥，檸檬烯是一種來自自然的生物型防治方式。','它不只能降低對人體健康的危害，也有機會減少對蜜蜂、土壤與生態系的傷害，讓農業朝向更永續的方向發展。'],
+      en: ['Therefore, we began to ask ourselves:','Is there a way to protect crops while also safeguarding human health and the environment?','During our research, we discovered that nature had already provided the answer.','When rice plants are attacked by pests, they naturally release a substance called limonene.','Limonene acts like a warning signal from the plant, helping to repel insects—including one of the most destructive rice pests, the rice leafroller.','Based on this, we aim to produce limonene through synthetic biology.','Compared to traditional pesticides, limonene is a bio-based pest control method derived from nature.','It not only reduces risks to human health, but also has the potential to lessen harm to bees, soil, and ecosystems—helping agriculture move toward a more sustainable future.']
+    },
+    {
+      id: 'a5',
+      frames: ['public/animation/a5-1.png','public/animation/a5-2.png','public/animation/a5-3.png','public/animation/a5-4.png','public/animation/a5-5.png','public/animation/a5-6.png','public/animation/a5-7.png','public/animation/a5-8.png','public/animation/a5-9.png'],
+      interval: 250, next: 'a6',
+      zh: ['但真正的改變，需要農民、政府與你的共同合作。','農民需要更安全、永續的防治方式；政府需要推動友善農業與相關支持政策；','而你的每一次選擇，也正在決定未來農業的方向。'],
+      en: ['But real change requires collaboration among farmers, the government, and you.','Farmers need safer and more sustainable methods of pest control. The government needs to promote eco-friendly agriculture and supportive policies.','And every choice you make is also shaping the future direction of agriculture.']
+    },
+    {
+      id: 'a6',
+      frames: ['public/animation/a5-1.png','public/animation/a5-2.png','public/animation/a5-3.png','public/animation/a5-4.png','public/animation/a5-5.png','public/animation/a5-6.png','public/animation/a5-7.png','public/animation/a5-8.png','public/animation/a5-9.png'],
+      interval: 250, next: 'a7',
+      zh: ['我們希望透過《NoFold》，讓你重新思考農藥、糧食、我們與環境之間的關係。','當更多人願意支持友善環境的農產品，改變才有可能真正發生。'],
+      en: ['We hope that through NoFold, you can rethink the relationship between pesticides, food, and the environment we share.','Only when more people are willing to support environmentally friendly agricultural products can real change truly begin.']
+    },
+    {
+      id: 'a7',
+      frames: ['public/animation/a7-1.png','public/animation/a7-2.png','public/animation/a7-3.png'],
+      interval: 200, next: null,
+      zh: ['也許有一天，當風吹過稻田時，','人們聞到的，不再是刺鼻的農藥味，而是土地與稻田最自然的氣息。'],
+      en: ['Perhaps one day, when the wind passes through the rice fields,','people will no longer smell the sharp scent of pesticides, but instead, the most natural fragrance of the land and the rice fields themselves.']
+    }
+  ];
+
+  let endingAnimSceneId = '1-7';
+  let endingAnimPart    = 0;
+  let endingAnimTyping  = false;
+  let endingAnimTypeTimer = null;
+  let endingAnimTimer   = null;
+
+  function initEndingAnim() {
+    endingAnimSceneId = '1-7';
+    endingAnimPart = 0;
+    endingAnimTyping = false;
+    if (endingAnimTypeTimer) { clearTimeout(endingAnimTypeTimer); endingAnimTypeTimer = null; }
+    if (endingAnimTimer)     { clearInterval(endingAnimTimer);   endingAnimTimer = null; }
+
+    const textBox = document.getElementById('endingAnimTextBox');
+    const fresh = textBox.cloneNode(true);
+    textBox.parentNode.replaceChild(fresh, textBox);
+    fresh.addEventListener('click', endingAnimHandleClick);
+    fresh.querySelector('#endingAnimArrow').addEventListener('click', e => { e.stopPropagation(); endingAnimHandleClick(); });
+
+    endingAnimGoToScene('1-7');
+  }
+
+  function endingAnimGoToScene(id) {
+    const scene = ENDING_ANIM_SCENES.find(s => s.id === id);
+    if (!scene) return;
+    endingAnimSceneId = id;
+    endingAnimPart = 0;
+
+    if (endingAnimTimer) { clearInterval(endingAnimTimer); endingAnimTimer = null; }
+    const img = document.getElementById('endingAnimImage');
+    if (img) {
+      img.src = scene.frames[0];
+      let idx = 0;
+      endingAnimTimer = setInterval(() => {
+        idx = (idx + 1) % scene.frames.length;
+        img.src = scene.frames[idx];
+      }, scene.interval);
+    }
+    endingAnimShowPart();
+  }
+
+  function endingAnimShowPart() {
+    const scene = ENDING_ANIM_SCENES.find(s => s.id === endingAnimSceneId);
+    if (!scene) return;
+    const lines = scene[gameLang] || scene['zh'];
+    const text  = lines[endingAnimPart];
+    const textEl  = document.getElementById('endingAnimText');
+    const arrowEl = document.getElementById('endingAnimArrow');
+    if (!textEl) return;
+
+    if (endingAnimTypeTimer) { clearTimeout(endingAnimTypeTimer); endingAnimTypeTimer = null; }
+    textEl.textContent = '';
+    if (arrowEl) arrowEl.classList.remove('show');
+    endingAnimTyping = true;
+    let i = 0;
+    function tick() {
+      if (i < text.length) {
+        textEl.textContent += text[i++];
+        endingAnimTypeTimer = setTimeout(tick, 40);
+      } else {
+        endingAnimTypeTimer = null;
+        endingAnimTyping = false;
+        if (arrowEl) arrowEl.classList.add('show');
+      }
+    }
+    tick();
+  }
+
+  function endingAnimHandleClick() {
+    const scene = ENDING_ANIM_SCENES.find(s => s.id === endingAnimSceneId);
+    if (!scene) return;
+    const lines = scene[gameLang] || scene['zh'];
+    const textEl  = document.getElementById('endingAnimText');
+    const arrowEl = document.getElementById('endingAnimArrow');
+
+    // 打字中 → 立刻跳完
+    if (endingAnimTyping) {
+      if (endingAnimTypeTimer) { clearTimeout(endingAnimTypeTimer); endingAnimTypeTimer = null; }
+      if (textEl) textEl.textContent = lines[endingAnimPart];
+      endingAnimTyping = false;
+      if (arrowEl) arrowEl.classList.add('show');
+      return;
+    }
+
+    // 還有下一句
+    if (endingAnimPart < lines.length - 1) {
+      endingAnimPart++;
+      endingAnimShowPart();
+      return;
+    }
+
+    // 最後一句播完 → 跳下一場景或結束進入 star
+    if (scene.next) {
+      endingAnimGoToScene(scene.next);
+    } else {
+      if (endingAnimTimer) { clearInterval(endingAnimTimer); endingAnimTimer = null; }
+      navTo('star');
+    }
+  }
+
+  // 語言切換時重播當前句
+  window.addEventListener('languageChanged', e => {
+    if (currentPage === 'ending-anim') {
+      endingAnimPart = 0;
+      endingAnimShowPart();
+    }
+    const docVideoTitle = document.getElementById('docVideoTitle');
+    if (docVideoTitle) {
+      docVideoTitle.innerHTML = e.detail.lang === 'zh' ? 'CCU-Taiwan iGEM10<br>稻米研究紀錄' : 'CCU-Taiwan iGEM10<br>Rice Research Record';
+    }
+  });
+
+  
+  const ACHIEVEMENTS = [
+    {key:'end_good1',cardId:'card_1_g1',textId:'name_1_g1',styles:{theme:'#2e7d32',bg:'#e8f5e9',lightBg:'#c8e6c9',text:'#1b5e20'},name:{zh:'吃稻飽',en:'All-You-Can-Eat Rice'},role:{zh:'瘤野螟',en:'Leaffolder'},tags:{zh:['#生存率100','#稻田裡的最後贏家','#精準鑽營的生還者'],en:['#100%SurvivalRate','#TheUltimateWinner','#MasterOfSurvival']},desc:{zh:'別人的吝嗇，就是你最大的底氣。\n在微弱的毒霧中優雅穿行，\n你的字典裡沒有「螟天再吃」的道理，\n只要沒死，整片稻田都是你的自助餐。',en:"Others' stinginess is your greatest strength.\nElegantly gliding through the faint toxic mist,\nThe concept of \"leaving it for tomorrow\" simply doesn't exist in your vocabulary.\nAs long as you are alive, the entire rice field is your buffet."},correspondingIds:['rice_bad1','farmer_bad1'],hint:{zh:'螟天再吃？不存在的！',en:'No tomorrow, eat it now!'}},
+    {key:'end_good2',cardId:'card_1_g2',textId:'name_1_g2',styles:{theme:'#6a1b9a',bg:'#f3e5f5',lightBg:'#e1bee7',text:'#4a148c'},name:{zh:'螟王適應體α',en:'The Stem Borer King Alpha'},role:{zh:'瘤野螟',en:'Leaffolder'},tags:{zh:['#生化防禦戰神','#農藥是我的調味料','#地表最強螟二代'],en:['#BiochemicalGod','#PesticideIsSeasoning','#StrongestGen2']},desc:{zh:'你經歷過農民的多次斬殺。\n每一次被農藥噴灑，都沒有讓你消失，\n那些殺不死你的，終將讓你成為農田的主人。你就是地表最強螟二代！',en:"Every time you were sprayed with pesticides, it failed to wipe you out.\nWhat didn't kill you has ultimately made you the master of the rice fields.\nYou are the strongest second-generation Stem Borer on Earth!"},correspondingIds:['rice_bad3','farmer_bad4'],hint:{zh:'那些殺不死我的，使我更強！',en:"What doesn't kill me makes me stronger."}},
+    {key:'end_bad1',cardId:'card_1_b1',textId:'name_1_b1',styles:{theme:'#c62828',bg:'#ffebee',lightBg:'#ffcdd2',text:'#b71c1c'},name:{zh:'螟中註定白費功夫',en:'Fated to Be in Vain'},role:{zh:'瘤野螟',en:'Leaffolder'},tags:{zh:['#產卵即終點','#被終結的傳承','#農田裡的沈默輓歌'],en:['#EggLayingIsEnd','#TerminatedLegacy','#SilentElegy']},desc:{zh:'你以為找到了溫柔的家鄉，其實是踏進了毒氣室。\n你產下的卵，成了這片土地最後的祭品。\n而你成為了農藥洗禮下的遺珠。',en:"You thought you had found a gentle homeland, but you actually stepped right into a gas chamber. The eggs you laid became the final sacrifice for this land, and you became the tragic remnant left behind after the baptism of pesticides."},correspondingIds:['rice_bad2','rice_good1','farmer_bad2','farmer_bad3'],hint:{zh:'提示：別一直跑去充滿刺鼻味道的地方啦！下輩子過好一點！',en:'Hint: Stop running off to places filled with pungent smells! Have a better life!'}},
+    {key:'end_bad2',cardId:'card_1_b2',textId:'name_1_b2',styles:{theme:'#f9a825',bg:'#fffde7',lightBg:'#fff9c4',text:'#f57f17'},name:{zh:'鞭數十驅之別院',en:'Driven to Another Place'},role:{zh:'瘤野螟',en:'Leaffolder'},tags:{zh:['#檸檬氣氣PTSD','#被迫搬家的流浪螟','#友善耕作的受害者'],en:['#LimonenePTSD','#HomelessMoth','#EcoFarmingVictim']},desc:{zh:"這不是致死的毒藥，卻是讓你靈魂顫抖的『逐客令』。\n你看著遠方的柔嫩的葉片，好想過去產卵，可是被一股薄荷味的檸檬烯阻擋著......\n「檸檬烯，我恨你！」",en:"This isn't a lethal poison, but it is an \"eviction notice\" that makes your very soul tremble.\nYou gaze at the tender leaves in the distance, longing to go over and lay your eggs, but you are blocked by a minty-scented wall of limonene... \"Limonene, I hate you!\""},correspondingIds:['rice_good2','rice_good3','farmer_good1','farmer_good2'],hint:{zh:'提示：農民時常會在高氮稻作噴更多農藥或使用檸檬烯！',en:'Hint: Farmers often use limonene on high-nitrogen crops!'}},
+    {key:'end_special1',cardId:'card_1_b3',textId:'name_1_b3',styles:{theme:'#0288d1',bg:'#e1f5fe',lightBg:'#b3e5fc',text:'#01579b'},name:{zh:'絕地求生',en:'PUBG Survival'},role:{zh:'瘤野螟',en:'Leaffolder'},tags:{zh:['#被記錄的一生','#無法逃離','#失去自由'],en:['#ALifeRecorded','#NoEscape','#LossOfFreedom']},desc:{zh:'你活了下來，但代價是失去了自由。\n你很不幸地被一群學生抓去研究，\n你成了螢光燈下的數據，被人類冷靜地觀測。\n你思考過人生，卻沒思考過螟生，下輩子別當瘤野螟了，當個人類吧！',en:"You survived, but the price was your freedom.\nUnfortunately, you were captured by a group of students for research.\nYou have become data under the fluorescent lights, calmly observed by humans."},correspondingIds:['rice_good4','farmer_good3'],hint:{zh:'下輩子，當個人類做研究吧！',en:'Be a human student in the next life!'}},
+    {key:'end_bad4',cardId:'card_1_b4',textId:'name_1_b4',styles:{theme:'#37474f',bg:'#eceff1',lightBg:'#cfd8dc',text:'#263238'},name:{zh:'瘤在世上',en:'Left Behind in the World'},role:{zh:'瘤野螟',en:'Leaffolder'},tags:{zh:['#無聲告別','#落幕的生命之舞','#孤獨的軀殼'],en:['#ASilentFarewell','#CurtainFalls','#TheLonelyShell']},desc:{zh:'你在僅有的生命期中，只留下了自己的軀殼在這個世界上。\n風吹過來，農民仍在辛勤工作，稻田還是那片田。\n但你，已經不在了。\n一隻瘤野螟的一生，就這樣結束了。短暫，平靜，悄無聲息。',en:"Within your brief lifespan, you left nothing but your empty shell behind in this world.\nThe wind blows, the farmers continue their hard work, and the rice fields remain just as they were."},correspondingIds:[],hint:{zh:'提示：可以多選擇有風險的選項，為你的孩子們冒一次險吧！',en:'Hint: Try choosing options with more risk!'}},
+    {key:'rice_bad1',cardId:'card_2_b1',textId:'name_2_b1',styles:{theme:'#795548',bg:'#efebe9',lightBg:'#d7ccc8',text:'#4e342e'},name:{zh:'坑坑洞洞',en:'Potholes and Hollows'},role:{zh:'水稻',en:'Rice'},tags:{zh:['#枯心苗的憂鬱','#被掏空的身軀','#全場唯一的受害者'],en:['#SadnessOfSeedling','#TheEmptyBody','#TheOnlyVictim']},desc:{zh:'你是這場博弈中唯一沈默的籌碼：\n被吝嗇的農民拋棄，成為瘤野螟口中的盛宴。\n雖然外表完整，但你的內部早已被掏空，\n你沒有被收割，也沒有被記住，\n就跟路邊的石頭一樣。',en:"You are the only silent pawn in this game: Thrown away by a cheap farmer, becoming a grand feast in the mouths of the rice leaf folders. Though you look whole on the outside, your inside is already completely empty. You are not harvested, and you are not remembered."},correspondingIds:['end_good1','farmer_bad1'],hint:{zh:'提示：你需要多選一些抗蟲率增加的選項！',en:"Hint: You need to pick more choices that increase your bug resistance!"}},
+    {key:'rice_bad2',cardId:'card_2_b2',textId:'name_2_b2',styles:{theme:'#e65100',bg:'#fff3e0',lightBg:'#ffe0b2',text:'#bf360c'},name:{zh:'收稻的代價',en:'The Price Received'},role:{zh:'水稻',en:'Rice'},tags:{zh:['#不被允許的存在','#被留下的不是幸運','#沉默的退場'],en:['#AnExistenceNotAllowed','#BeingLeftBehindIsNotLuck','#AQuietExit']},desc:{zh:'你被順利收割，卻在最後一刻被判定不合格。\n農藥殘留成為無法忽視的標記。\n你被分離、被封存，停留在倉庫深處。\n你沒有壞掉，只是失去了被選擇的資格。',en:"You are harvested safely, but you fail the test at the very last moment.\nThe leftover pesticide becomes a mark that no one can ignore.\nYou are separated, sealed away, and left deep inside a dark warehouse."},correspondingIds:['end_bad1','farmer_bad2'],hint:{zh:'提示：你攝入的農藥量太多了，請吃健康一點。',en:'Hint: You took in too much pesticide!'}},
+    {key:'rice_bad3',cardId:'card_2_b3',textId:'name_2_b3',styles:{theme:'#ad1457',bg:'#fce4ec',lightBg:'#f8bbd0',text:'#880e4f'},name:{zh:'農藥無效的夏天',en:'The Summer the Pesticides Failed'},role:{zh:'水稻',en:'Rice'},tags:{zh:['#抗藥性失控','#無聲消失','#來不及成熟'],en:['#OutofControl','#FadingAwaySilently','#NoTimeToRipen']},desc:{zh:'防治失效的那一年，你沒有撐過去。\n瘤野螟在田間擴散，你的結構被一點一點破壞。\n沒有收成，也沒有後續。\n你消失在了那個沒有結果的夏天。',en:"In the year the protection failed, you did not make it through.\nThe rice leaf folders spread across the field, Breaking your body down bit by bit.\nNo harvest, and no follow-up.\nYou disappeared into that fruitless summer."},correspondingIds:['end_good2','farmer_bad4'],hint:{zh:'提示：害蟲的抗藥性太高了，單靠傳統農藥不夠力。',en:'Hint: The pests developed too much resistance!'}},
+    {key:'rice_good1',cardId:'card_2_g1',textId:'name_2_g1',styles:{theme:'#afb42b',bg:'#f9fbe7',lightBg:'#f0f4c3',text:'#558b2f'},name:{zh:'逃過一劫',en:'Escaping by a Hair'},role:{zh:'水稻',en:'Rice'},tags:{zh:['#擦邊通過','#風險未解','#暫時安全'],en:['#BarelyPassing','#DangersNotSolved','#SafeForNow']},desc:{zh:'你順利通過檢驗，被帶入市場。\n過程中存在風險，但未被發現。\n你被包裝、被運送、被販售。表面一切正常。\n這是一場沒有被揭露的倖存。',en:"You pass the test safely and are taken to the market.\nThere were dangers along the way, but no one found them.\nEverything looks completely normal on the outside."},correspondingIds:['end_bad1','farmer_bad3'],hint:{zh:'幸運也是實力的一種！',en:'Luck is also a form of strength!'}},
+    {key:'rice_good2',cardId:'card_2_g2',textId:'name_2_g2',styles:{theme:'#f57f17',bg:'#fffde7',lightBg:'#fff9c4',text:'#e65100'},name:{zh:'稻米界模範生',en:'The Model Student of the Rice World'},role:{zh:'水稻',en:'Rice'},tags:{zh:['#品質頂標','#被認可的存在','#穩定與控制'],en:['#TopQuality','#ALifeApproved','#SteadyAndInControl']},desc:{zh:'從生長到收成，你維持最佳狀態。\n結構完整，品質穩定。\n你被選為標準，被作為參考。\n你的存在，成為「理想狀態」的代表。',en:"From growing to harvest, you stay in your very best shape.\nYour body is whole, and your quality is steady.\nYour life becomes the face of the \"perfect state\"."},correspondingIds:['end_bad2','farmer_good1'],hint:{zh:'實至名歸的最高榮譽！',en:'Well-deserved top honors!'}},
+    {key:'rice_good3',cardId:'card_2_g3',textId:'name_2_g3',styles:{theme:'#00796b',bg:'#e0f2f1',lightBg:'#b2dfdb',text:'#004d40'},name:{zh:'終於等稻你',en:'Finally Met You'},role:{zh:'水稻',en:'Rice'},tags:{zh:['#剛剛好','#被選中的普通','#平穩結束'],en:['#JustRight','#TheChosenOrdinary','#AQuietEnding']},desc:{zh:'你沒有特別突出，卻完整走過整個過程。\n在眾多稻米之中，你被選中。\n不是最耀眼，但剛好被需要。\n你被帶走，完成你的角色。',en:"You are not super special, But you made it all the way through.\nNot the brightest star, but just what someone needs right now."},correspondingIds:['end_bad2','farmer_good2'],hint:{zh:'平凡之中最見真章。',en:'True beauty lies in simplicity.'}},
+    {key:'rice_good4',cardId:'card_2_g4',textId:'name_2_g4',styles:{theme:'#0097a7',bg:'#e0f7fa',lightBg:'#b2ebf2',text:'#006064'},name:{zh:'搬家之旅',en:'The Moving Journey'},role:{zh:'水稻',en:'Rice'},tags:{zh:['#流動的命運','#離開原點','#好好吃的你'],en:['#MovingDestiny','#LeavingTheStart','#YouTasteSoGood']},desc:{zh:'你離開原本的田地，被運送到不同的地方。\n你的旅程沒有在田間結束，你將作為研究目標，\n為人類與大自然帶來更多的希望！',en:"You leave your old rice field, And you are moved to a different place.\nYou will be studied as a target, Bringing more hope to humans!"},correspondingIds:['end_special1','farmer_good3'],hint:{zh:'科研前線，也有你的貢獻。',en:'Contributing to the frontlines of science!'}},
+    {key:'farmer_bad1',cardId:'card_3_b1',textId:'name_3_b1',styles:{theme:'#8d6e63',bg:'#efebe9',lightBg:'#d7ccc8',text:'#4e342e'},name:{zh:'躺平的一生',en:'A Life of Lying Flat'},role:{zh:'農民',en:'Farmer'},tags:{zh:['#懶惰的代價','#破產倒數','#被遺忘的田壟'],en:['#ThePriceOfLazy','#CountDownToBroke','#TheForgottenFields']},desc:{zh:'你以為休息是為了走更長的路，沒想到休息太久，連路都找不到了。\n資金逐漸耗盡，田地荒廢。\n外界不再關注，你也失去重新開始的機會。',en:"You think resting is for walking a longer road later, But you do not know that resting for too long makes you lose the road completely."},correspondingIds:['end_good1','rice_bad1'],hint:{zh:'提示：別再懶了，請動起來。',en:'Hint: Do not be lazy anymore! Please get moving.'}},
+    {key:'farmer_bad2',cardId:'card_3_b2',textId:'name_3_b2',styles:{theme:'#b71c1c',bg:'#ffebee',lightBg:'#ffcdd2',text:'#7f0000'},name:{zh:'被檢舉達人盯上',en:'Targeted by a Serial Reporter'},role:{zh:'農民',en:'Farmer'},tags:{zh:['#高風險操作','#市場淘汰','#聲譽崩壞'],en:['#HighRiskMove','#ThrownOutByMarket','#BrokenGoodName']},desc:{zh:'你因為一直借錢或噴農藥，防治逐漸失效。\n農藥使用痕跡被放大檢視。市場檢測介入，流程被迫中止。\n產品遭到封存，無法流通。信任一旦破裂，難以回復。',en:"Because you keep borrowing money or spraying pesticides, your protection slowly fails.\nThe marks left by the pesticides are put under a big magnifying glass."},correspondingIds:['end_bad1','rice_bad2'],hint:{zh:'提示：你噴的農藥或借的錢太多了，請低調一點，別再噴那麼多農藥！',en:"Hint: You've sprayed too much pesticide or borrowed too much money.Stop spraying so many chemicals!"}},
+    {key:'farmer_bad3',cardId:'card_3_b3',textId:'name_3_b3',styles:{theme:'#e53935',bg:'#fff5f5',lightBg:'#ffdde0',text:'#a30000'},name:{zh:'醫院是你第二個家',en:'The Hospital is Your Second Home'},role:{zh:'農民',en:'Farmer'},tags:{zh:['#健康透支','#高壓反噬','#失去控制'],en:['#OverusedHealth','#HitBackByHighStress','#LosingControl']},desc:{zh:'你因為一直借錢或噴農藥，防治逐漸失效。\n長期暴露在農藥與壓力之下，身體開始出現明顯負擔。\n即使田地仍在運作，人已無法承受。生產與生活同時失衡。',en:"Prolonged exposure to pesticides and stress began to place a noticeable strain on the body.\nEven though the field is still working, you can no longer take it.\nYour work and your life both lose their balance at the same time."},correspondingIds:['end_bad1','rice_good1'],hint:{zh:'提示：你噴的農藥或借的錢太多了，請考慮一下自己的身心靈健康。',en:"Hint: You've sprayed too much pesticide or borrowed too much money. Please think about your own health."}},
+    {key:'farmer_bad4',cardId:'card_3_b4',textId:'name_3_b4',styles:{theme:'#455a64',bg:'#eceff1',lightBg:'#cfd8dc',text:'#263238'},name:{zh:'螟螟很努力',en:'You Work Very Hard'},role:{zh:'農民',en:'Farmer'},tags:{zh:['#抗藥性爆發','#全面失守','#連鎖崩壞'],en:['#DrugResistanceExplosion','#CompletelyLost','#ChainReactionBreakdown']},desc:{zh:'你因為一直借錢或噴農藥，防治逐漸失效。\n瘤野螟族群擴散，田間生態失去平衡。\n產量下降，品質不穩，整體系統進入不可逆的惡化狀態。',en:"The rice leafroller family spreads, and the nature in the field loses its balance.\nThe harvest drops, the quality becomes unsteady, and the whole system enters a bad state that cannot be fixed."},correspondingIds:['end_good2','rice_bad3'],hint:{zh:'提示：你噴的農藥或借的錢太多了，請考慮一下自己的身心靈健康。',en:"Hint: You are spraying too many pesticides or borrowing too much money; please consider your physical, mental, and spiritual well-being."}},
+    {key:'farmer_good1',cardId:'card_3_g1',textId:'name_3_g1',styles:{theme:'#f57c00',bg:'#fff3e0',lightBg:'#ffe0b2',text:'#e65100'},name:{zh:'一夜暴富',en:'Becoming Rich Overnight'},role:{zh:'農民',en:'Farmer'},tags:{zh:['#名利雙收','#綠色奇蹟','#稻浪淘金'],en:['#FameAndFortune','#GreenMiracle','#HarvestingGold']},desc:{zh:'你堅持友善農法建立的頂級聲譽，使各大契作商紛紛捧著現金爭相包田。\n鋪天蓋地的訂單與超高溢價，讓你在收成期實現了真正的一夜暴富。\n這是你守護土地、兼顧生態與品質換來的最高財富回報！',en:"Your eco-friendly farming reputation pays off big this season! Top buyers are lining up with cash to secure your entire harvest.\nFlooded with premium orders, you've struck it rich overnight. This is the ultimate reward for guarding the land and mastering sustainable quality!"},correspondingIds:['end_bad2','rice_good2'],hint:{zh:'溫柔對待土地，土地用一夜暴富回應你。',en:'Treat the land with kindness, and it will answer with a fortune.'}},
+    {key:'farmer_good2',cardId:'card_3_g2',textId:'name_3_g2',styles:{theme:'#388e3c',bg:'#e8f5e9',lightBg:'#c8e6c9',text:'#1b5e20'},name:{zh:'不為五斗米折腰',en:'Not Bowing for Five Pecks of Rice'},role:{zh:'農民',en:'Farmer'},tags:{zh:['#穩定成長','#品質優先','#長期價值'],en:['#SteadyGrowth','#QualityFirst','#LongTermValue']},desc:{zh:'選擇較穩定且可持續的方式經營。\n產量或許不高，但品質穩定。\n市場信任逐步建立。\n整體發展趨於長期平衡。',en:"You choose a more steady and lasting way to run your farm.\nThe harvest amount might not be very high, but the quality is steady.\nMarket trust is built up step by step.\nThe overall growth moves toward a long-term balance."},correspondingIds:['end_bad2','rice_good3'],hint:{zh:'永續經營才是真王道！',en:'Sustainability is the true way to go!'}},
+    {key:'farmer_good3',cardId:'card_3_g3',textId:'name_3_g3',styles:{theme:'#1976d2',bg:'#e3f2fd',lightBg:'#bbdefb',text:'#0d47a1'},name:{zh:'學術交流',en:'Academic Exchange'},role:{zh:'農民',en:'Farmer'},tags:{zh:['#知識轉化','#經驗累積','#影響擴散'],en:['#KnowledgeSharing','#GatheredExperience','#SpreadingInfluence']},desc:{zh:'種植經驗被記錄與分析。\n你的方法成為案例，被帶入更大範圍的討論與改良。\n田地不只是生產單位，也成為知識的一部分。',en:"Your farming experience is recorded and analyzed.\nYour methods become a case study for improvement.\nThe field is no longer just a place for growing food, but also becomes a piece of knowledge."},correspondingIds:['end_special1','rice_good4'],hint:{zh:'恭喜成為永續農業模範推手！',en:'Congrats on becoming a model for farming!'}}
+  ];
+
+  let starLang = 'zh';
+  let starActiveAch = null;
+
+  /* ══════════════════════════════════════════
+     EGG PAGE
+  ══════════════════════════════════════════ */
+  const EGG_TOTAL = 20; // 全部結局數量
+
+  function allEndingsUnlocked() {
+    const keys = ['end_good1','end_good2','end_bad1','end_bad2','end_special1','end_bad4',
+      'rice_bad1','rice_bad2','rice_bad3','rice_good1','rice_good2','rice_good3','rice_good4',
+      'farmer_bad1','farmer_bad2','farmer_bad3','farmer_bad4','farmer_good1','farmer_good2','farmer_good3'];
+    return keys.every(k => localStorage.getItem(k) === 'true');
+  }
+
+  function initEggPage() {
+    const isZh = gameLang === 'zh';
+    const unlocked = allEndingsUnlocked();
+
+    document.getElementById('eggLocked').style.display   = unlocked ? 'none'  : 'flex'; // fixed overlay
+    document.getElementById('eggUnlocked').style.display = unlocked ? 'block' : 'none';
+
+    // 更新語言文字
+    document.querySelectorAll('#eggBox [data-zh]').forEach(el => {
+      el.innerHTML = isZh ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+    });
+
+    if (!unlocked) return;
+
+    // 綁定桌布下載（cloneNode 避免重複綁定）
+    document.querySelectorAll('.egg-wallpaper-card').forEach(card => {
+      const fresh = card.cloneNode(true);
+      card.parentNode.replaceChild(fresh, card);
+      fresh.addEventListener('click', () => {
+        const src  = fresh.dataset.src;
+        const name = fresh.dataset.name;
+        const a = document.createElement('a');
+        a.href = src; a.download = name; a.click();
+      });
+    });
+  }
+
+  window.addEventListener('languageChanged', () => {
+    if (currentPage === 'egg') initEggPage();
+  });
+
+  let starPageInited = false;
+
+  function initStarPage(){
+    // 從結局進來：清掉進度，讓「回到遊戲」回首頁
+    if (localStorage.getItem('came_from_ending') === 'true') {
+      localStorage.removeItem('came_from_ending');
+      localStorage.removeItem('currentGamePage');
+    }
+
+    let unlockCount = 0;
+    ACHIEVEMENTS.forEach(ach => { if(localStorage.getItem(ach.key)==='true') unlockCount++; });
+    updateStarLang(gameLang, unlockCount);
+
+    // 清除並重新綁定 card click（避免每次進頁面重複疊加 listener）
+    ACHIEVEMENTS.forEach(ach => {
+      const isUnlocked = localStorage.getItem(ach.key)==='true';
+      const cardEl = document.getElementById(ach.cardId);
+      if(cardEl){
+        const fresh = cardEl.cloneNode(true);
+        cardEl.parentNode.replaceChild(fresh, cardEl);
+        if(isUnlocked){
+          fresh.classList.remove('locked');
+          fresh.addEventListener('click', ()=>openModal(ach));
+        }
+      }
+    });
+
+    // 只在第一次初始化時綁定固定 UI 事件
+    if (!starPageInited) {
+      const modal = document.getElementById('resultModal');
+      document.getElementById('modalCloseBtn').onclick = closeModal;
+      modal.addEventListener('click', e => { if(e.target===modal) closeModal(); });
+      document.getElementById('modalReplayBtn').onclick = () => navTo('index');
+      document.getElementById('modalShareBtn').onclick = handleShare;
+      window.addEventListener('languageChanged', e => {
+        starLang = e.detail.lang;
+        let cnt = 0; ACHIEVEMENTS.forEach(a=>{if(localStorage.getItem(a.key)==='true')cnt++;});
+        updateStarLang(starLang, cnt);
+        if(starActiveAch && document.getElementById('resultModal').style.display==='flex') renderModal(starActiveAch, starLang);
+        if(document.getElementById('googleLoginOverlay').classList.contains('show')) updateGoogleLoginLang();
+        resetBtns();
+      });
+      starPageInited = true;
+    }
+
+    // 只有剛打完結局才自動彈出 modal
+    const lastEnding = localStorage.getItem('last_ending');
+    if (lastEnding) {
+      localStorage.removeItem('last_ending');
+      const ach = ACHIEVEMENTS.find(a => a.key === lastEnding);
+      if (ach && localStorage.getItem(ach.key) === 'true') {
+        setTimeout(() => openModal(ach), 150);
+      }
+    }
+  }
+
+  function updateStarLang(lang, unlockCount){
+    starLang = lang;
+    const titleEl = document.querySelector('.wall-title');
+    if(titleEl) titleEl.innerText = lang==='zh' ? `結局收集牆 (${unlockCount}/20)` : `Endings Wall (${unlockCount}/20)`;
+    ACHIEVEMENTS.forEach(ach => {
+      const isUnlocked = localStorage.getItem(ach.key)==='true';
+      const cardEl = document.getElementById(ach.cardId);
+      const textEl = document.getElementById(ach.textId);
+      if(cardEl && textEl){
+        if(isUnlocked) textEl.innerText = ach.name[lang];
+        else textEl.innerText = lang==='zh' ? '？？？' : '???';
+      }
+    });
+    document.querySelectorAll('#page-star [data-zh]').forEach(el => {
+      el.innerHTML = lang==='zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+    });
+  }
+
+  function renderModal(achData, lang){
+    const imgPath = `public/results/${achData.cardId.replace('card_','').replace('_','-')}.png`;
+    const s = achData.styles;
+    const root = document.documentElement;
+    root.style.setProperty('--current-theme', s.theme);
+    root.style.setProperty('--current-bg', s.bg);
+    root.style.setProperty('--current-light-theme', s.lightBg);
+    root.style.setProperty('--current-text', s.text);
+    document.getElementById('modalRoleName').innerText = achData.role[lang];
+    document.getElementById('modalEndingName').innerText = achData.name[lang];
+    document.getElementById('modalMainImgBox').innerHTML = `<img src="${imgPath}" alt="${achData.name[lang]}">`;
+    const tagsEl = document.getElementById('modalTagsContainer');
+    tagsEl.innerHTML = '';
+    achData.tags[lang].forEach(tag => { const d=document.createElement('div');d.className='tag-item';d.innerText=tag;tagsEl.appendChild(d); });
+    document.getElementById('modalDescription').innerText = achData.desc[lang];
+    document.getElementById('modalHintBox').innerText = achData.hint[lang];
+    const body = document.getElementById('modalCorrespondingBody');
+    body.innerHTML = '';
+    if(!achData.correspondingIds||achData.correspondingIds.length===0){
+      body.innerHTML = `<div style="font-size:12px;color:#999;padding:10px;">${lang==='zh'?'無特殊相應結局':'No specific corresponding endings.'}</div>`;
+    } else {
+      achData.correspondingIds.forEach(targetKey => {
+        const target = ACHIEVEMENTS.find(a=>a.key===targetKey);
+        if(target){
+          const isUnlocked = localStorage.getItem(target.key)==='true';
+          const tImgPath = `public/results/${target.cardId.replace('card_','').replace('_','-')}.png`;
+          const itemDiv = document.createElement('div'); itemDiv.className='sub-ending-item';
+          const imgBox = document.createElement('div'); imgBox.className='sub-ending-img-box';
+          if(!isUnlocked) imgBox.classList.add('sub-locked');
+          imgBox.innerHTML = `<img src="${tImgPath}" alt="sub">`;
+          const nameSpan = document.createElement('span'); nameSpan.className='sub-ending-name';
+          nameSpan.innerText = isUnlocked ? target.name[lang] : (lang==='zh'?'？？？':'???');
+          itemDiv.appendChild(imgBox); itemDiv.appendChild(nameSpan); body.appendChild(itemDiv);
+        }
+      });
+    }
+  }
+
+  function openModal(achData){
+    starActiveAch = achData;
+    renderModal(achData, starLang);
+    document.getElementById('resultModal').style.display = 'flex';
+  }
+
+  function closeModal(){
+    document.getElementById('resultModal').style.display = 'none';
+    closeShareSheet();
+    starActiveAch = null;
+    resetBtns();
+  }
+
+  /* ══════════════════════════════════════════
+     GOOGLE LOGIN OVERLAY (真實 GIS OAuth)
+  ══════════════════════════════════════════ */
+  const GOOGLE_CLIENT_ID = '994477253429-c5e95fc37719lmcav7oh87s1bq88vlol.apps.googleusercontent.com';
+  let googleLoggedIn = false;
+  let googleUserInfo = null;
+  let pendingShare   = false;
+
+  function updateGoogleLoginLang() {
+    const isZh = gameLang === 'zh';
+    document.getElementById('glTitle1').textContent    = isZh ? '登入以繼續分享' : 'Sign in to continue';
+    document.getElementById('glSubtitle1').textContent = isZh ? '請先登入你的 Google 帳號，才能分享結局卡片。' : 'Please sign in with your Google account to share the ending card.';
+    document.getElementById('glSignBtnText').textContent = isZh ? '使用 Google 帳號登入' : 'Sign in with Google';
+    document.getElementById('glCancelBtn').textContent   = isZh ? '取消' : 'Cancel';
+    document.getElementById('glTitle2').textContent      = isZh ? '確認帳號' : 'Confirm Account';
+    document.getElementById('glSubtitle2').textContent   = isZh ? '以此帳號繼續分享結局卡片？' : 'Continue sharing with this account?';
+    document.getElementById('glConfirmBtn').textContent  = isZh ? '確認繼續' : 'Confirm & Continue';
+    document.getElementById('glSwitchBtn').textContent   = isZh ? '切換帳號' : 'Switch Account';
+    document.getElementById('glCancelBtn2').textContent  = isZh ? '取消' : 'Cancel';
+  }
+
+  function showGoogleLogin() {
+    updateGoogleLoginLang();
+    document.getElementById('glStep1').classList.remove('hidden');
+    document.getElementById('glStep2').classList.add('hidden');
+    document.getElementById('googleLoginOverlay').classList.add('show');
+  }
+  function hideGoogleLogin() {
+    document.getElementById('googleLoginOverlay').classList.remove('show');
+  }
+  function showStep2(userInfo) {
+    // 頭像
+    const wrap = document.getElementById('glAvatarWrap');
+    if (userInfo.picture) {
+      wrap.innerHTML = `<img class="gl-avatar" src="${userInfo.picture}" alt="avatar" />`;
+    } else {
+      const initial = (userInfo.name || '?')[0].toUpperCase();
+      wrap.innerHTML = `<div class="gl-avatar-placeholder">${initial}</div>`;
+    }
+    document.getElementById('glUserName').textContent  = userInfo.name  || '';
+    document.getElementById('glUserEmail').textContent = userInfo.email || '';
+    document.getElementById('glStep1').classList.add('hidden');
+    document.getElementById('glStep2').classList.remove('hidden');
+  }
+
+  // GIS popup login
+  function startGoogleLogin() {
+    const client = google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: 'openid email profile',
+      callback: async (tokenResponse) => {
+        if (tokenResponse.error) { console.error(tokenResponse); return; }
+        // 用 access_token 取使用者資訊
+        try {
+          const res  = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+          });
+          const info = await res.json();
+          googleUserInfo = info;
+          showStep2(info);
+        } catch(e) { console.error('Failed to get user info', e); }
+      }
+    });
+    client.requestAccessToken({ prompt: 'select_account' });
+  }
+
+  document.getElementById('glSignBtn').onclick   = startGoogleLogin;
+  document.getElementById('glSwitchBtn').onclick = startGoogleLogin;
+
+  document.getElementById('glConfirmBtn').onclick = () => {
+    googleLoggedIn = true;
+    hideGoogleLogin();
+    if (pendingShare) {
+      pendingShare = false;
+      doShare();
+    }
+  };
+
+  document.getElementById('glCancelBtn').onclick = () => {
+    pendingShare = false;
+    hideGoogleLogin();
+  };
+  document.getElementById('glCancelBtn2').onclick = () => {
+    pendingShare = false;
+    hideGoogleLogin();
+  };
+
+  /* ══════════════════════════════════════════
+     SHARE SHEET LOGIC
+  ══════════════════════════════════════════ */
+
+  // 產生卡片圖片 blob
+  async function generateCardBlob() {
+    const card = document.querySelector('.result-card');
+    const scale = 3, w = card.offsetWidth, h = card.offsetHeight;
+    const dataUrl = await domtoimage.toPng(card, {
+      width: w * scale, height: h * scale,
+      style: { transform: `scale(${scale})`, transformOrigin: 'top left', width: w + 'px', height: h + 'px' }
+    });
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
+    const roleName   = starActiveAch.role[starLang].replace(/\s+/g, '_');
+    const endingName = starActiveAch.name[starLang].replace(/\s+/g, '_');
+    return { blob, fileName: `NoFold_${roleName}_${endingName}.png` };
+  }
+
+
+  function setBtnLoading(id) {
+    const b = document.getElementById(id);
+    if(b){ b.disabled=true; b.textContent=starLang==='zh'?'產生中…':'Generating…'; }
+    const row = document.querySelector('.buttons-row-only');
+    if(row) row.style.visibility='hidden';
+  }
+  function resetBtns() {
+    ['modalShareBtn'].forEach(id => {
+      const b = document.getElementById(id);
+      if(b){ b.disabled=false; b.textContent=starLang==='zh'?b.getAttribute('data-zh'):b.getAttribute('data-en'); }
+    });
+    const row = document.querySelector('.buttons-row-only');
+    if(row) row.style.visibility='visible';
+  }
+
+  async function generateCardBlob() {
+    const card = document.querySelector('.result-card');
+    const scale=3, w=card.offsetWidth, h=card.offsetHeight;
+    const dataUrl = await domtoimage.toPng(card,{width:w*scale,height:h*scale,style:{transform:`scale(${scale})`,transformOrigin:'top left',width:w+'px',height:h+'px'}});
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
+    const roleName  = starActiveAch.role[starLang].replace(/\s+/g,'_');
+    const endingName = starActiveAch.name[starLang].replace(/\s+/g,'_');
+    return { blob, fileName: `NoFold_${roleName}_${endingName}.png` };
+  }
+
+  async function handleShare(){
+    if(!starActiveAch) return;
+    if(!googleLoggedIn){ pendingShare=true; showGoogleLogin(); return; }
+    setBtnLoading('modalShareBtn');
+    try {
+      const {blob, fileName} = await generateCardBlob();
+      const file = new File([blob], fileName, {type:'image/png'});
+      const shareText = starLang==='zh'
+        ? `我在《NoFold》解鎖了結局【${starActiveAch.role.zh} - ${starActiveAch.name.zh}】！`
+        : `I unlocked the ending [${starActiveAch.role.en} - ${starActiveAch.name.en}] in NoFold!`;
+      if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+        await navigator.share({files:[file], title:'NoFold', text: shareText});
+      } else {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href=url; a.download=fileName; a.click();
+        URL.revokeObjectURL(url);
+      }
+    } catch(e){ if(e.name!=='AbortError'){ console.error(e); } }
+    finally { resetBtns(); }
+  }
+
+  </script>
+  <script>
+  // 解鎖全部結局
+  const _allKeys = ['end_good1','end_good2','end_bad1','end_bad2','end_special1','end_bad4',
+    'rice_bad1','rice_bad2','rice_bad3','rice_good1','rice_good2','rice_good3','rice_good4',
+    'farmer_bad1','farmer_bad2','farmer_bad3','farmer_bad4','farmer_good1','farmer_good2','farmer_good3'];
+  _allKeys.forEach(k => localStorage.setItem(k, 'true'));
+  </script>
+
+
+</body>
+</html>

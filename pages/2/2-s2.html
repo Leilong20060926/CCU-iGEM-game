@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1-s3</title>
+  <link rel="stylesheet" href="../../public/css/shared.css" />
+  <link rel="stylesheet" href="../../public/css/dialogue-box.css" />
+  <link rel="stylesheet" href="../../public/css/typewriter.css" />
+  
+  <link rel="preload" href="../../public/pictures/1-7-1.png" as="image" />
+  <link rel="preload" href="../../public/pictures/1-7-2.png" as="image" />
+  <link rel="preload" href="../../public/pictures/1-7-3.png" as="image" />
+  <link rel="preload" href="../../public/pictures/1-7-4.png" as="image" />
+  <link rel="preload" href="../../public/pictures/1-7-5.png" as="image" />
+
+  <style>
+    .story-text-box {
+      background: rgba(127, 108, 54, 0.92);
+      color: white;
+    }
+
+    .story-text-box::before {
+      border-bottom: 12px solid rgba(127, 108, 54, 0.92);
+    }
+
+    .character-name {
+        background: rgba(206, 163, 43, 0.92);
+        color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li>
+        <a href="../index.html" id="backToGameBtn">
+          <img src="../../public/menu/left.svg" alt="" class="menu-icon"/>
+          <span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/star.html">
+          <img src="../../public/menu/star.svg" alt="" class="menu-icon"/>
+          <span data-zh="收集結局" data-en="Endings">收集結局</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/egg.html">
+          <img src="../../public/menu/egg.svg" alt="" class="menu-icon"/>
+          <span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/doc.html">
+          <img src="../../public/menu/doc.svg" class="menu-icon"/>
+          <span data-zh="相關資訊" data-en="Information">相關資訊</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/info.html">
+          <img src="../../public/menu/info.svg" alt="" class="menu-icon"/>
+          <span data-zh="關於我們" data-en="About Us">關於我們</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="top-left-controls">
+    <button class="btn" id="alignBtn" aria-label="Align left">
+      <img id="alignIcon" src="../../public/menu/align-left.svg" alt="Align left" />
+    </button>
+  </div>
+  <div class="controls">
+    <button class="btn" id="musicBtn" aria-label="Toggle music">
+      <img id="musicIcon" src="../../public/menu/music.svg" alt="Music" />
+    </button>
+    <button class="btn" id="langBtn" aria-label="Toggle language">
+      <span id="langText">EN</span>
+    </button>
+  </div>
+
+  <div class="game-container" id="gameContainer">
+    <div class="image-relative-wrapper">
+      <div class="story-text-box" id="storyTextBox">
+        <div class="character-name" id="characterName"></div>
+        <div id="storyText" class="story-text"></div>
+        <a href="1-s4-1.html" class="story-text-arrow"></a>
+      </div>
+      <img id="animationImage" class="game-image" src="../../public/pictures/1-7-1.png" alt="1-7 animation scene" />
+    </div>
+  </div>
+
+  <script src="../../public/js/shared-controls.js"></script>
+  <script src="../../public/js/typewriter.js"></script>
+  <script>
+    const animationFrames = [
+      '../../public/pictures/1-7-1.png',
+      '../../public/pictures/1-7-2.png',
+      '../../public/pictures/1-7-3.png',
+      '../../public/pictures/1-7-4.png',
+      '../../public/pictures/1-7-5.png'
+    ];
+
+    let currentFrameIndex = 0;
+    let direction = 1;
+    const animImageElement = document.getElementById('animationImage');
+
+    function playPingPongAnimation() {
+      currentFrameIndex += direction;
+      if (currentFrameIndex === animationFrames.length - 1) {
+        direction = -1;
+      } else if (currentFrameIndex === 0) {
+        direction = 1;
+      }
+      animImageElement.src = animationFrames[currentFrameIndex];
+    }
+
+    const animationTimer = setInterval(playPingPongAnimation, 250);
+
+    const arrow = document.querySelector('.story-text-arrow');
+
+    const localDialogueData = {
+      zh: {
+        name: '稻米',
+        text: [
+          '這….這是哪？',
+          '怎麼沒有熟悉的泥土，也沒有原本的氣味？'
+        ]
+      },
+      en: {
+        name: 'Rice',
+        text: [
+          'Where... where am I?',
+          'Why is there no familiar soil, and no original home?'
+        ]
+      }
+    };
+
+    let textParts = [];
+    let currentPart = 0;
+    let currentName = '';
+
+    function showNextPart() {
+      const charNameEl = document.getElementById('characterName');
+      const storyTextEl = document.getElementById('storyText');
+
+      if (charNameEl) {
+        charNameEl.innerText = currentName;
+      }
+
+      if (storyTextEl && currentPart < textParts.length) {
+        storyTextEl.innerHTML = '';
+        if (typeof startTypewriter === 'function') {
+          startTypewriter(textParts[currentPart], {
+            onComplete: null
+          });
+        } else {
+          storyTextEl.innerText = textParts[currentPart];
+        }
+        currentPart++;
+      }
+    }
+
+    function renderStory(lang) {
+      const data = localDialogueData[lang] || localDialogueData['zh'];
+      textParts = data.text;
+      currentName = data.name;
+      currentPart = 0;
+      showNextPart();
+    }
+
+    window.addEventListener('languageChanged', (event) => {
+      renderStory(event.detail.lang);
+    });
+
+    if (arrow) {
+      arrow.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (currentPart < textParts.length) {
+          showNextPart();
+        } else {
+          window.location.href = '2-s3-1.html';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

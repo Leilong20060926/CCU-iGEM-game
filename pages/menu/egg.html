@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1-1 故事</title>
+  <link rel="stylesheet" href="../../public/css/shared.css" />
+  <link rel="stylesheet" href="../../public/css/text-box.css" />
+  <style>
+    .story-text-box {
+      background: rgba(60, 100, 60, 0.85);
+      color: white;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="../index.html" id="backToGameBtn"><img src="../../public/menu/left.svg" alt="" class="menu-icon"/>回到遊戲</a></li>
+      <li><a href="../menu/star.html"><img src="../../public/menu/star.svg" alt="" class="menu-icon"/>收集結局</a></li>
+      <li><a href="../menu/egg.html"><img src="../../public/menu/egg.svg" alt="" class="menu-icon"/>遊戲彩蛋</a></li>
+      <li><a href="../menu/doc.html"><img src="../../public/menu/doc.svg" alt="" class="menu-icon"/>相關資訊</a></li>
+      <li><a href="../menu/info.html"><img src="../../public/menu/info.svg" alt="" class="menu-icon"/>關於我們</a></li>
+    </ul>
+  </nav>
+  <div class="top-left-controls">
+    <button class="btn" id="alignBtn" aria-label="Align left">
+      <img id="alignIcon" src="../../public/menu/align-left.svg" alt="Align left" />
+    </button>
+  </div>
+  <div class="controls">
+    <button class="btn" id="musicBtn" aria-label="Toggle music">
+      <img id="musicIcon" src="../../public/menu/music.svg" alt="Music" />
+    </button>
+    <button class="btn" id="langBtn" aria-label="Toggle language">
+      <span id="langText">EN</span>
+    </button>
+  </div>
+  <div class="game-container" id="gameContainer">
+    <div class="image-relative-wrapper">
+    <div class="story-text-box" id="storyTextBox">
+      <div id="storyText">夜幕降臨，你在二期稻田中徘徊。<br>月光灑落在搖曳的稻穗上，微風帶來淡淡的植物氣味。</div>
+      <a href="1-2.html" class="story-text-arrow"></a>
+    </div>
+    <img class="game-image" src="../../public/pictures/1-1.png" alt="1-1 scene" />
+    </div>
+  </div>
+  <script src="../../public/js/shared-controls.js"></script>
+  <script src="../../public/js/typewriter.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      // 執行原本的打字機效果
+      startTypewriter('test');
+      
+    });
+  </script>
+</body>
+</html>

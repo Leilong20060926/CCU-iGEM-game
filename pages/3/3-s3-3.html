@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2-2 故事</title>
+  <link rel="stylesheet" href="../../public/css/shared.css" />
+  <link rel="stylesheet" href="../../public/css/text-box.css" />
+  <link rel="stylesheet" href="../../public/css/typewriter.css" />
+  <style>
+    .story-text-box {
+      background: rgba(45, 82, 119, 0.85);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li><a href="../index.html" id="backToGameBtn"><img src="../../public/menu/left.svg" alt="" class="menu-icon"/><span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span></a></li>
+      <li><a href="../menu/star.html"><img src="../../public/menu/star.svg" alt="" class="menu-icon"/><span data-zh="收集結局" data-en="Endings">收集結局</span></a></li>
+      <li><a href="../menu/egg.html"><img src="../../public/menu/egg.svg" alt="" class="menu-icon"/><span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span></a></li>
+      <li><a href="../menu/doc.html"><img src="../../public/menu/doc.svg" alt="" class="menu-icon"/><span data-zh="相關資訊" data-en="Information">相關資訊</span></a></li>
+      <li><a href="../menu/info.html"><img src="../../public/menu/info.svg" alt="" class="menu-icon"/><span data-zh="關於我們" data-en="About Us">關於我們</span></a></li>
+    </ul>
+  </nav>
+  <div class="top-left-controls">
+    <button class="btn" id="alignBtn" aria-label="Align left">
+      <img id="alignIcon" src="../../public/menu/align-left.svg" alt="Align left" />
+    </button>
+  </div>
+  <div class="controls">
+    <button class="btn" id="musicBtn" aria-label="Toggle music">
+      <img id="musicIcon" src="../../public/menu/music.svg" alt="Music" />
+    </button>
+    <button class="btn" id="langBtn" aria-label="Toggle language">
+      <span id="langText">EN</span>
+    </button>
+  </div>
+  <div class="game-container" id="gameContainer">
+    <div class="image-relative-wrapper">
+      <div class="story-text-box" id="storyTextBox">
+        <div id="storyText" class="story-text"></div>
+        <a href="#" class="story-text-arrow"></a>
+      </div>
+      <img class="game-image" src="../../public/pictures/2-8.png" alt="2-8 scene" />
+    </div>
+  </div>
+
+  <script src="../../public/js/shared-controls.js"></script>
+  <script src="../../public/js/typewriter.js"></script>
+  <script>
+    const arrow = document.querySelector('.story-text-arrow');
+    const typewriter = new TypewriterEffect();
+    let currentPart = 0;
+    let currentLang = 'zh';
+
+    const textData = {
+      zh: [
+        '你在田埂上和他們道別並加以鼓勵。',
+        '風吹過稻浪，田裡恢復安靜，',
+        '但你知道，有些答案，正在遠方被慢慢拼出來。'
+      ],
+      en: [
+        'You say farewell on the edge of the field, offering them encouragement.',
+        'The wind passes through the waves of rice plants, and the field falls quiet once again.',
+        'But you know—some answers are still being slowly pieced together somewhere far away.'
+      ]
+    };
+
+    const showNextPart = () => {
+      const texts = textData[currentLang];
+      if (currentPart < texts.length) {
+        arrow.classList.remove('show');
+        typewriter.start(texts[currentPart], () => {
+          arrow.classList.add('show');
+        });
+        currentPart++;
+      } else {
+        window.location.href = '#';
+      }
+    };
+
+    window.addEventListener('languageChanged', (e) => {
+      currentLang = e.detail.lang;
+      // 更新選單文字
+      document.querySelectorAll('[data-zh]').forEach(el => {
+        el.innerText = currentLang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-zh');
+      });
+      // 重新顯示當前句子
+      const activeIndex = Math.max(0, currentPart - 1);
+      typewriter.start(textData[currentLang][activeIndex], () => arrow.classList.add('show'));
+    });
+
+    window.addEventListener('load', () => {
+      localStorage.setItem('currentGamePage', window.location.href);
+      currentLang = (document.getElementById('langText').innerText === 'ZH') ? 'en' : 'zh';
+      showNextPart();
+    });
+
+    arrow.addEventListener('click', (e) => {
+      e.preventDefault();
+      showNextPart();
+    });
+  </script>
+</body>
+</html>

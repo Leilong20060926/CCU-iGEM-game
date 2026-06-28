@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NoFold - 選擇角色</title>
+  <link rel="stylesheet" href="../public/css/shared.css" />
+  <style>
+    .game-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+      width: 100%;
+    }
+
+    /* 黑框圖片包覆層 */
+    .image-relative-wrapper {
+      position: relative;
+      display: inline-block;
+      width: calc(100% - 1002px); 
+      min-width: 270px;           
+      margin: auto;
+    }
+
+    /* 圖片本身依然保有黑框 */
+    .game-image {
+      display: block;
+      width: 100%;                
+      height: auto;
+      border: 2px solid #000;
+    }
+
+    .game-image.blurred {
+      filter: blur(8px);
+    }
+
+    /* 全螢幕覆蓋提示框 */
+    .game-tip-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;    
+      height: 100vh;   
+      background: rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;   
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .game-tip-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .game-tip-box {
+      background: white;
+      border-radius: 20px;
+      padding: 40px 30px 30px;
+      max-width: 300px;
+      width: 85%;
+      height: 360px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      position: relative;
+      text-align: center;
+      border: 1px solid #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .game-tip-icon {
+      width: 50px;
+      height: 50px;
+      background: #FFEE91;
+      border: 1px solid #000;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 28px;
+      color: black;
+      font-weight: bold;
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .game-tip-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 15px;
+      margin-top: 10px;
+    }
+
+    .game-tip-content {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .game-tip-arrow {
+      width: 0;
+      height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 12px solid #333;
+      margin: 0 auto;
+      cursor: pointer;
+    }
+
+    .game-tip-arrow:hover {
+      border-top-color: #000;
+    }
+
+    .character-buttons-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      z-index: 50;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .character-buttons-container.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .character-button {
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      padding: 0;
+      transition: transform 0.2s ease;
+      position: absolute;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .character-button:hover .character-img-button {
+      transform: scale(1.04);
+    }
+
+    .character-button:active .character-img-button {
+      transform: scale(0.98);
+    }
+
+    .character-button.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .character-button-1 {
+      left: 58%;
+      top: 23.5%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+
+    .character-button-2 {
+      left: 72%;
+      top: 61.3%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+
+    .character-button-3 {
+      left: 20%;
+      top: 28.5%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
+
+    .character-img-button {
+      width: 83px;
+      height: 45px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-color: transparent;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      text-indent: -9999px;
+      transition: transform 0.2s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li>
+        <a href="index.html" id="backToGameBtn">
+          <img src="../public/menu/left.svg" alt="" class="menu-icon"/>
+          <span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span>
+        </a>
+      </li>
+      <li>
+        <a href="menu/star.html">
+          <img src="../public/menu/star.svg" alt="" class="menu-icon"/>
+          <span data-zh="收集結局" data-en="Endings">收集結局</span>
+        </a>
+      </li>
+      <li>
+        <a href="menu/egg.html">
+          <img src="../public/menu/egg.svg" alt="" class="menu-icon"/>
+          <span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span>
+        </a>
+      </li>
+      <li>
+        <a href="menu/doc.html">
+          <img src="../public/menu/doc.svg" class="menu-icon"/>
+          <span data-zh="相關資訊" data-en="Information">相關資訊</span>
+        </a>
+      </li>
+      <li>
+        <a href="menu/info.html">
+          <img src="../public/menu/info.svg" alt="" class="menu-icon"/>
+          <span data-zh="關於我們" data-en="About Us">About Us</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="top-left-controls">
+    <button class="btn" id="alignBtn" aria-label="Align left">
+      <img id="alignIcon" src="../public/menu/align-left.svg" alt="Align left" />
+    </button>
+  </div>
+  <div class="controls">
+    <button class="btn" id="musicBtn" aria-label="Toggle music">
+      <img id="musicIcon" src="../public/menu/music.svg" alt="Music" />
+    </button>
+    <button class="btn" id="langBtn" aria-label="Toggle language">
+      <span id="langText">EN</span>
+    </button>
+  </div>
+
+  <div class="game-container" id="gameContainer">
+    <div class="game-tip-overlay" id="gameTipOverlay">
+      <div class="game-tip-box">
+        <div class="game-tip-icon">!</div>
+        <div class="game-tip-title" data-zh="遊戲提示" data-en="Game Tips">遊戲提示</div>
+        <div class="game-tip-content" id="tipContent1"></div>
+        <div class="game-tip-arrow"></div>
+      </div>
+    </div>
+
+    <div class="game-tip-overlay" id="gameTipOverlay2">
+      <div class="game-tip-box">
+        <div class="game-tip-icon">!</div>
+        <div class="game-tip-title" data-zh="遊戲提示" data-en="Game Tips">遊戲提示</div>
+        <div class="game-tip-content" id="tipContent2"></div>
+        <div class="game-tip-arrow"></div>
+      </div>
+    </div>
+
+    <div class="image-relative-wrapper">
+      <div class="character-buttons-container" id="characterButtonsContainer">
+        <a class="character-button show character-button-1" id="characterBtn1" href="1/1-test.html">
+          <button class="character-img-button" style="background-image: url('../public/buttoms/Character1.PNG');"></button>
+        </a>
+        <a class="character-button show character-button-2" id="characterBtn2" href="2/2-test.html">
+          <button class="character-img-button" style="background-image: url('../public/buttoms/Character2.PNG');"></button>
+        </a>
+        <a class="character-button show character-button-3" id="characterBtn3" href="3/3-test.html">
+          <button class="character-img-button" style="background-image: url('../public/buttoms/Character3.PNG');"></button>
+        </a>
+      </div>
+
+      <img class="game-image" src="../public/pictures/characters.PNG" alt="characters" />
+    </div>
+  </div>
+
+  <script src="../public/js/shared-controls.js"></script>
+  <script>
+    localStorage.setItem('currentGamePage', window.location.href);
+
+    const gameTipOverlay = document.getElementById('gameTipOverlay');
+    const gameTipOverlay2 = document.getElementById('gameTipOverlay2');
+    const gameTipArrows = document.querySelectorAll('.game-tip-arrow');
+    const gameImage = document.querySelector('.game-image');
+    const characterButtonsContainer = document.getElementById('characterButtonsContainer');
+    
+    // 雙語文字資料庫
+    const localTextData = {
+      tip1: {
+        zh: '歡迎遊玩《NoFold》！<br><br>這是一款以瘤野螟、稻米與農民三種不同視角出發，體驗稻米生產過程的劇情式遊戲。<br><br>遊戲中包含多種結局，試著解鎖所有結局，看看不同選擇將會帶來怎樣的結果吧！',
+        en: 'Welcome to NoFold!<br><br>This is a story-driven game that explores rice cultivation from three distinct perspectives: the Cnaphalocrocis medinalis, the rice plant, and the farmer.<br><br>Multiple endings await. Try to unlock them all and see where your choices lead!'
+      },
+      tip2: {
+        zh: '即將踏入稻田，<br>請選擇一位角色展開全新的冒險吧！',
+        en: 'About to step into the paddy field...<br>Please choose a character to start your new adventure!'
+      }
+    };
+
+    let currentLanguage = 'zh';
+
+    function updateLanguageElements(lang) {
+      currentLanguage = lang;
+      
+      // 更新選單與標題等帶有 data-zh 屬性的節點
+      document.querySelectorAll('[data-zh]').forEach(el => {
+        el.innerText = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-zh');
+      });
+
+      // 更新動態內文
+      const tip1 = document.getElementById('tipContent1');
+      const tip2 = document.getElementById('tipContent2');
+      if (tip1) tip1.innerHTML = localTextData.tip1[lang] || localTextData.tip1['zh'];
+      if (tip2) tip2.innerHTML = localTextData.tip2[lang] || localTextData.tip2['zh'];
+    }
+
+    window.addEventListener('languageChanged', (event) => {
+      updateLanguageElements(event.detail.lang);
+    });
+
+    window.addEventListener('load', function() {
+      // 讀取當前語系（若 shared-controls 尚未發出事件，可先抓取目前控制項文字或預設）
+      const initialLang = (document.getElementById('langText')?.innerText === 'ZH') ? 'en' : 'zh';
+      updateLanguageElements(initialLang);
+
+      gameTipOverlay.classList.add('show');
+      gameImage.classList.add('blurred');
+    });
+
+    // 提示框 1 箭頭與空白處點擊
+    gameTipArrows[0].addEventListener('click', function() {
+      gameTipOverlay.classList.remove('show');
+      gameTipOverlay2.classList.add('show');
+    });
+
+    gameTipOverlay.addEventListener('click', function(e) {
+      if (e.target === gameTipOverlay) {
+        gameTipOverlay.classList.remove('show');
+        gameTipOverlay2.classList.add('show');
+      }
+    });
+
+    // 提示框 2 箭頭與空白處點擊
+    gameTipArrows[1].addEventListener('click', function() {
+      gameTipOverlay2.classList.remove('show');
+      gameImage.classList.remove('blurred');
+      characterButtonsContainer.classList.add('show');
+    });
+
+    gameTipOverlay2.addEventListener('click', function(e) {
+      if (e.target === gameTipOverlay2) {
+        gameTipOverlay2.classList.remove('show');
+        gameImage.classList.remove('blurred');
+        characterButtonsContainer.classList.add('show');
+      }
+    });
+  </script>
+</body>
+</html>

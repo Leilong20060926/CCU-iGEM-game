@@ -1,0 +1,79 @@
+/* 
+ * 選項框模板
+ * 用途：帶選項按鈕的選擇框
+ * 使用方式：在 .html 文件的 <style> 中導入，然後修改顏色參數
+ * 
+ * HTML 結構：
+ * <div class="choices-container" id="choicesContainer">
+ *   <div class="choices-title">請選擇...</div>
+ *   <ul class="choices-list">
+ *     <li><button class="choice-button" data-choice="option1">選項1</button></li>
+ *     <li><button class="choice-button" data-choice="option2">選項2</button></li>
+ *   </ul>
+ * </div>
+ * 
+ * 可自定義參數示例：
+ * - --bg-color: 背景顏色
+ * - --text-color: 文字顏色
+ * - --button-bg: 按鈕背景顏色
+ * - --button-border: 按鈕邊框顏色
+ */
+
+/* 選項容器 */
+.choices-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 400px;
+  border-radius: 15px;
+  padding: 40px 30px;
+  z-index: 100;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  display: none;
+}
+
+.choices-container.show {
+  display: block;
+}
+
+/* 選項標題 */
+.choices-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+/* 選項列表 */
+.choices-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 選項按鈕 */
+.choice-button {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  border: 2px solid;
+}
+
+.choice-button:hover {
+  transform: translateY(-2px);
+}
+
+.choice-button:active {
+  transform: translateY(0);
+}

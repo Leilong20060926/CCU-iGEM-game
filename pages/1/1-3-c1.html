@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1-3-c1</title>
+  <link rel="stylesheet" href="../../public/css/shared.css" />
+  <link rel="stylesheet" href="../../public/css/dialogue-box.css" />
+  <link rel="stylesheet" href="../../public/css/choices-box.css" />
+  <link rel="stylesheet" href="../../public/css/typewriter.css" />
+  <style>
+    .story-text-box {
+      background: rgba(180, 220, 180, 0.95);
+      color: #333;
+    }
+
+    .story-text-box::before {
+      border-bottom: 12px solid rgba(180, 220, 180, 0.95);
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li>
+        <a href="../index.html" id="backToGameBtn">
+          <img src="../../public/menu/left.svg" alt="" class="menu-icon"/>
+          <span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/star.html">
+          <img src="../../public/menu/star.svg" alt="" class="menu-icon"/>
+          <span data-zh="收集結局" data-en="Endings">收集結局</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/egg.html">
+          <img src="../../public/menu/egg.svg" alt="" class="menu-icon"/>
+          <span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/doc.html">
+          <img src="../../public/menu/doc.svg" class="menu-icon"/>
+          <span data-zh="相關資訊" data-en="Information">相關資訊</span>
+        </a>
+      </li>
+      <li>
+        <a href="../menu/info.html">
+          <img src="../../public/menu/info.svg" alt="" class="menu-icon"/>
+          <span data-zh="關於我們" data-en="About Us">關於我們</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <div class="top-left-controls">
+    <button class="btn" id="alignBtn" aria-label="Align left">
+      <img id="alignIcon" src="../../public/menu/align-left.svg" alt="Align left" />
+    </button>
+  </div>
+  <div class="controls">
+    <button class="btn" id="musicBtn" aria-label="Toggle music">
+      <img id="musicIcon" src="../../public/menu/music.svg" alt="Music" />
+    </button>
+    <button class="btn" id="langBtn" aria-label="Toggle language">
+      <span id="langText">EN</span>
+    </button>
+  </div>
+  <div class="game-container" id="gameContainer">
+    <div class="image-relative-wrapper">
+      <div class="story-text-box" id="storyTextBox">
+        <div class="character-name" data-zh="瘤野螟" data-en="Leaffolder">瘤野螟</div>
+        <div id="storyText" class="story-text"></div>
+        <a href="1-3-c2.html" class="story-text-arrow"></a>
+      </div>
+      <img class="game-image" src="../../public/pictures/1-3-c.png" alt="1-3-c scene" />
+    </div>
+  </div>
+
+  <script src="../../public/js/shared-controls.js"></script>
+  <script src="../../public/js/typewriter.js"></script>
+  <script>
+    const localStoryData = {
+      zh: '這感覺不太對，我本能地急忙拍動翅膀，試圖遠離農田以避開這氣味。',
+      en: 'Something feels wrong. Instinctively, I flutter my wings in a hurry, trying to stay away from the field to avoid this smell.'
+    };
+
+    function renderStory(lang) {
+      const storyTextEl = document.getElementById('storyText');
+      if (storyTextEl) {
+        storyTextEl.innerHTML = '';
+        if (typeof startTypewriter === 'function') {
+          startTypewriter(localStoryData[lang], {
+            onComplete: null
+          });
+        } else {
+          storyTextEl.innerText = localStoryData[lang];
+        }
+      }
+    }
+
+    window.addEventListener('languageChanged', (event) => {
+      renderStory(event.detail.lang);
+    });
+  </script>
+</body>
+</html>
