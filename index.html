@@ -203,7 +203,7 @@
     .start-button:active .png-button { transform: scale(0.98); }
     .png-button {
       width: 85px; height: 53px;
-      background-image: url('public/buttoms/Homepage_buttom.PNG');
+      background-image: url('../public/buttoms/Homepage_buttom.PNG');
       background-size: contain; background-repeat: no-repeat; background-color: transparent;
       border: none; cursor: pointer; text-indent: -9999px; transition: transform 0.2s ease;
     }
@@ -367,7 +367,7 @@
     .scene-overlay-btn {
       position: absolute; left: 27%; top: 74%;
       transform: translate(-50%, -50%); width: 120px; height: 50px;
-      background-image: url('public/buttoms/3-6_buttom.PNG');
+      background-image: url('../public/buttoms/3-6_buttom.PNG');
       background-size: contain; background-repeat: no-repeat;
       background-color: transparent; border: none; cursor: pointer; z-index: 10;
       transition: transform 0.2s ease;
@@ -450,7 +450,7 @@
         <p class="gl-subtitle" id="glSubtitle1">請先登入你的 Google 帳號，才能分享結局卡片。</p>
         <div class="gl-divider"></div>
         <button class="gl-sign-btn" id="glSignBtn">
-          <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google" />
+          <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.PNG" alt="Google" />
           <span id="glSignBtnText">使用 Google 帳號登入</span>
         </button>
         <button class="gl-cancel" id="glCancelBtn">取消</button>
@@ -481,21 +481,21 @@
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <nav class="sidebar" id="sidebar">
     <ul class="sidebar-menu">
-      <li><a onclick="resumeGame()" id="backToGameBtn"><img src="public/menu/left.svg" alt="" class="menu-icon"/><span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span></a></li>
-      <li><a onclick="navTo('star')"><img src="public/menu/star.svg" alt="" class="menu-icon"/><span data-zh="收集結局" data-en="Endings">收集結局</span></a></li>
-      <li><a onclick="navTo('egg')"><img src="public/menu/egg.svg" alt="" class="menu-icon"/><span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span></a></li>
-      <li><a onclick="navTo('doc')"><img src="public/menu/doc.svg" alt="" class="menu-icon"/><span data-zh="相關資訊" data-en="Information">相關資訊</span></a></li>
-      <li><a onclick="navTo('info')"><img src="public/menu/info.svg" alt="" class="menu-icon"/><span data-zh="關於我們" data-en="About Us">關於我們</span></a></li>
+      <li><a onclick="resumeGame()" id="backToGameBtn"><img src="../public/menu/left.svg" alt="" class="menu-icon"/><span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span></a></li>
+      <li><a onclick="navTo('star')"><img src="../public/menu/star.svg" alt="" class="menu-icon"/><span data-zh="收集結局" data-en="Endings">收集結局</span></a></li>
+      <li><a onclick="navTo('egg')"><img src="../public/menu/egg.svg" alt="" class="menu-icon"/><span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span></a></li>
+      <li><a onclick="navTo('doc')"><img src="../public/menu/doc.svg" alt="" class="menu-icon"/><span data-zh="相關資訊" data-en="Information">相關資訊</span></a></li>
+      <li><a onclick="navTo('info')"><img src="../public/menu/info.svg" alt="" class="menu-icon"/><span data-zh="關於我們" data-en="About Us">關於我們</span></a></li>
     </ul>
   </nav>
   <div class="top-left-controls">
     <button class="btn" id="alignBtn" aria-label="Align left">
-      <img id="alignIcon" src="public/menu/align-left.svg" alt="Align left" />
+      <img id="alignIcon" src="../public/menu/align-left.svg" alt="Align left" />
     </button>
   </div>
   <div class="controls">
     <button class="btn" id="musicBtn" aria-label="Toggle music">
-      <img id="musicIcon" src="public/menu/music.svg" alt="Music" />
+      <img id="musicIcon" src="../public/menu/music.svg" alt="Music" />
     </button>
     <button class="btn" id="langBtn" aria-label="Toggle language">
       <span id="langText">EN</span>
@@ -526,7 +526,7 @@
       <div class="image-relative-wrapper" style="width:calc(100vw - 1002px);min-width:270px;position:relative;overflow:hidden;">
 
         <div id="homepageScene">
-          <img class="game-image" src="public/pictures/homepage.PNG" alt="homepage" />
+          <img class="game-image" src="../public/pictures/homepage.PNG" alt="homepage" />
           <a class="start-button" id="startBtn" href="#">
             <button class="png-button">前往下一頁</button>
           </a>
@@ -534,16 +534,16 @@
         <div id="characterScene">
           <div class="character-buttons-container" id="characterButtonsContainer">
             <a class="character-button show character-button-1" href="#" onclick="navTo('char1');return false;">
-              <button class="character-img-button" style="background-image: url('public/buttoms/Character1.PNG');"></button>
+              <button class="character-img-button" style="background-image: url('../public/buttoms/Character1.PNG');"></button>
             </a>
             <a class="character-button show character-button-2" href="#" onclick="navTo('char2');return false;">
-              <button class="character-img-button" style="background-image: url('public/buttoms/Character2.PNG');"></button>
+              <button class="character-img-button" style="background-image: url('../public/buttoms/Character2.PNG');"></button>
             </a>
             <a class="character-button show character-button-3" href="#" onclick="navTo('char3');return false;">
-              <button class="character-img-button" style="background-image: url('public/buttoms/Character3.PNG');"></button>
+              <button class="character-img-button" style="background-image: url('../public/buttoms/Character3.PNG');"></button>
             </a>
           </div>
-          <img class="game-image" id="characterImage" src="public/pictures/characters.PNG" alt="characters" />
+          <img class="game-image" id="characterImage" src="../public/pictures/characters.PNG" alt="characters" />
         </div>
       </div>
     </div>
@@ -557,17 +557,17 @@
       <!-- 1-1 -->
       <div id="scene-1-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-1" data-goto="1-2"><div id="storyText-1-1" class="story-text"></div><span class="story-text-arrow" data-goto="1-2"></span></div>
-        <img class="game-image" src="public/pictures/1-1.png" alt="1-1" />
+        <img class="game-image" src="../public/pictures/1-1.PNG" alt="1-1" />
       </div></div></div>
       <!-- 1-2 -->
       <div id="scene-1-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-2" data-goto="1-2-c"><div id="storyText-1-2" class="story-text"></div><span class="story-text-arrow" data-goto="1-2-c"></span></div>
-        <img class="game-image" src="public/pictures/1-2.png" alt="1-2" />
+        <img class="game-image" src="../public/pictures/1-2.PNG" alt="1-2" />
       </div></div></div>
       <!-- 1-2-c dialogue -->
       <div id="scene-1-2-c" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-2-c" data-goto="1-2-choose"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-2-c" class="story-text"></div><span class="story-text-arrow" data-goto="1-2-choose"></span></div>
-        <img class="game-image" src="public/pictures/1-2-c.png" alt="1-2-c" />
+        <img class="game-image" src="../public/pictures/1-2-c.PNG" alt="1-2-c" />
       </div></div></div>
       <!-- 1-2-choose -->
       <div id="scene-1-2-choose" class="scene"><div class="game-container"><div class="image-relative-wrapper">
@@ -578,77 +578,77 @@
             <li><button class="choice-button" data-choice="normal-rice" data-zh="繁殖於綠意漸褪的稻作" data-en="Reproduce on fading green rice crops">繁殖於綠意漸褪的稻作</button></li>
           </ul>
         </div>
-        <img class="game-image" style="filter:blur(8px);" src="public/pictures/1-2-c.png" alt="1-2-c" />
+        <img class="game-image" style="filter:blur(8px);" src="../public/pictures/1-2-c.PNG" alt="1-2-c" />
       </div></div></div>
       <!-- 1-3 -->
       <div id="scene-1-3" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-3" data-goto="1-3-c1"><div id="storyText-1-3" class="story-text"></div><span class="story-text-arrow" data-goto="1-3-c1"></span></div>
-        <img class="game-image" src="public/pictures/1-3.png" alt="1-3" />
+        <img class="game-image" src="../public/pictures/1-3.PNG" alt="1-3" />
       </div></div></div>
       <!-- 1-3-c1 -->
       <div id="scene-1-3-c1" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-3-c1" data-goto="1-3-c2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-3-c1" class="story-text"></div><span class="story-text-arrow" data-goto="1-3-c2"></span></div>
-        <img class="game-image" src="public/pictures/1-3-c.png" alt="1-3-c" />
+        <img class="game-image" src="../public/pictures/1-3-c.PNG" alt="1-3-c" />
       </div></div></div>
       <!-- 1-3-c2 -->
       <div id="scene-1-3-c2" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-3-c2" data-ending="end_bad2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-3-c2" class="story-text"></div><span class="story-text-arrow" data-ending="end_bad2"></span></div>
-        <img class="game-image" src="public/pictures/1-3-c.png" alt="1-3-c" />
+        <img class="game-image" src="../public/pictures/1-3-c.PNG" alt="1-3-c" />
       </div></div></div>
       <!-- 1-4 -->
       <div id="scene-1-4" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-4" data-goto="1-2-choose"><div id="storyText-1-4" class="story-text"></div><span class="story-text-arrow" data-goto="1-2-choose"></span></div>
-        <img class="game-image" src="public/pictures/1-4.png" alt="1-4" />
+        <img class="game-image" src="../public/pictures/1-4.PNG" alt="1-4" />
       </div></div></div>
       <!-- 1-5 -->
       <div id="scene-1-5" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-5" data-goto="1-2-choose"><div id="storyText-1-5" class="story-text"></div><span class="story-text-arrow" data-goto="1-2-choose"></span></div>
-        <img class="game-image" src="public/pictures/1-5.png" alt="1-5" />
+        <img class="game-image" src="../public/pictures/1-5.PNG" alt="1-5" />
       </div></div></div>
       <!-- 1-s1 -->
       <div id="scene-1-s1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s1"><div id="storyText-1-s1" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="public/pictures/1-1.png" alt="1-s1" />
+        <img class="game-image" src="../public/pictures/1-1.PNG" alt="1-s1" />
       </div></div></div>
       <!-- 1-s2-1 -->
       <div id="scene-1-s2-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s2-1" data-goto="1-s2-c"><div id="storyText-1-s2-1" class="story-text"></div><span class="story-text-arrow" data-goto="1-s2-c"></span></div>
-        <img class="game-image" src="public/pictures/1-6.png" alt="1-s2-1" />
+        <img class="game-image" src="../public/pictures/1-6.PNG" alt="1-s2-1" />
       </div></div></div>
       <!-- 1-s2-c -->
       <div id="scene-1-s2-c" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s2-c" data-goto="1-s2-2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-s2-c" class="story-text"></div><span class="story-text-arrow" data-goto="1-s2-2"></span></div>
-        <img class="game-image" src="public/pictures/1-6-c.png" alt="1-s2-c" />
+        <img class="game-image" src="../public/pictures/1-6-c.PNG" alt="1-s2-c" />
       </div></div></div>
       <!-- 1-s2-2 -->
       <div id="scene-1-s2-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s2-2" data-goto="1-s3"><div id="storyText-1-s2-2" class="story-text"></div><span class="story-text-arrow" data-goto="1-s3"></span></div>
-        <img class="game-image" src="public/pictures/1-6.png" alt="1-s2-2" />
+        <img class="game-image" src="../public/pictures/1-6.PNG" alt="1-s2-2" />
       </div></div></div>
       <!-- 1-s3 animation -->
       <div id="scene-1-s3" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s3"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-s3" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" id="animationImage" src="public/pictures/1-7-1.png" alt="animation" />
+        <img class="game-image" id="animationImage" src="../public/pictures/1-7-1.PNG" alt="animation" />
       </div></div></div>
       <!-- 1-s4-1 -->
       <div id="scene-1-s4-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s4-1"><div id="storyText-1-s4-1" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="public/pictures/1-8.png" alt="1-s4-1" />
+        <img class="game-image" src="../public/pictures/1-8.PNG" alt="1-s4-1" />
       </div></div></div>
       <!-- 1-s4-c -->
       <div id="scene-1-s4-c" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s4-c" data-goto="1-s4-2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-s4-c" class="story-text"></div><span class="story-text-arrow" data-goto="1-s4-2"></span></div>
-        <img class="game-image" src="public/pictures/1-8-c.png" alt="1-s4-c" />
+        <img class="game-image" src="../public/pictures/1-8-c.PNG" alt="1-s4-c" />
       </div></div></div>
       <!-- 1-s4-2 -->
       <div id="scene-1-s4-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s4-2" data-ending="end_special1"><div id="storyText-1-s4-2" class="story-text"></div><span class="story-text-arrow" data-ending="end_special1"></span></div>
-        <img class="game-image" src="public/pictures/1-8.png" alt="1-s4-2" />
+        <img class="game-image" src="../public/pictures/1-8.PNG" alt="1-s4-2" />
       </div></div></div>
       <!-- 1-2p2 -->
       <div id="scene-1-2p2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-2p2"><div id="storyText-1-2p2" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="public/pictures/1-2.png" alt="1-2p2" />
+        <img class="game-image" src="../public/pictures/1-2.PNG" alt="1-2p2" />
       </div></div></div>
       <!-- 1-2p2-choose -->
       <div id="scene-1-2p2-choose" class="scene"><div class="game-container"><div class="image-relative-wrapper">
@@ -659,72 +659,72 @@
             <li><button class="choice-button" data-choice="observe" data-zh="主動外出觀察周遭環境" data-en="Actively go out to observe the surroundings">主動外出觀察周遭環境</button></li>
           </ul>
         </div>
-        <img class="game-image" style="filter:blur(8px);" src="public/pictures/1-2-c.png" alt="1-2p2-choose" />
+        <img class="game-image" style="filter:blur(8px);" src="../public/pictures/1-2-c.PNG" alt="1-2p2-choose" />
       </div></div></div>
       <!-- 1-9 -->
       <div id="scene-1-9" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-9"><div id="storyText-1-9" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="public/pictures/1-10.png" alt="1-10" />
+        <img class="game-image" src="../public/pictures/1-10.PNG" alt="1-10" />
       </div></div></div>
       <!-- 1-10 -->
       <div id="scene-1-10" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-10"><div id="storyText-1-10" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="public/pictures/1-9.png" alt="1-9" />
+        <img class="game-image" src="../public/pictures/1-9.PNG" alt="1-9" />
       </div></div></div>
       <!-- 1-11-1 -->
       <div id="scene-1-11-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-11-1" data-ending="end_bad1"><div id="storyText-1-11-1" class="story-text"></div><span class="story-text-arrow" data-ending="end_bad1"></span></div>
-        <img class="game-image" src="public/pictures/1-11.png" alt="1-11" />
+        <img class="game-image" src="../public/pictures/1-11.PNG" alt="1-11" />
       </div></div></div>
       <!-- 1-11-2 -->
       <div id="scene-1-11-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-11-2" data-ending="end_good2"><div id="storyText-1-11-2" class="story-text"></div><span class="story-text-arrow" data-ending="end_good2"></span></div>
-        <img class="game-image" src="public/pictures/1-11.png" alt="1-11" />
+        <img class="game-image" src="../public/pictures/1-11.PNG" alt="1-11" />
       </div></div></div>
       <!-- 1-12-1 -->
       <div id="scene-1-12-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-12-1"><div id="storyText-1-12-1" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="public/pictures/3-1.png" alt="3-1" />
+        <img class="game-image" src="../public/pictures/3-1.PNG" alt="3-1" />
       </div></div></div>
       <!-- 1-12-cs -->
       <div id="scene-1-12-cs" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-12-cs"><div id="storyText-1-12-cs" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="public/pictures/1-12.png" alt="1-12" />
+        <img class="game-image" src="../public/pictures/1-12.PNG" alt="1-12" />
       </div></div></div>
       <!-- 1-12-cd -->
       <div id="scene-1-12-cd" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-12-cd" data-goto="1-12-c2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-12-cd" class="story-text"></div><span class="story-text-arrow" data-goto="1-12-c2"></span></div>
-        <img class="game-image" src="public/pictures/1-12-c.png" alt="1-12-c" />
+        <img class="game-image" src="../public/pictures/1-12-c.PNG" alt="1-12-c" />
       </div></div></div>
       <!-- 1-12-c2 -->
       <div id="scene-1-12-c2" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-12-c2" data-goto="1-12-3"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-12-c2" class="story-text"></div><span class="story-text-arrow" data-goto="1-12-3"></span></div>
-        <img class="game-image" src="public/pictures/1-12-c2.png" alt="1-12-c2" />
+        <img class="game-image" src="../public/pictures/1-12-c2.PNG" alt="1-12-c2" />
       </div></div></div>
       <!-- 1-12-3 -->
       <div id="scene-1-12-3" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-12-3"><div id="storyText-1-12-3" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="public/pictures/1-12.png" alt="1-12" />
+        <img class="game-image" src="../public/pictures/1-12.PNG" alt="1-12" />
       </div></div></div>
       <!-- 1-12-c3 -->
       <div id="scene-1-12-c3" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-12-c3" data-ending="end_good1"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-12-c3" class="story-text"></div><span class="story-text-arrow" data-ending="end_good1"></span></div>
-        <img class="game-image" src="public/pictures/1-12-c2.png" alt="1-12-c2" />
+        <img class="game-image" src="../public/pictures/1-12-c2.PNG" alt="1-12-c2" />
       </div></div></div>
       <!-- 1-13-1 -->
       <div id="scene-1-13-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-13-1"><div id="storyText-1-13-1" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <img class="game-image" src="public/pictures/1-13.png" alt="1-13" />
+        <img class="game-image" src="../public/pictures/1-13.PNG" alt="1-13" />
       </div></div></div>
       <!-- 1-13-c -->
       <div id="scene-1-13-c" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-13-c" data-goto="1-13-2"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-13-c" class="story-text"></div><span class="story-text-arrow" data-goto="1-13-2"></span></div>
-        <img class="game-image" src="public/pictures/1-13-c.png" alt="1-13-c" />
+        <img class="game-image" src="../public/pictures/1-13-c.PNG" alt="1-13-c" />
       </div></div></div>
       <!-- 1-13-2 -->
       <div id="scene-1-13-2" class="scene"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-13-2" data-ending="end_bad4"><div id="storyText-1-13-2" class="story-text"></div><span class="story-text-arrow" data-ending="end_bad4"></span></div>
-        <img class="game-image" src="public/pictures/1-13.png" alt="1-13" />
+        <img class="game-image" src="../public/pictures/1-13.PNG" alt="1-13" />
       </div></div></div>
     </div><!-- /sceneWrapper1 -->
   </div><!-- /page-char1 -->
@@ -744,7 +744,7 @@
           <div id="storyText2" class="story-text"></div>
           <span class="story-text-arrow" id="nextArrow2"></span>
         </div>
-        <img class="game-image" id="gameImage2" src="public/pictures/2-10.png" alt="scene" />
+        <img class="game-image" id="gameImage2" src="../public/pictures/2-10.PNG" alt="scene" />
       </div>
     </div>
   </div>
@@ -765,7 +765,7 @@
           <span class="story-text-arrow" id="nextArrow3"></span>
         </div>
         <button class="scene-overlay-btn hidden" id="sceneOverlayBtn3"></button>
-        <img class="game-image" id="gameImage3" src="public/pictures/3-1.png" alt="scene" />
+        <img class="game-image" id="gameImage3" src="../public/pictures/3-1.PNG" alt="scene" />
       </div>
     </div>
   </div>
@@ -780,7 +780,7 @@
           <div id="endingAnimText" class="story-text"></div>
           <span class="story-text-arrow" id="endingAnimArrow"></span>
         </div>
-        <img id="endingAnimImage" class="game-image" src="public/pictures/1-7-1.png" alt="animation scene" />
+        <img id="endingAnimImage" class="game-image" src="../public/pictures/1-7-1.PNG" alt="animation scene" />
       </div>
     </div>
   </div>
@@ -792,26 +792,26 @@
     <div class="achieve-wall-container menu-page-wrapper">
       <h2 class="wall-title"></h2>
       <div class="achieve-grid">
-        <div class="achieve-card locked" id="card_1_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-g1.png" /></div><div class="achieve-name" id="name_1_g1">？？？</div></div>
-        <div class="achieve-card locked" id="card_1_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-g2.png" /></div><div class="achieve-name" id="name_1_g2">？？？</div></div>
-        <div class="achieve-card locked" id="card_1_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-b1.png" /></div><div class="achieve-name" id="name_1_b1">？？？</div></div>
-        <div class="achieve-card locked" id="card_1_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-b2.png" /></div><div class="achieve-name" id="name_1_b2">？？？</div></div>
-        <div class="achieve-card locked" id="card_1_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-b3.png" /></div><div class="achieve-name" id="name_1_b3">？？？</div></div>
-        <div class="achieve-card locked" id="card_1_b4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/1-b4.png" /></div><div class="achieve-name" id="name_1_b4">？？？</div></div>
-        <div class="achieve-card locked" id="card_2_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-b1.png" /></div><div class="achieve-name" id="name_2_b1">？？？</div></div>
-        <div class="achieve-card locked" id="card_2_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-b2.png" /></div><div class="achieve-name" id="name_2_b2">？？？</div></div>
-        <div class="achieve-card locked" id="card_2_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-b3.png" /></div><div class="achieve-name" id="name_2_b3">？？？</div></div>
-        <div class="achieve-card locked" id="card_2_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-g1.png" /></div><div class="achieve-name" id="name_2_g1">？？？</div></div>
-        <div class="achieve-card locked" id="card_2_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-g2.png" /></div><div class="achieve-name" id="name_2_g2">？？？</div></div>
-        <div class="achieve-card locked" id="card_2_g3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-g3.png" /></div><div class="achieve-name" id="name_2_g3">？？？</div></div>
-        <div class="achieve-card locked" id="card_2_g4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/2-g4.png" /></div><div class="achieve-name" id="name_2_g4">？？？</div></div>
-        <div class="achieve-card locked" id="card_3_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-b1.png" /></div><div class="achieve-name" id="name_3_b1">？？？</div></div>
-        <div class="achieve-card locked" id="card_3_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-b2.png" /></div><div class="achieve-name" id="name_3_b2">？？？</div></div>
-        <div class="achieve-card locked" id="card_3_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-b3.png" /></div><div class="achieve-name" id="name_3_b3">？？？</div></div>
-        <div class="achieve-card locked" id="card_3_b4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-b4.png" /></div><div class="achieve-name" id="name_3_b4">？？？</div></div>
-        <div class="achieve-card locked" id="card_3_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-g1.png" /></div><div class="achieve-name" id="name_3_g1">？？？</div></div>
-        <div class="achieve-card locked" id="card_3_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-g2.png" /></div><div class="achieve-name" id="name_3_g2">？？？</div></div>
-        <div class="achieve-card locked" id="card_3_g3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="public/results/3-g3.png" /></div><div class="achieve-name" id="name_3_g3">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/1-g1.PNG" /></div><div class="achieve-name" id="name_1_g1">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/1-g2.PNG" /></div><div class="achieve-name" id="name_1_g2">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/1-b1.PNG" /></div><div class="achieve-name" id="name_1_b1">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/1-b2.PNG" /></div><div class="achieve-name" id="name_1_b2">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/1-b3.PNG" /></div><div class="achieve-name" id="name_1_b3">？？？</div></div>
+        <div class="achieve-card locked" id="card_1_b4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/1-b4.PNG" /></div><div class="achieve-name" id="name_1_b4">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/2-b1.PNG" /></div><div class="achieve-name" id="name_2_b1">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/2-b2.PNG" /></div><div class="achieve-name" id="name_2_b2">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/2-b3.PNG" /></div><div class="achieve-name" id="name_2_b3">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/2-g1.PNG" /></div><div class="achieve-name" id="name_2_g1">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/2-g2.PNG" /></div><div class="achieve-name" id="name_2_g2">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_g3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/2-g3.PNG" /></div><div class="achieve-name" id="name_2_g3">？？？</div></div>
+        <div class="achieve-card locked" id="card_2_g4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/2-g4.PNG" /></div><div class="achieve-name" id="name_2_g4">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_b1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/3-b1.PNG" /></div><div class="achieve-name" id="name_3_b1">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_b2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/3-b2.PNG" /></div><div class="achieve-name" id="name_3_b2">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_b3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/3-b3.PNG" /></div><div class="achieve-name" id="name_3_b3">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_b4"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/3-b4.PNG" /></div><div class="achieve-name" id="name_3_b4">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_g1"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/3-g1.PNG" /></div><div class="achieve-name" id="name_3_g1">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_g2"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/3-g2.PNG" /></div><div class="achieve-name" id="name_3_g2">？？？</div></div>
+        <div class="achieve-card locked" id="card_3_g3"><div class="img-wrapper"><div class="lock-overlay">？</div><img class="achieve-img" src="../public/results/3-g3.PNG" /></div><div class="achieve-name" id="name_3_g3">？？？</div></div>
       </div>
     </div>
     <!-- Modal -->
@@ -891,25 +891,25 @@
       <div id="eggUnlocked" style="display:none;">
         <div class="egg-section-title" data-zh="遊戲彩蛋" data-en="Easter Egg">遊戲彩蛋</div>
         <p class="egg-body-text"
-          data-zh="恭喜完成所有結局！<br>你成功體驗了每位角色的選擇與命運。<br>作為獎勵，點擊以下團隊設計的桌布即可下載圖片！"
-          data-en="Congratulations on completing all endings!<br>You have experienced the choices and fate of every character.<br>As a reward, click on the wallpapers below designed by our team to download!">
-          恭喜完成所有結局！<br>你成功體驗了每位角色的選擇與命運。<br>作為獎勵，點擊以下團隊設計的桌布即可下載圖片！
+          data-zh="🎉 恭喜完成所有結局！<br>你成功體驗了每位角色的選擇與命運。<br>作為獎勵，點擊以下團隊設計的桌布即可下載圖片！"
+          data-en="🎉 Congratulations on completing all endings!<br>You have experienced the choices and fate of every character.<br>As a reward, click on the wallpapers below designed by our team to download!">
+          🎉 恭喜完成所有結局！<br>你成功體驗了每位角色的選擇與命運。<br>作為獎勵，點擊以下團隊設計的桌布即可下載圖片！
         </p>
         <div class="egg-wallpaper-grid" id="eggWallpaperGrid">
-          <div class="egg-wallpaper-card" data-src="public/egg/wallpaper1.png" data-name="NoFold_wallpaper1.png">
-            <img src="public/egg/wallpaper1.png" alt="桌布 1" />
+          <div class="egg-wallpaper-card" data-src="../public/egg/wallpaper1.PNG" data-name="NoFold_wallpaper1.PNG">
+            <img src="../public/egg/wallpaper1.PNG" alt="桌布 1" />
             <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
           </div>
-          <div class="egg-wallpaper-card" data-src="public/egg/wallpaper2.png" data-name="NoFold_wallpaper2.png">
-            <img src="public/egg/wallpaper2.png" alt="桌布 2" />
+          <div class="egg-wallpaper-card" data-src="../public/egg/wallpaper2.PNG" data-name="NoFold_wallpaper2.PNG">
+            <img src="../public/egg/wallpaper2.PNG" alt="桌布 2" />
             <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
           </div>
-          <div class="egg-wallpaper-card" data-src="public/egg/wallpaper3.png" data-name="NoFold_wallpaper3.png">
-            <img src="public/egg/wallpaper3.png" alt="桌布 3" />
+          <div class="egg-wallpaper-card" data-src="../public/egg/wallpaper3.PNG" data-name="NoFold_wallpaper3.PNG">
+            <img src="../public/egg/wallpaper3.PNG" alt="桌布 3" />
             <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
           </div>
-          <div class="egg-wallpaper-card" data-src="public/egg/wallpaper4.png" data-name="NoFold_wallpaper4.png">
-            <img src="public/egg/wallpaper4.png" alt="桌布 4" />
+          <div class="egg-wallpaper-card" data-src="../public/egg/wallpaper4.PNG" data-name="NoFold_wallpaper4.PNG">
+            <img src="../public/egg/wallpaper4.PNG" alt="桌布 4" />
             <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
           </div>
         </div>
@@ -970,7 +970,7 @@
       <div class="doc-news-title" id="docVideoTitle">CCU iGEM10<br>稻米研究紀錄</div>
       <div class="doc-video-box">
         <video controls style="width:100%;border-radius:4px;">
-          <source src="public/video/grow.mp4" type="video/mp4" />
+          <source src="../public/video/grow.mp4" type="video/mp4" />
         </video>
       </div>
     </div>
@@ -1012,13 +1012,13 @@
       <div class="info-news-title" data-zh="相關連結" data-en="Related Links">相關連結</div>
       <div class="info-link-buttons">
         <a class="info-link-btn" href="https://www.instagram.com/ccuigem/" target="_blank">
-          <img src="https://cdn-icons-png.flaticon.com/512/3621/3621435.png" alt="Instagram" />
+          <img src="https://cdn-icons-png.flaticon.com/512/3621/3621435.PNG" alt="Instagram" />
         </a>
         <a class="info-link-btn" href="https://igem.ccu.edu.tw" target="_blank">
-          <img src="https://cdn-icons-png.flaticon.com/512/17724/17724849.png" alt="Website" />
+          <img src="https://cdn-icons-png.flaticon.com/512/17724/17724849.PNG" alt="Website" />
         </a>
         <a class="info-link-btn" href="https://www.youtube.com/@ccutaiwanigemteam133/featured" target="_blank">
-          <img src="https://cdn-icons-png.flaticon.com/512/5968/5968852.png" alt="YouTube" />
+          <img src="https://cdn-icons-png.flaticon.com/512/5968/5968852.PNG" alt="YouTube" />
         </a>
       </div>
     </div>
@@ -1176,7 +1176,7 @@
     musicBtn.addEventListener('click', () => {
       isMusicOn = !isMusicOn;
       const icon = document.getElementById('musicIcon');
-      icon.src = isMusicOn ? 'public/menu/music.svg' : 'public/menu/music-slash.svg';
+      icon.src = isMusicOn ? '../public/menu/music.svg' : '../public/menu/music-slash.svg';
     });
 
     alignBtn.addEventListener('click', () => {
@@ -1187,7 +1187,7 @@
         alignIcon.style.display = 'none';
         if (!closeIcon) {
           closeIcon = document.createElement('img');
-          closeIcon.id = 'closeIcon'; closeIcon.src = 'public/menu/cross.svg';
+          closeIcon.id = 'closeIcon'; closeIcon.src = '../public/menu/cross.svg';
           closeIcon.alt = 'Close'; closeIcon.style.width = '24px'; closeIcon.style.height = '24px';
           alignBtn.appendChild(closeIcon);
         } else { closeIcon.style.display = 'inline'; }
@@ -1274,7 +1274,7 @@
   let animationTimer1 = null;
   let currentScene1   = null;
 
-  const ANIMATION_FRAMES1 = ['public/pictures/1-7-1.png','public/pictures/1-7-2.png','public/pictures/1-7-3.png','public/pictures/1-7-4.png','public/pictures/1-7-5.png'];
+  const ANIMATION_FRAMES1 = ['../public/pictures/1-7-1.PNG','../public/pictures/1-7-2.PNG','../public/pictures/1-7-3.PNG','../public/pictures/1-7-4.PNG','../public/pictures/1-7-5.PNG'];
 
   function resetChar1() {
     if (globalTypewriterTimer1) { clearTimeout(globalTypewriterTimer1); globalTypewriterTimer1 = null; }
@@ -1572,7 +1572,7 @@
     if(el)el.textContent=text; isTyping2=false; if(arrowEl)arrowEl.classList.add('show');
   }
 
-  const ANIM_FRAMES2 = ['public/pictures/1-7-1.png','public/pictures/1-7-2.png','public/pictures/1-7-3.png','public/pictures/1-7-4.png','public/pictures/1-7-5.png'];
+  const ANIM_FRAMES2 = ['../public/pictures/1-7-1.PNG','../public/pictures/1-7-2.PNG','../public/pictures/1-7-3.PNG','../public/pictures/1-7-4.PNG','../public/pictures/1-7-5.PNG'];
   let animTimer2 = null;
   function char2StartSpecialAnim(){ char2StopSpecialAnim(); let fi=0,dir=1; char2GameImageEl().src=ANIM_FRAMES2[0]; animTimer2=setInterval(()=>{fi+=dir;if(fi===ANIM_FRAMES2.length-1)dir=-1;else if(fi===0)dir=1;char2GameImageEl().src=ANIM_FRAMES2[fi];},250); }
   function char2StopSpecialAnim(){ if(animTimer2){clearInterval(animTimer2);animTimer2=null;} }
@@ -1603,40 +1603,40 @@
   }
 
   const SCENES2 = {
-    's1':{image:'2-10.png',charName:null,texts:{zh:['清晨的陽光灑落在稻田之上。露水沿著葉尖緩緩滑落，微風吹過，整片稻田泛起層層綠浪。'],en:['The morning sun casts its golden light across the paddy field. Dewdrops gently slide down the tips of the leaves, and as a soft breeze blows, ripples of green waves cascade through the rice.']},next:()=>'s2'},
-    's2':{image:'2-1.png',charName:null,texts:{zh:['你是一株剛進入生長期的水稻，你的使命只有一個：成長並結出健康的稻穗，獲得標章或被農民賣出。','但你能感覺到環境並不單純。','風中，帶著不同的訊號：化學氣味、昆蟲活動、還有人類的干預。','你無法移動，只能選擇「如何成長」。'],en:['You are a rice plant that has just entered its growth phase. You have but one purpose: to mature and bear healthy grains, earning certification or being sold by the farmer.','Yet, you can sense that the environment is far from simple.','Carried on the wind are distinct signals: chemical odors, insect movements, and human interventions.','Stationary and rooted, your only choice is "how to grow".']},next:()=>{char2GoChoice('choose1');return null;}},
-    'story_stable1':{image:'2-2.png',charName:null,texts:{zh:['你選擇順應自然，慢慢吸收養分。','沒有額外干預，但你能感覺到周圍的威脅正在增加。'],en:["You choose to follow nature's course, slowly absorbing nutrients.",'Without external intervention, you can feel the surrounding threats beginning to increase.']},next:()=>{char2GoChoice('choose1');return null;}},
-    'story_pest1':{image:'2-2.png',charName:null,texts:{zh:['刺鼻的氣味覆蓋葉面。','你感受到外來物質進入體內，昆蟲的氣息逐漸減少。'],en:['A pungent odor covers the surface of your leaves.','You feel foreign substances entering your body as the presence of insects gradually fades away.']},next:()=>{char2GoChoice('choose2');return null;}},
-    'story_lim1_narr':{image:'2-2.png',charName:null,texts:{zh:['空氣中出現清新的氣味。','你感受到某種天然的保護，同時維持著自身的品質。'],en:['A fresh, crisp scent fills the air.','You feel a sense of natural protection washing over you while maintaining your overall quality.']},next:()=>'story_lim1_dia'},
-    'story_lim1_dia':{image:'2-2.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['好特別，是什麼味道？！居然讓那些蟲都遠離我了'],en:["How unique, what is this smell?! It's actually keeping all those bugs away from me!"]},next:()=>{char2GoChoice('choose3');return null;}},
-    'story_stable2':{image:'2-2.png',charName:null,texts:{zh:['你選擇順應自然，慢慢吸收養分。','沒有額外干預，但你能感覺到周圍的威脅正在增加。'],en:["You choose to follow nature's course, slowly absorbing nutrients.",'Without external intervention, you can feel the surrounding threats beginning to increase.']},next:()=>{char2GoChoice('choose2');return null;}},
-    'story_oldpest_dia':{image:'2-2.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['又有東西撒在我身上了……'],en:['Something is being sprayed on me again...']},next:()=>'story_oldpest_narr'},
-    'story_oldpest_narr':{image:'2-2.png',charName:null,texts:{zh:['熟悉的氣味再次出現。','你感受到外來物質進入體內，昆蟲的氣息逐漸減少。'],en:['A familiar odor covers you once again.','You feel foreign substances entering your body as the presence of insects gradually fades away.']},next:()=>{char2GoChoice('choose2');return null;}},
-    'story_newpest':{image:'2-2.png',charName:null,texts:{zh:['熟悉的氣味再次出現。','但這一次，效果似乎不如以往。'],en:['A familiar odor covers you once again.',"However, this time, the effects don't seem to be as potent as they used to be."]},next:()=>{char2GoChoice('choose2');return null;}},
-    'story_stable3':{image:'2-2.png',charName:null,texts:{zh:['你選擇順應自然，慢慢吸收養分。','沒有額外干預，但你能感覺到周圍的威脅正在增加。'],en:["You choose to follow nature's course, slowly absorbing nutrients.",'Without external intervention, you can feel the surrounding threats beginning to increase.']},next:()=>{char2GoChoice('choose3');return null;}},
-    'story_lim2_narr':{image:'2-2.png',charName:null,texts:{zh:['氣味持續存在。'],en:['The scent continues to linger in the air.']},next:()=>'story_lim2_dia'},
-    'story_lim2_dia':{image:'2-2.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['現在的感覺真棒！'],en:['This feels absolutely amazing right now!']},next:()=>{char2GoChoice('choose3');return null;}},
-    's_sale1':{image:'2-4.png',charName:null,texts:{zh:['夕陽逐漸染紅整片稻田。','經過漫長的生長後，田間即將迎來人類的評價。','人們再次踏入田間，'],en:['The setting sun gradually dyes the entire rice field crimson.','After a long period of growth, the field is about to face human evaluation.','People step into the field once again.']},next:()=>'s_sale1_dia'},
-    's_sale1_dia':{image:'2-4-c.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['嗯……我會面臨什麼結局呢？'],en:["Hmm... what kind of ending awaits me?"]},next:()=>{const map={bad2:'s5_1',bad3:'s6_1',good1:'s8_1',good2:'s9_1',good3:'s7_1'};return map[char2FinalEnding]||'s7_1';}},
-    's_bad1':{image:'2-6.png',charName:null,texts:{zh:['你的抗蟲率徹底歸零。','螟蟲開始大規模侵入你的體內結構，不斷啃食莖部與葉片，留下無法修復的傷痕。','原本穩定的生長逐漸被破壞、被中斷，脆弱的身體也開始失去支撐。','你試著撐起逐漸枯黃的葉片，試著維持最後的生命力。','但那些損傷，早已無法恢復。','最終，你的生長提前停止。'],en:['Your power to fight bugs is completely gone.','The bugs start to move deep inside your body in big groups. They keep eating your stems and leaves, leaving hurts that can never be fixed.','Your steady growth is broken and stopped. Your weak body begins to lose its strength to stand.','You try hard to hold up your turning-yellow leaves, trying to keep your last bit of life.','But the damage is already too bad to fix.','In the end, you stop growing too soon.']},next:()=>{char2FinishEnding();return null;}},
-    's5_1':{image:'2-5.png',charName:null,texts:{zh:['檢測人員進入田間，開始抽查。','「無法販售。」','原本等待運出的稻米，被一袋袋堆放進昏暗的倉庫。','嘆息聲遍布整個農田......'],en:['Inspectors enter the field and begin conducting random checks.','\"These cannot be sold.\"','The rice that was originally waiting to be shipped is stacked bag by bag in a dim warehouse.','Sighs echoed across the entire farmland...']},next:()=>'s5_dia'},
-    's5_dia':{image:'2-5-c.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['怎麼大家都在嘆息…'],en:['Why is everyone sighing...?']},next:()=>'s5_2'},
-    's5_2':{image:'2-5.png',charName:null,texts:{zh:['人類無力地望著堆積如山的稻米。','而你只能靜靜留在原地，等待著不知道是否還會到來的未來。'],en:['The farmers stare helplessly at the mountain of unsellable rice.','As for you, all you can do is remain where you are, quietly waiting for a future that may never come.']},next:()=>{char2FinishEnding();return null;}},
-    's6_1':{image:'2-6.png',charName:null,texts:{zh:['螟蟲因為對農藥產生抗藥性而存活，甚至開始擴散。'],en:['The rice leafrollers survive after developing resistance to pesticides and begin spreading across the fields.']},next:()=>'s6_dia'},
-    's6_dia':{image:'2-6-c.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['我的身上都是農藥…','好多蟲都咬我…'],en:["I'm covered in pesticide residues...",'So many insects are feeding on me...']},next:()=>'s6_2'},
-    's6_2':{image:'2-6.png',charName:null,texts:{zh:['你的身體同時承受到農藥殘留與蟲害破壞。','原本飽滿的你，失去光澤，','市場拒絕了你，田間也早已來不及補救。','最後，你被留倉庫角落，等待著被世界遺忘。'],en:['Your body suffers from both pesticide contamination and insect damage.','Once plump and healthy, you gradually lose your shine.','The market rejects you, and by the time the damage is noticed, it is already too late for the farmers to save the harvest.','In the end, you are left in a dark corner of the warehouse, waiting to be forgotten by the world.']},next:()=>{char2FinishEnding();return null;}},
-    's8_1':{image:'2-8.png',charName:null,texts:{zh:['沒有任何異常被通報。','外觀正常的你，順利通過檢測，進入了市場。'],en:['No anomalies were reported.','Appearing completely normal on the outside, you smoothly pass inspection and enter the market.']},next:()=>'s8_dia'},
-    's8_dia':{image:'2-8-c.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['咦？我竟然通過檢測了嗎？'],en:['Huh? I actually passed the inspection?']},next:()=>'s8_2'},
-    's8_2':{image:'2-8.png',charName:null,texts:{zh:['人們照常搬運、販售、購買，沒有人察覺那些隱藏在表面之下的問題。','這是一場沒有被發現的風險。'],en:['People carry, sell, and buy just as they always do. No one notices the issues hidden beneath the surface.','This is a risk that went entirely undetected.']},next:()=>{char2FinishEnding();return null;}},
-    's9_1':{image:'2-9.png',charName:null,texts:{zh:['你在整個生長過程中始終維持著最佳狀態。','飽滿的稻穗隨風搖曳，葉片健康而完整，在陽光下泛著成熟的光澤。'],en:['You stayed in your best shape during the whole growing time.','Your heavy rice ears swing in the wind. Your leaves are healthy and whole, shining under the bright sun.']},next:()=>'s9_dia'},
-    's9_dia':{image:'2-9-c.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['大家快看我快看我！'],en:['Everyone, Look at me!']},next:()=>'s9_2'},
-    's9_2':{image:'2-9.png',charName:null,texts:{zh:['收成時，人們讚賞的聲音與欣慰的目光，落在你與整片稻田之上。','你的存在，被人們認可。','而你，也成為了這片田間最理想的典範。'],en:['During harvest time, people look at you and the whole field with happy smiles and praise you.','People accept and love who you are.','And you become the most perfect example for this field.']},next:()=>{char2FinishEnding();return null;}},
-    's7_1':{image:'2-7.png',charName:null,texts:{zh:['沒有遭遇極端的風險，也沒有留下特別耀眼的成果。','你順利被收割、包裝，最後送往市場販售。','沒有人特別記住你，卻也沒有任何人將你淘汰。','這或許不是最亮眼的一年，但至少一切都平穩地落下了帷幕。'],en:['You did not face any big dangers, but you also did not make anything amazing.','You are harvested, packed, and sent to the market to be sold without any trouble.','No one remembers you in a special way, but no one throws you away either.','This may not be the brightest year, but at least everything ends in a quiet, peaceful way.']},next:()=>{char2FinishEnding();return null;}},
-    'sp1':{image:'2-3.png',charName:null,texts:{zh:['突然，你感受到異常的震動。','你的部分組織，被人類帶離田間。'],en:['Suddenly, you feel an unusual vibration.','A part of your tissue is taken away from the field by humans.']},next:()=>'sp2'},
-    'sp2':{image:'1-7-1.png',animated:true,charName:{zh:'稻米',en:'Rice'},texts:{zh:['這….這是哪？','怎麼沒有熟悉的泥土，也沒有原本的氣味？'],en:['Where... where am I?','Why is there no familiar soil, and no original home?']},next:()=>'sp3'},
-    'sp3':{image:'1-8.png',charName:null,texts:{zh:['你被移植到另一個環境。'],en:['You have been transplanted into a completely different environment.']},next:()=>'sp3_dia'},
-    'sp3_dia':{image:'1-8.png',charName:{zh:'稻米',en:'Rice'},texts:{zh:['發生了什麼事…..？'],en:['What just happened...?']},next:()=>'sp4'},
-    'sp4':{image:'1-8.png',charName:null,texts:{zh:['你的成長，已經不再屬於自然。'],en:['Your growth no longer belongs to nature.']},next:()=>{char2FinalEnding='good4';char2FinishEnding();return null;}}
+    's1':{image:'2-10.PNG',charName:null,texts:{zh:['清晨的陽光灑落在稻田之上。露水沿著葉尖緩緩滑落，微風吹過，整片稻田泛起層層綠浪。'],en:['The morning sun casts its golden light across the paddy field. Dewdrops gently slide down the tips of the leaves, and as a soft breeze blows, ripples of green waves cascade through the rice.']},next:()=>'s2'},
+    's2':{image:'2-1.PNG',charName:null,texts:{zh:['你是一株剛進入生長期的水稻，你的使命只有一個：成長並結出健康的稻穗，獲得標章或被農民賣出。','但你能感覺到環境並不單純。','風中，帶著不同的訊號：化學氣味、昆蟲活動、還有人類的干預。','你無法移動，只能選擇「如何成長」。'],en:['You are a rice plant that has just entered its growth phase. You have but one purpose: to mature and bear healthy grains, earning certification or being sold by the farmer.','Yet, you can sense that the environment is far from simple.','Carried on the wind are distinct signals: chemical odors, insect movements, and human interventions.','Stationary and rooted, your only choice is "how to grow".']},next:()=>{char2GoChoice('choose1');return null;}},
+    'story_stable1':{image:'2-2.PNG',charName:null,texts:{zh:['你選擇順應自然，慢慢吸收養分。','沒有額外干預，但你能感覺到周圍的威脅正在增加。'],en:["You choose to follow nature's course, slowly absorbing nutrients.",'Without external intervention, you can feel the surrounding threats beginning to increase.']},next:()=>{char2GoChoice('choose1');return null;}},
+    'story_pest1':{image:'2-2.PNG',charName:null,texts:{zh:['刺鼻的氣味覆蓋葉面。','你感受到外來物質進入體內，昆蟲的氣息逐漸減少。'],en:['A pungent odor covers the surface of your leaves.','You feel foreign substances entering your body as the presence of insects gradually fades away.']},next:()=>{char2GoChoice('choose2');return null;}},
+    'story_lim1_narr':{image:'2-2.PNG',charName:null,texts:{zh:['空氣中出現清新的氣味。','你感受到某種天然的保護，同時維持著自身的品質。'],en:['A fresh, crisp scent fills the air.','You feel a sense of natural protection washing over you while maintaining your overall quality.']},next:()=>'story_lim1_dia'},
+    'story_lim1_dia':{image:'2-2.PNG',charName:{zh:'稻米',en:'Rice'},texts:{zh:['好特別，是什麼味道？！居然讓那些蟲都遠離我了'],en:["How unique, what is this smell?! It's actually keeping all those bugs away from me!"]},next:()=>{char2GoChoice('choose3');return null;}},
+    'story_stable2':{image:'2-2.PNG',charName:null,texts:{zh:['你選擇順應自然，慢慢吸收養分。','沒有額外干預，但你能感覺到周圍的威脅正在增加。'],en:["You choose to follow nature's course, slowly absorbing nutrients.",'Without external intervention, you can feel the surrounding threats beginning to increase.']},next:()=>{char2GoChoice('choose2');return null;}},
+    'story_oldpest_dia':{image:'2-2.PNG',charName:{zh:'稻米',en:'Rice'},texts:{zh:['又有東西撒在我身上了……'],en:['Something is being sprayed on me again...']},next:()=>'story_oldpest_narr'},
+    'story_oldpest_narr':{image:'2-2.PNG',charName:null,texts:{zh:['熟悉的氣味再次出現。','你感受到外來物質進入體內，昆蟲的氣息逐漸減少。'],en:['A familiar odor covers you once again.','You feel foreign substances entering your body as the presence of insects gradually fades away.']},next:()=>{char2GoChoice('choose2');return null;}},
+    'story_newpest':{image:'2-2.PNG',charName:null,texts:{zh:['熟悉的氣味再次出現。','但這一次，效果似乎不如以往。'],en:['A familiar odor covers you once again.',"However, this time, the effects don't seem to be as potent as they used to be."]},next:()=>{char2GoChoice('choose2');return null;}},
+    'story_stable3':{image:'2-2.PNG',charName:null,texts:{zh:['你選擇順應自然，慢慢吸收養分。','沒有額外干預，但你能感覺到周圍的威脅正在增加。'],en:["You choose to follow nature's course, slowly absorbing nutrients.",'Without external intervention, you can feel the surrounding threats beginning to increase.']},next:()=>{char2GoChoice('choose3');return null;}},
+    'story_lim2_narr':{image:'2-2.PNG',charName:null,texts:{zh:['氣味持續存在。'],en:['The scent continues to linger in the air.']},next:()=>'story_lim2_dia'},
+    'story_lim2_dia':{image:'2-2.PNG',charName:{zh:'稻米',en:'Rice'},texts:{zh:['現在的感覺真棒！'],en:['This feels absolutely amazing right now!']},next:()=>{char2GoChoice('choose3');return null;}},
+    's_sale1':{image:'2-4.PNG',charName:null,texts:{zh:['夕陽逐漸染紅整片稻田。','經過漫長的生長後，田間即將迎來人類的評價。','人們再次踏入田間，'],en:['The setting sun gradually dyes the entire rice field crimson.','After a long period of growth, the field is about to face human evaluation.','People step into the field once again.']},next:()=>'s_sale1_dia'},
+    's_sale1_dia':{image:'2-4-c.PNG',charName:{zh:'稻米',en:'Rice'},texts:{zh:['嗯……我會面臨什麼結局呢？'],en:["Hmm... what kind of ending awaits me?"]},next:()=>{const map={bad2:'s5_1',bad3:'s6_1',good1:'s8_1',good2:'s9_1',good3:'s7_1'};return map[char2FinalEnding]||'s7_1';}},
+    's_bad1':{image:'2-6.PNG',charName:null,texts:{zh:['你的抗蟲率徹底歸零。','螟蟲開始大規模侵入你的體內結構，不斷啃食莖部與葉片，留下無法修復的傷痕。','原本穩定的生長逐漸被破壞、被中斷，脆弱的身體也開始失去支撐。','你試著撐起逐漸枯黃的葉片，試著維持最後的生命力。','但那些損傷，早已無法恢復。','最終，你的生長提前停止。'],en:['Your power to fight bugs is completely gone.','The bugs start to move deep inside your body in big groups. They keep eating your stems and leaves, leaving hurts that can never be fixed.','Your steady growth is broken and stopped. Your weak body begins to lose its strength to stand.','You try hard to hold up your turning-yellow leaves, trying to keep your last bit of life.','But the damage is already too bad to fix.','In the end, you stop growing too soon.']},next:()=>{char2FinishEnding();return null;}},
+    's5_1':{image:'2-5.PNG',charName:null,texts:{zh:['檢測人員進入田間，開始抽查。','「無法販售。」','原本等待運出的稻米，被一袋袋堆放進昏暗的倉庫。','嘆息聲遍布整個農田......'],en:['Inspectors enter the field and begin conducting random checks.','\"These cannot be sold.\"','The rice that was originally waiting to be shipped is stacked bag by bag in a dim warehouse.','Sighs echoed across the entire farmland...']},next:()=>'s5_dia'},
+    's5_dia':{image:'2-5-c.PNG',charName:{zh:'稻米',en:'Rice'},texts:{zh:['怎麼大家都在嘆息…'],en:['Why is everyone sighing...?']},next:()=>'s5_2'},
+    's5_2':{image:'2-5.PNG',charName:null,texts:{zh:['人類無力地望著堆積如山的稻米。','而你只能靜靜留在原地，等待著不知道是否還會到來的未來。'],en:['The farmers stare helplessly at the mountain of unsellable rice.','As for you, all you can do is remain where you are, quietly waiting for a future that may never come.']},next:()=>{char2FinishEnding();return null;}},
+    's6_1':{image:'2-6.PNG',charName:null,texts:{zh:['螟蟲因為對農藥產生抗藥性而存活，甚至開始擴散。'],en:['The rice leafrollers survive after developing resistance to pesticides and begin spreading across the fields.']},next:()=>'s6_dia'},
+    's6_dia':{image:'2-6-c.PNG',charName:{zh:'稻米',en:'Rice'},texts:{zh:['我的身上都是農藥…','好多蟲都咬我…'],en:["I'm covered in pesticide residues...",'So many insects are feeding on me...']},next:()=>'s6_2'},
+    's6_2':{image:'2-6.PNG',charName:null,texts:{zh:['你的身體同時承受到農藥殘留與蟲害破壞。','原本飽滿的你，失去光澤，','市場拒絕了你，田間也早已來不及補救。','最後，你被留倉庫角落，等待著被世界遺忘。'],en:['Your body suffers from both pesticide contamination and insect damage.','Once plump and healthy, you gradually lose your shine.','The market rejects you, and by the time the damage is noticed, it is already too late for the farmers to save the harvest.','In the end, you are left in a dark corner of the warehouse, waiting to be forgotten by the world.']},next:()=>{char2FinishEnding();return null;}},
+    's8_1':{image:'2-8.PNG',charName:null,texts:{zh:['沒有任何異常被通報。','外觀正常的你，順利通過檢測，進入了市場。'],en:['No anomalies were reported.','Appearing completely normal on the outside, you smoothly pass inspection and enter the market.']},next:()=>'s8_dia'},
+    's8_dia':{image:'2-8-c.PNG',charName:{zh:'稻米',en:'Rice'},texts:{zh:['咦？我竟然通過檢測了嗎？'],en:['Huh? I actually passed the inspection?']},next:()=>'s8_2'},
+    's8_2':{image:'2-8.PNG',charName:null,texts:{zh:['人們照常搬運、販售、購買，沒有人察覺那些隱藏在表面之下的問題。','這是一場沒有被發現的風險。'],en:['People carry, sell, and buy just as they always do. No one notices the issues hidden beneath the surface.','This is a risk that went entirely undetected.']},next:()=>{char2FinishEnding();return null;}},
+    's9_1':{image:'2-9.PNG',charName:null,texts:{zh:['你在整個生長過程中始終維持著最佳狀態。','飽滿的稻穗隨風搖曳，葉片健康而完整，在陽光下泛著成熟的光澤。'],en:['You stayed in your best shape during the whole growing time.','Your heavy rice ears swing in the wind. Your leaves are healthy and whole, shining under the bright sun.']},next:()=>'s9_dia'},
+    's9_dia':{image:'2-9-c.PNG',charName:{zh:'稻米',en:'Rice'},texts:{zh:['大家快看我快看我！'],en:['Everyone, Look at me!']},next:()=>'s9_2'},
+    's9_2':{image:'2-9.PNG',charName:null,texts:{zh:['收成時，人們讚賞的聲音與欣慰的目光，落在你與整片稻田之上。','你的存在，被人們認可。','而你，也成為了這片田間最理想的典範。'],en:['During harvest time, people look at you and the whole field with happy smiles and praise you.','People accept and love who you are.','And you become the most perfect example for this field.']},next:()=>{char2FinishEnding();return null;}},
+    's7_1':{image:'2-7.PNG',charName:null,texts:{zh:['沒有遭遇極端的風險，也沒有留下特別耀眼的成果。','你順利被收割、包裝，最後送往市場販售。','沒有人特別記住你，卻也沒有任何人將你淘汰。','這或許不是最亮眼的一年，但至少一切都平穩地落下了帷幕。'],en:['You did not face any big dangers, but you also did not make anything amazing.','You are harvested, packed, and sent to the market to be sold without any trouble.','No one remembers you in a special way, but no one throws you away either.','This may not be the brightest year, but at least everything ends in a quiet, peaceful way.']},next:()=>{char2FinishEnding();return null;}},
+    'sp1':{image:'2-3.PNG',charName:null,texts:{zh:['突然，你感受到異常的震動。','你的部分組織，被人類帶離田間。'],en:['Suddenly, you feel an unusual vibration.','A part of your tissue is taken away from the field by humans.']},next:()=>'sp2'},
+    'sp2':{image:'1-7-1.PNG',animated:true,charName:{zh:'稻米',en:'Rice'},texts:{zh:['這….這是哪？','怎麼沒有熟悉的泥土，也沒有原本的氣味？'],en:['Where... where am I?','Why is there no familiar soil, and no original home?']},next:()=>'sp3'},
+    'sp3':{image:'1-8.PNG',charName:null,texts:{zh:['你被移植到另一個環境。'],en:['You have been transplanted into a completely different environment.']},next:()=>'sp3_dia'},
+    'sp3_dia':{image:'1-8.PNG',charName:{zh:'稻米',en:'Rice'},texts:{zh:['發生了什麼事…..？'],en:['What just happened...?']},next:()=>'sp4'},
+    'sp4':{image:'1-8.PNG',charName:null,texts:{zh:['你的成長，已經不再屬於自然。'],en:['Your growth no longer belongs to nature.']},next:()=>{char2FinalEnding='good4';char2FinishEnding();return null;}}
   };
 
   const CHOICES2 = {
@@ -1662,7 +1662,7 @@
     char2CurrentTexts=scene.texts[gameLang]||scene.texts['zh'];
     char2StopSpecialAnim();
     if(scene.animated)char2StartSpecialAnim();
-    else char2GameImageEl().src='public/pictures/'+scene.image;
+    else char2GameImageEl().src='../public/pictures/'+scene.image;
     if(scene.charName){char2CharNameEl().classList.remove('hidden');char2CharNameEl().innerText=gameLang==='en'?scene.charName.en:scene.charName.zh;char2SceneWrapper().classList.add('scene-dialogue');}
     else{char2CharNameEl().classList.add('hidden');char2SceneWrapper().classList.remove('scene-dialogue');}
     char2ChoicesBox().classList.remove('show');
@@ -1801,46 +1801,46 @@
   }
 
   const SCENES3={
-    's1':{image:'3-1.png',charName:null,texts:{zh:['清晨五點，天還沒完全亮，你踩進濕冷的田裡，鞋底沾滿泥水。'],en:['It is 5 AM, the sky has not yet fully brightened. You step into the cold, damp field, your shoes caked in mud.']},next:()=>'s2'},
-    's2':{image:'3-2.png',charName:null,texts:{zh:['空中傳來細微的振翅聲。'],en:['A faint sound of flapping wings comes from the air.']},next:()=>'c1'},
-    'c1':{image:'3-2.png',charName:{zh:'農民',en:'Farmer'},texts:{zh:['唉，又是瘤野螟......'],en:['Sigh, rice leaffolders again...']},next:()=>'nibble'},
-    'nibble':{image:'3-2.png',charName:null,texts:{zh:['你伸手撥開稻葉，發現部分稻米葉面上殘留著被啃食過的痕跡。'],en:['You reach out to part the rice leaves, only to find traces of nibbling on the surface of some of the leaves.']},next:()=>'c2'},
-    'c2':{image:'3-2.png',charName:{zh:'農民',en:'Farmer'},texts:{zh:['瘤野螟，你完蛋了！'],en:['Rice leaffolder, you are done for!']},next:()=>'goal'},
-    'goal':{image:'3-2.png',charName:null,texts:{zh:['為了避免讓瘤野螟大量繁殖，破壞整片稻田，你內心只有一個目標：斬殺瘤野螟，成功收成，賺到滿滿的錢。','接下來，輪到你，接下這片田。'],en:['To prevent the rice leaffolders from multiplying and destroying the entire paddy, your goal is singular: eradicate them, secure a successful harvest, and make a fortune.','Now, it is your turn to take over this field.']},next:()=>{char3GoChoice('period1');return null;}},
-    'p1_stable':{image:'3-2.png',charName:null,texts:{zh:['你按照了你的老方法來種植，想說至少還能控制。'],en:['You follow your usual farming method, hoping at least to maintain control.']},next:()=>afterChoice3('period1')},
-    'p1_pesticide':{image:'3-2.png',charName:null,texts:{zh:['你知道這不是長久之計，但現在沒有時間猶豫，先活下來再說吧！'],en:["You know this isn't a long-term solution, but there is no time to hesitate. Survive first."]},next:()=>afterChoicePeriodLockOrShortcut3('period1','period2')},
-    'p1_limonene':{image:'3-2.png',charName:null,texts:{zh:['你聽說這種方法比較安全，想著先試試看吧！好像還滿不錯的！'],en:["You've heard this method is safer, so you decide to give it a try. It actually seems pretty good."]},next:()=>afterChoicePeriodLockOrShortcut3('period1','period3')},
-    'p1_borrow':{image:'3-3.png',charName:null,texts:{zh:['沒錢了，你決定先借錢投資，晚一點再考慮稻米。'],en:['You have no money left, so you decide to borrow money and invest first, and deal with the rice later.']},next:()=>afterChoice3('period1')},
-    'p1_rest':{image:'3-4.png',charName:null,texts:{zh:['你決定休息，給水稻們自己造化，反正船到橋頭自然直。'],en:['You decide to rest and let the rice plants take their own course. After all, things will work out when the time comes.']},next:()=>afterChoice3('period1')},
-    'p2_stable':{image:'3-2.png',charName:null,texts:{zh:['用穩定的方式種植，穩穩的種出新的稻米。'],en:['You return to a steady farming method, producing new rice calmly and consistently.']},next:()=>afterChoice3('period2')},
-    'p2_pesticide':{image:'3-2.png',charName:null,texts:{zh:['這次使出絕命毒殺技，使出農藥絕殺！'],en:['This time you unleash an "ultimate pesticide strike," fully committing to chemical control.']},next:()=>afterChoice3('period2')},
-    'p2_borrow':{image:'3-3.png',charName:null,texts:{zh:['沒錢了，你決定先借錢投資，晚一點再考慮稻米。'],en:['You have no money left, so you decide to borrow money and invest first, and deal with the rice later.']},next:()=>afterChoice3('period2')},
-    'p2_rest':{image:'3-4.png',charName:null,texts:{zh:['你決定休息，給水稻們自己造化，反正船到橋頭自然直。'],en:['You decide to rest and let the rice plants take their own course. After all, things will work out when the time comes.']},next:()=>afterChoice3('period2')},
-    'p3_stable':{image:'3-2.png',charName:null,texts:{zh:['用穩定的方式種植，穩穩的種出新的稻米。'],en:['You return to a steady farming method, producing new rice calmly and consistently.']},next:()=>afterChoice3('period3')},
-    'p3_limonene':{image:'3-2.png',charName:null,texts:{zh:['走在水稻時尚前端的你，決定試試這新款的檸檬烯！'],en:["Staying at the forefront of rice farming trends, you decide to try this new limonene-based approach."]},next:()=>afterChoice3('period3')},
-    'p3_borrow':{image:'3-3.png',charName:null,texts:{zh:['沒錢了，你決定先借錢投資，晚一點再考慮稻米。'],en:['You have no money left, so you decide to borrow money and invest first, and deal with the rice later.']},next:()=>afterChoice3('period3')},
-    'p3_rest':{image:'3-4.png',charName:null,texts:{zh:['你決定休息，給水稻們自己造化，反正船到橋頭自然直。'],en:['You decide to rest and let the rice plants take their own course. After all, things will work out when the time comes.']},next:()=>afterChoice3('period3')},
-    's_harvest_start':{image:'2-4.png',charName:null,texts:{zh:['收割開始了，機器進入田間，一排一排稻穗被整齊割下。','你先前的努力即將揭曉。'],en:["The harvest begins. Machines enter the field, and rows of rice stalks are neatly cut down one by one.","Everything you've done so far is about to be revealed."]},next:()=>{if(char3Stats.reputation<-50)return'harvest_bad2_1';if(char3Stats.reputation>100)return'good1_1';return'good2';}},
-    'harvest_bad2_1':{image:'3-5.png',charName:null,texts:{zh:['市場早已對你的稻米失去信任。','即使完成收成，仍無法順利進入販售流程。','部分稻米被退回，部分滯留倉庫。','田地仍在運作，但產出不再被認可。'],en:['The market has already lost trust in your rice.','Even after the harvest is completed, it still cannot smoothly enter the sales process.','Some of the rice is returned, while some remains stuck in storage warehouses.','The fields continue to operate, but the produce is no longer recognized.']},next:()=>'harvest_bad2_c'},
-    'harvest_bad2_c':{image:'3-2.png',charName:{zh:'農民',en:'Farmer'},texts:{zh:['怎麼會這樣......'],en:['How did it come to this...']},next:()=>'harvest_bad2_2'},
-    'harvest_bad2_2':{image:'3-5.png',charName:null,texts:{zh:['過去的選擇累積成結果，影響的不只是這一季的收成。'],en:["Past choices have accumulated into consequences, affecting not just this season's harvest."]},next:()=>{char3FinishEnding('bad2');return null;}},
-    'g3_1':{image:'3-5.png',charName:null,texts:{zh:['你在整理收成資料時，手機裡冒出了一則通知。'],en:['While you are organizing the harvest data, a notification suddenly pops up on your phone.']},next:()=>'g3_2'},
-    'g3_2':{image:'3-6.png',charName:null,buttonScene:true,texts:{zh:[],en:[]},next:()=>'g3_3'},
-    'g3_3':{image:'3-5.png',charName:null,texts:{zh:['隔天，你與IGEM 10團隊聊了許多稻田的種種與研究的內容。'],en:['The next day, you spend a long time talking with iGEM Team 10 about rice fields and their research.']},next:()=>'g3_4'},
-    'g3_4':{image:'3-2.png',charName:{zh:'農民',en:'Farmer'},texts:{zh:['這些秧苗給你們，一起來捕捉瘤野螟吧！'],en:["Here are the seedlings for you. Let's capture the rice leafrollers together!"]},next:()=>'g3_5'},
-    'g3_5':{image:'3-5.png',charName:null,texts:{zh:['稻米被裝進了紙箱中，瘤野螟的幼蟲與成蟲則被裝進了昆蟲箱。'],en:['The rice plants are carefully packed into cardboard boxes, while the larvae and adult rice leafrollers are placed into insect containers for study.']},next:()=>'g3_6'},
-    'g3_6':{image:'3-2.png',charName:{zh:'農民',en:'Farmer'},texts:{zh:['再見！我相信你們可以的！'],en:['Goodbye! I believe you can do it!']},next:()=>'g3_7'},
-    'g3_7':{image:'2-8.png',charName:null,texts:{zh:['你在田埂上和他們道別並加以鼓勵。','風吹過稻浪，田裡恢復安靜，','但你知道，有些答案，正在遠方被慢慢拼出來。'],en:['You say farewell on the edge of the field, offering them encouragement.','The wind passes through the waves of rice plants, and the field falls quiet once again.','But you know—some answers are still being slowly pieced together somewhere far away.']},next:()=>{char3FinishEnding('good3');return null;}},
-    'bad1':{image:'3-4.png',charName:null,texts:{zh:['帳戶裡的數字終於歸零。','借不到錢、賣不出稻米，這片田你再也撐不下去了。','你只能黯然放棄這次的耕種。'],en:['The number in your account finally hits zero.','Unable to borrow more or sell any rice, you cannot keep this field going any longer.','You have no choice but to give up this harvest.']},next:()=>{char3FinishEnding('bad1');return null;}},
-    'bad2':{image:'2-5.png',charName:null,texts:{zh:['你持續借錢擴張並大量使用農藥。','田區開始被外部檢查介入。','用藥紀錄與異常數據被放大檢視。','最終，收成被封存，無法販售，信任中斷，一切停止。'],en:['You keep borrowing money to grow bigger and use a large amount of pesticides.','Outside inspectors start to step into your fields.','Your spray records and strange data are put under a big magnifying glass.','In the end, your harvest is sealed away and cannot be sold. Trust is broken, and everything stops.']},next:()=>{char3FinishEnding('bad2');return null;}},
-    'good2':{image:'2-7.png',charName:null,texts:{zh:['收成與販售過程順利完成。','未出現重大問題，也未有特別突出的成果。','整體維持基本穩定。','田地持續運作，資源得以延續至下一季。','本季以平穩的狀態結束。'],en:['The harvest and sales process are completed smoothly.','No major problems occur, but there are also no particularly outstanding results.','Overall, things remain basically stable.','The field continues to operate, and resources are carried over to the next season.','This season ends in a steady, uneventful state.']},next:()=>{char3FinishEnding('good2');return null;}},
-    'good1_1':{image:'2-8.png',charName:null,texts:{zh:['整體種植過程穩定，品質與管理受到肯定。','產品順利通過市場檢驗，並獲得良好評價。','收成後的產品不僅成功完成販售，也逐漸累積了市場信任，為下一季的合作與機會奠定基礎。'],en:['The overall cultivation process remained stable, and both quality and management were well recognized.','The product successfully passed market inspections and received positive evaluations.','After harvest, the rice was not only successfully sold but also gradually built market trust, laying the foundation for future cooperation and opportunities.']},next:()=>'good1_c'},
-    'good1_c':{image:'2-8.png',charName:{zh:'農民',en:'Farmer'},texts:{zh:['好欸，成功達成目標了！'],en:['Yes, I did it—I reached my goal!']},next:()=>'good1_2'},
-    'good1_2':{image:'2-8.png',charName:null,texts:{zh:['最終，本季的表現被視為一次成功的種植案例。'],en:['In the end, this season was regarded as a successful farming case study.']},next:()=>{char3FinishEnding('good1');return null;}},
-    'bad3':{image:'2-5.png',charName:null,texts:{zh:['你持續借錢擴張並大量使用農藥。','你的身體開始無法負荷長期壓力與化學暴露。'],en:['You keep borrowing money to grow bigger and use a large amount of pesticides.','Your body begins to break down from the long-term stress and the chemicals.']},next:()=>'bad3_c'},
-    'bad3_c':{image:'2-5.png',charName:{zh:'農民',en:'Farmer'},texts:{zh:['咳咳咳......'],en:['Cough, cough, cough...']},next:()=>'bad3_2'},
-    'bad3_2':{image:'2-5.png',charName:null,texts:{zh:['田還在，但你已經無法長時間停留。'],en:['The field is still there, but you can no longer stay in it for long.']},next:()=>{char3FinishEnding('bad3');return null;}},
-    'bad4':{image:'2-6.png',charName:null,texts:{zh:['你持續借錢擴張並大量使用農藥。','螟蟲逐漸適應並擴散，田間失去控制。','生態崩壞，產量與品質同步下滑。'],en:['You keep borrowing money to grow bigger and use a large amount of pesticides.','The bugs slowly get used to the chemicals and spread, and the field goes out of control.','The nature around you breaks down, and both your harvest amount and its quality drop at the same time.']},next:()=>{char3FinishEnding('bad4');return null;}}
+    's1':{image:'3-1.PNG',charName:null,texts:{zh:['清晨五點，天還沒完全亮，你踩進濕冷的田裡，鞋底沾滿泥水。'],en:['It is 5 AM, the sky has not yet fully brightened. You step into the cold, damp field, your shoes caked in mud.']},next:()=>'s2'},
+    's2':{image:'3-2.PNG',charName:null,texts:{zh:['空中傳來細微的振翅聲。'],en:['A faint sound of flapping wings comes from the air.']},next:()=>'c1'},
+    'c1':{image:'3-2.PNG',charName:{zh:'農民',en:'Farmer'},texts:{zh:['唉，又是瘤野螟......'],en:['Sigh, rice leaffolders again...']},next:()=>'nibble'},
+    'nibble':{image:'3-2.PNG',charName:null,texts:{zh:['你伸手撥開稻葉，發現部分稻米葉面上殘留著被啃食過的痕跡。'],en:['You reach out to part the rice leaves, only to find traces of nibbling on the surface of some of the leaves.']},next:()=>'c2'},
+    'c2':{image:'3-2.PNG',charName:{zh:'農民',en:'Farmer'},texts:{zh:['瘤野螟，你完蛋了！'],en:['Rice leaffolder, you are done for!']},next:()=>'goal'},
+    'goal':{image:'3-2.PNG',charName:null,texts:{zh:['為了避免讓瘤野螟大量繁殖，破壞整片稻田，你內心只有一個目標：斬殺瘤野螟，成功收成，賺到滿滿的錢。','接下來，輪到你，接下這片田。'],en:['To prevent the rice leaffolders from multiplying and destroying the entire paddy, your goal is singular: eradicate them, secure a successful harvest, and make a fortune.','Now, it is your turn to take over this field.']},next:()=>{char3GoChoice('period1');return null;}},
+    'p1_stable':{image:'3-2.PNG',charName:null,texts:{zh:['你按照了你的老方法來種植，想說至少還能控制。'],en:['You follow your usual farming method, hoping at least to maintain control.']},next:()=>afterChoice3('period1')},
+    'p1_pesticide':{image:'3-2.PNG',charName:null,texts:{zh:['你知道這不是長久之計，但現在沒有時間猶豫，先活下來再說吧！'],en:["You know this isn't a long-term solution, but there is no time to hesitate. Survive first."]},next:()=>afterChoicePeriodLockOrShortcut3('period1','period2')},
+    'p1_limonene':{image:'3-2.PNG',charName:null,texts:{zh:['你聽說這種方法比較安全，想著先試試看吧！好像還滿不錯的！'],en:["You've heard this method is safer, so you decide to give it a try. It actually seems pretty good."]},next:()=>afterChoicePeriodLockOrShortcut3('period1','period3')},
+    'p1_borrow':{image:'3-3.PNG',charName:null,texts:{zh:['沒錢了，你決定先借錢投資，晚一點再考慮稻米。'],en:['You have no money left, so you decide to borrow money and invest first, and deal with the rice later.']},next:()=>afterChoice3('period1')},
+    'p1_rest':{image:'3-4.PNG',charName:null,texts:{zh:['你決定休息，給水稻們自己造化，反正船到橋頭自然直。'],en:['You decide to rest and let the rice plants take their own course. After all, things will work out when the time comes.']},next:()=>afterChoice3('period1')},
+    'p2_stable':{image:'3-2.PNG',charName:null,texts:{zh:['用穩定的方式種植，穩穩的種出新的稻米。'],en:['You return to a steady farming method, producing new rice calmly and consistently.']},next:()=>afterChoice3('period2')},
+    'p2_pesticide':{image:'3-2.PNG',charName:null,texts:{zh:['這次使出絕命毒殺技，使出農藥絕殺！'],en:['This time you unleash an "ultimate pesticide strike," fully committing to chemical control.']},next:()=>afterChoice3('period2')},
+    'p2_borrow':{image:'3-3.PNG',charName:null,texts:{zh:['沒錢了，你決定先借錢投資，晚一點再考慮稻米。'],en:['You have no money left, so you decide to borrow money and invest first, and deal with the rice later.']},next:()=>afterChoice3('period2')},
+    'p2_rest':{image:'3-4.PNG',charName:null,texts:{zh:['你決定休息，給水稻們自己造化，反正船到橋頭自然直。'],en:['You decide to rest and let the rice plants take their own course. After all, things will work out when the time comes.']},next:()=>afterChoice3('period2')},
+    'p3_stable':{image:'3-2.PNG',charName:null,texts:{zh:['用穩定的方式種植，穩穩的種出新的稻米。'],en:['You return to a steady farming method, producing new rice calmly and consistently.']},next:()=>afterChoice3('period3')},
+    'p3_limonene':{image:'3-2.PNG',charName:null,texts:{zh:['走在水稻時尚前端的你，決定試試這新款的檸檬烯！'],en:["Staying at the forefront of rice farming trends, you decide to try this new limonene-based approach."]},next:()=>afterChoice3('period3')},
+    'p3_borrow':{image:'3-3.PNG',charName:null,texts:{zh:['沒錢了，你決定先借錢投資，晚一點再考慮稻米。'],en:['You have no money left, so you decide to borrow money and invest first, and deal with the rice later.']},next:()=>afterChoice3('period3')},
+    'p3_rest':{image:'3-4.PNG',charName:null,texts:{zh:['你決定休息，給水稻們自己造化，反正船到橋頭自然直。'],en:['You decide to rest and let the rice plants take their own course. After all, things will work out when the time comes.']},next:()=>afterChoice3('period3')},
+    's_harvest_start':{image:'2-4.PNG',charName:null,texts:{zh:['收割開始了，機器進入田間，一排一排稻穗被整齊割下。','你先前的努力即將揭曉。'],en:["The harvest begins. Machines enter the field, and rows of rice stalks are neatly cut down one by one.","Everything you've done so far is about to be revealed."]},next:()=>{if(char3Stats.reputation<-50)return'harvest_bad2_1';if(char3Stats.reputation>100)return'good1_1';return'good2';}},
+    'harvest_bad2_1':{image:'3-5.PNG',charName:null,texts:{zh:['市場早已對你的稻米失去信任。','即使完成收成，仍無法順利進入販售流程。','部分稻米被退回，部分滯留倉庫。','田地仍在運作，但產出不再被認可。'],en:['The market has already lost trust in your rice.','Even after the harvest is completed, it still cannot smoothly enter the sales process.','Some of the rice is returned, while some remains stuck in storage warehouses.','The fields continue to operate, but the produce is no longer recognized.']},next:()=>'harvest_bad2_c'},
+    'harvest_bad2_c':{image:'3-2.PNG',charName:{zh:'農民',en:'Farmer'},texts:{zh:['怎麼會這樣......'],en:['How did it come to this...']},next:()=>'harvest_bad2_2'},
+    'harvest_bad2_2':{image:'3-5.PNG',charName:null,texts:{zh:['過去的選擇累積成結果，影響的不只是這一季的收成。'],en:["Past choices have accumulated into consequences, affecting not just this season's harvest."]},next:()=>{char3FinishEnding('bad2');return null;}},
+    'g3_1':{image:'3-5.PNG',charName:null,texts:{zh:['你在整理收成資料時，手機裡冒出了一則通知。'],en:['While you are organizing the harvest data, a notification suddenly pops up on your phone.']},next:()=>'g3_2'},
+    'g3_2':{image:'3-6.PNG',charName:null,buttonScene:true,texts:{zh:[],en:[]},next:()=>'g3_3'},
+    'g3_3':{image:'3-5.PNG',charName:null,texts:{zh:['隔天，你與IGEM 10團隊聊了許多稻田的種種與研究的內容。'],en:['The next day, you spend a long time talking with iGEM Team 10 about rice fields and their research.']},next:()=>'g3_4'},
+    'g3_4':{image:'3-2.PNG',charName:{zh:'農民',en:'Farmer'},texts:{zh:['這些秧苗給你們，一起來捕捉瘤野螟吧！'],en:["Here are the seedlings for you. Let's capture the rice leafrollers together!"]},next:()=>'g3_5'},
+    'g3_5':{image:'3-5.PNG',charName:null,texts:{zh:['稻米被裝進了紙箱中，瘤野螟的幼蟲與成蟲則被裝進了昆蟲箱。'],en:['The rice plants are carefully packed into cardboard boxes, while the larvae and adult rice leafrollers are placed into insect containers for study.']},next:()=>'g3_6'},
+    'g3_6':{image:'3-2.PNG',charName:{zh:'農民',en:'Farmer'},texts:{zh:['再見！我相信你們可以的！'],en:['Goodbye! I believe you can do it!']},next:()=>'g3_7'},
+    'g3_7':{image:'2-8.PNG',charName:null,texts:{zh:['你在田埂上和他們道別並加以鼓勵。','風吹過稻浪，田裡恢復安靜，','但你知道，有些答案，正在遠方被慢慢拼出來。'],en:['You say farewell on the edge of the field, offering them encouragement.','The wind passes through the waves of rice plants, and the field falls quiet once again.','But you know—some answers are still being slowly pieced together somewhere far away.']},next:()=>{char3FinishEnding('good3');return null;}},
+    'bad1':{image:'3-4.PNG',charName:null,texts:{zh:['帳戶裡的數字終於歸零。','借不到錢、賣不出稻米，這片田你再也撐不下去了。','你只能黯然放棄這次的耕種。'],en:['The number in your account finally hits zero.','Unable to borrow more or sell any rice, you cannot keep this field going any longer.','You have no choice but to give up this harvest.']},next:()=>{char3FinishEnding('bad1');return null;}},
+    'bad2':{image:'2-5.PNG',charName:null,texts:{zh:['你持續借錢擴張並大量使用農藥。','田區開始被外部檢查介入。','用藥紀錄與異常數據被放大檢視。','最終，收成被封存，無法販售，信任中斷，一切停止。'],en:['You keep borrowing money to grow bigger and use a large amount of pesticides.','Outside inspectors start to step into your fields.','Your spray records and strange data are put under a big magnifying glass.','In the end, your harvest is sealed away and cannot be sold. Trust is broken, and everything stops.']},next:()=>{char3FinishEnding('bad2');return null;}},
+    'good2':{image:'2-7.PNG',charName:null,texts:{zh:['收成與販售過程順利完成。','未出現重大問題，也未有特別突出的成果。','整體維持基本穩定。','田地持續運作，資源得以延續至下一季。','本季以平穩的狀態結束。'],en:['The harvest and sales process are completed smoothly.','No major problems occur, but there are also no particularly outstanding results.','Overall, things remain basically stable.','The field continues to operate, and resources are carried over to the next season.','This season ends in a steady, uneventful state.']},next:()=>{char3FinishEnding('good2');return null;}},
+    'good1_1':{image:'2-8.PNG',charName:null,texts:{zh:['整體種植過程穩定，品質與管理受到肯定。','產品順利通過市場檢驗，並獲得良好評價。','收成後的產品不僅成功完成販售，也逐漸累積了市場信任，為下一季的合作與機會奠定基礎。'],en:['The overall cultivation process remained stable, and both quality and management were well recognized.','The product successfully passed market inspections and received positive evaluations.','After harvest, the rice was not only successfully sold but also gradually built market trust, laying the foundation for future cooperation and opportunities.']},next:()=>'good1_c'},
+    'good1_c':{image:'2-8.PNG',charName:{zh:'農民',en:'Farmer'},texts:{zh:['好欸，成功達成目標了！'],en:['Yes, I did it—I reached my goal!']},next:()=>'good1_2'},
+    'good1_2':{image:'2-8.PNG',charName:null,texts:{zh:['最終，本季的表現被視為一次成功的種植案例。'],en:['In the end, this season was regarded as a successful farming case study.']},next:()=>{char3FinishEnding('good1');return null;}},
+    'bad3':{image:'2-5.PNG',charName:null,texts:{zh:['你持續借錢擴張並大量使用農藥。','你的身體開始無法負荷長期壓力與化學暴露。'],en:['You keep borrowing money to grow bigger and use a large amount of pesticides.','Your body begins to break down from the long-term stress and the chemicals.']},next:()=>'bad3_c'},
+    'bad3_c':{image:'2-5.PNG',charName:{zh:'農民',en:'Farmer'},texts:{zh:['咳咳咳......'],en:['Cough, cough, cough...']},next:()=>'bad3_2'},
+    'bad3_2':{image:'2-5.PNG',charName:null,texts:{zh:['田還在，但你已經無法長時間停留。'],en:['The field is still there, but you can no longer stay in it for long.']},next:()=>{char3FinishEnding('bad3');return null;}},
+    'bad4':{image:'2-6.PNG',charName:null,texts:{zh:['你持續借錢擴張並大量使用農藥。','螟蟲逐漸適應並擴散，田間失去控制。','生態崩壞，產量與品質同步下滑。'],en:['You keep borrowing money to grow bigger and use a large amount of pesticides.','The bugs slowly get used to the chemicals and spread, and the field goes out of control.','The nature around you breaks down, and both your harvest amount and its quality drop at the same time.']},next:()=>{char3FinishEnding('bad4');return null;}}
   };
 
   const CHOICES3={
@@ -1869,7 +1869,7 @@
     const scene=SCENES3[key];if(!scene)return;
     char3CurrentScene=key;char3CurrentPart=0;
     char3CurrentTexts=scene.texts[gameLang]||scene.texts['zh'];
-    char3GameImageEl().src='public/pictures/'+scene.image;
+    char3GameImageEl().src='../public/pictures/'+scene.image;
     if(scene.charName){char3CharNameEl().classList.remove('hidden');char3CharNameEl().innerText=gameLang==='en'?scene.charName.en:scene.charName.zh;char3SceneWrapper().classList.add('scene-dialogue');}
     else{char3CharNameEl().classList.add('hidden');char3SceneWrapper().classList.remove('scene-dialogue');}
     char3ChoicesBox().classList.remove('show');
@@ -1934,56 +1934,56 @@
   const ENDING_ANIM_SCENES = [
     {
       id: '1-7',
-      frames: ['public/pictures/1-7-1.png','public/pictures/1-7-2.png','public/pictures/1-7-3.png','public/pictures/1-7-4.png','public/pictures/1-7-5.png'],
+      frames: ['../public/pictures/1-7-1.PNG','../public/pictures/1-7-2.PNG','../public/pictures/1-7-3.PNG','../public/pictures/1-7-4.PNG','../public/pictures/1-7-5.PNG'],
       interval: 250, next: 'a1',
       zh: ['你剛剛所經歷的選擇，並不只是遊戲，而是正在世界各地發生的現實。'],
       en: ['The choices you just experienced are not just a game, but a reality happening all over the world.']
     },
     {
       id: 'a1',
-      frames: ['public/animation/a1-1.png','public/animation/a1-2.png','public/animation/a1-3.png','public/animation/a1-4.png','public/animation/a1-5.png','public/animation/a1-6.png','public/animation/a1-7.png','public/animation/a1-8.png','public/animation/a1-9.png'],
+      frames: ['../public/animation/a1-1.PNG','../public/animation/a1-2.PNG','../public/animation/a1-3.PNG','../public/animation/a1-4.PNG','../public/animation/a1-5.PNG','../public/animation/a1-6.PNG','../public/animation/a1-7.PNG','../public/animation/a1-8.PNG','../public/animation/a1-9.PNG'],
       interval: 250, next: 'a2',
       zh: ['你知道嗎？全球超過一半的人口，都以稻米作為主要糧食來源。','而亞洲，更是世界上最大的稻米消費與生產地區。','然而，在保護稻米產量的背後，卻隱藏著一個越來越嚴重的問題——'],
       en: ['Do you know that more than half of the global population relies on rice as a staple food source.','Asia, in particular, is the largest region for both rice consumption and production in the world.','However, behind the effort to protect rice yields, there lies a growing and increasingly serious problem—']
     },
     {
       id: 'a2',
-      frames: ['public/animation/a2-1.png','public/animation/a2-2.png','public/animation/a2-3.png','public/animation/a2-4.png','public/animation/a2-5.png','public/animation/a2-6.png','public/animation/a2-7.png','public/animation/a2-8.png','public/animation/a2-9.png','public/animation/a2-10.png'],
+      frames: ['../public/animation/a2-1.PNG','../public/animation/a2-2.PNG','../public/animation/a2-3.PNG','../public/animation/a2-4.PNG','../public/animation/a2-5.PNG','../public/animation/a2-6.PNG','../public/animation/a2-7.PNG','../public/animation/a2-8.PNG','../public/animation/a2-9.PNG','../public/animation/a2-10.PNG'],
       interval: 250, next: 'a3',
       zh: ['農藥。','研究指出，長期生活在農藥頻繁噴灑區域附近的人，或長時間接觸農藥的人，罹患癌症的風險會明顯提高。','不僅如此，農藥還會導致蜂后數量減少85%，殺死蜜蜂等重要的授粉昆蟲，危害樹蛙等瀕危物種，甚至破壞土壤肥力，使土地失去原本的生命力。','聯合國糧農組織警告說，如果這樣的情況持續下去，未來我們面對的，將不只是環境問題，更可能是糧食短缺與生態崩潰。'],
       en: ['Pesticides.','Studies have shown that people who live near areas with frequent pesticide spraying, or those who are regularly exposed to pesticides over long periods, face a significantly higher risk of developing cancer.','In addition, pesticides have been found to reduce queen bee populations by up to 85%, kill essential pollinators such as bees, threaten endangered species like tree frogs, and even degrade soil fertility, stripping the land of its natural vitality.','The Food and Agriculture Organization of the United Nations has warned that if this situation continues, what we may face in the future is not only an environmental crisis, but also potential food shortages and ecological collapse.']
     },
     {
       id: 'a3',
-      frames: ['public/animation/a3-1.png','public/animation/a3-2.png','public/animation/a3-3.png','public/animation/a3-4.png','public/animation/a3-5.png','public/animation/a3-6.png','public/animation/a3-7.png','public/animation/a3-8.png'],
+      frames: ['../public/animation/a3-1.PNG','../public/animation/a3-2.PNG','../public/animation/a3-3.PNG','../public/animation/a3-4.PNG','../public/animation/a3-5.PNG','../public/animation/a3-6.PNG','../public/animation/a3-7.PNG','../public/animation/a3-8.PNG'],
       interval: 250, next: 'a4',
       zh: ['透過對農民的採訪和實地調查，我們也了解到另一個殘酷的現實。','因為氣候變遷加劇，病蟲害問題越來越嚴重，許多農民為了保護收成，只能噴灑更多農藥。這形成了一個惡性循環：','農藥使用越多，環境破壞越嚴重。'],
       en: ['Through interviews with farmers and on-site field investigations, we also came to understand another harsh reality.','Due to the worsening impacts of climate change, pest and disease problems are becoming increasingly severe. Many farmers, in order to protect their harvests, are forced to use more pesticides. This creates a vicious cycle:','The more pesticides are used, the more severe the environmental damage becomes.']
     },
     {
       id: 'a4',
-      frames: ['public/animation/a4-1.png','public/animation/a4-2.png','public/animation/a4-3.png','public/animation/a4-4.png','public/animation/a4-5.png'],
+      frames: ['../public/animation/a4-1.PNG','../public/animation/a4-2.PNG','../public/animation/a4-3.PNG','../public/animation/a4-4.PNG','../public/animation/a4-5.PNG'],
       interval: 250, next: 'a5',
       zh: ['因此，我們開始思考：','有沒有一種方式，能夠保護作物，同時也保護人體健康與環境？','在研究過程中，我們發現了大自然早已提供答案。','當水稻受到害蟲攻擊時，植物本身其實會自然釋放一種物質——檸檬烯。','檸檬烯就像植物發出的警訊，能夠幫助驅趕害蟲，其中包括水稻最具破壞性的害蟲之一——瘤野螟。','於是，我們希望透過合成生物學生產檸檬烯。','相比傳統農藥，檸檬烯是一種來自自然的生物型防治方式。','它不只能降低對人體健康的危害，也有機會減少對蜜蜂、土壤與生態系的傷害，讓農業朝向更永續的方向發展。'],
       en: ['Therefore, we began to ask ourselves:','Is there a way to protect crops while also safeguarding human health and the environment?','During our research, we discovered that nature had already provided the answer.','When rice plants are attacked by pests, they naturally release a substance called limonene.','Limonene acts like a warning signal from the plant, helping to repel insects—including one of the most destructive rice pests, the rice leafroller.','Based on this, we aim to produce limonene through synthetic biology.','Compared to traditional pesticides, limonene is a bio-based pest control method derived from nature.','It not only reduces risks to human health, but also has the potential to lessen harm to bees, soil, and ecosystems—helping agriculture move toward a more sustainable future.']
     },
     {
       id: 'a5',
-      frames: ['public/animation/a5-1.png','public/animation/a5-2.png','public/animation/a5-3.png','public/animation/a5-4.png','public/animation/a5-5.png','public/animation/a5-6.png','public/animation/a5-7.png','public/animation/a5-8.png','public/animation/a5-9.png'],
+      frames: ['../public/animation/a5-1.PNG','../public/animation/a5-2.PNG','../public/animation/a5-3.PNG','../public/animation/a5-4.PNG','../public/animation/a5-5.PNG','../public/animation/a5-6.PNG','../public/animation/a5-7.PNG','../public/animation/a5-8.PNG','../public/animation/a5-9.PNG'],
       interval: 250, next: 'a6',
       zh: ['但真正的改變，需要農民、政府與你的共同合作。','農民需要更安全、永續的防治方式；政府需要推動友善農業與相關支持政策；','而你的每一次選擇，也正在決定未來農業的方向。'],
       en: ['But real change requires collaboration among farmers, the government, and you.','Farmers need safer and more sustainable methods of pest control. The government needs to promote eco-friendly agriculture and supportive policies.','And every choice you make is also shaping the future direction of agriculture.']
     },
     {
       id: 'a6',
-      frames: ['public/animation/a5-1.png','public/animation/a5-2.png','public/animation/a5-3.png','public/animation/a5-4.png','public/animation/a5-5.png','public/animation/a5-6.png','public/animation/a5-7.png','public/animation/a5-8.png','public/animation/a5-9.png'],
+      frames: ['../public/animation/a5-1.PNG','../public/animation/a5-2.PNG','../public/animation/a5-3.PNG','../public/animation/a5-4.PNG','../public/animation/a5-5.PNG','../public/animation/a5-6.PNG','../public/animation/a5-7.PNG','../public/animation/a5-8.PNG','../public/animation/a5-9.PNG'],
       interval: 250, next: 'a7',
       zh: ['我們希望透過《NoFold》，讓你重新思考農藥、糧食、我們與環境之間的關係。','當更多人願意支持友善環境的農產品，改變才有可能真正發生。'],
       en: ['We hope that through NoFold, you can rethink the relationship between pesticides, food, and the environment we share.','Only when more people are willing to support environmentally friendly agricultural products can real change truly begin.']
     },
     {
       id: 'a7',
-      frames: ['public/animation/a7-1.png','public/animation/a7-2.png','public/animation/a7-3.png'],
+      frames: ['../public/animation/a7-1.PNG','../public/animation/a7-2.PNG','../public/animation/a7-3.PNG'],
       interval: 200, next: null,
       zh: ['也許有一天，當風吹過稻田時，','人們聞到的，不再是刺鼻的農藥味，而是土地與稻田最自然的氣息。'],
       en: ['Perhaps one day, when the wind passes through the rice fields,','people will no longer smell the sharp scent of pesticides, but instead, the most natural fragrance of the land and the rice fields themselves.']
@@ -2247,7 +2247,7 @@
   }
 
   function renderModal(achData, lang){
-    const imgPath = `public/results/${achData.cardId.replace('card_','').replace('_','-')}.png`;
+    const imgPath = `../public/results/${achData.cardId.replace('card_','').replace('_','-')}.PNG`;
     const s = achData.styles;
     const root = document.documentElement;
     root.style.setProperty('--current-theme', s.theme);
@@ -2271,7 +2271,7 @@
         const target = ACHIEVEMENTS.find(a=>a.key===targetKey);
         if(target){
           const isUnlocked = localStorage.getItem(target.key)==='true';
-          const tImgPath = `public/results/${target.cardId.replace('card_','').replace('_','-')}.png`;
+          const tImgPath = `../public/results/${target.cardId.replace('card_','').replace('_','-')}.PNG`;
           const itemDiv = document.createElement('div'); itemDiv.className='sub-ending-item';
           const imgBox = document.createElement('div'); imgBox.className='sub-ending-img-box';
           if(!isUnlocked) imgBox.classList.add('sub-locked');
@@ -2400,7 +2400,7 @@
     const blob = await res.blob();
     const roleName   = starActiveAch.role[starLang].replace(/\s+/g, '_');
     const endingName = starActiveAch.name[starLang].replace(/\s+/g, '_');
-    return { blob, fileName: `NoFold_${roleName}_${endingName}.png` };
+    return { blob, fileName: `NoFold_${roleName}_${endingName}.PNG` };
   }
 
 
@@ -2427,7 +2427,7 @@
     const blob = await res.blob();
     const roleName  = starActiveAch.role[starLang].replace(/\s+/g,'_');
     const endingName = starActiveAch.name[starLang].replace(/\s+/g,'_');
-    return { blob, fileName: `NoFold_${roleName}_${endingName}.png` };
+    return { blob, fileName: `NoFold_${roleName}_${endingName}.PNG` };
   }
 
   async function handleShare(){
