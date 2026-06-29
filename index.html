@@ -436,8 +436,43 @@
 
 
   </style>
+  <style>
+    /* ══ LOADING SCREEN ══ */
+    #loadingScreen {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: #252947; z-index: 99999;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center; gap: 28px;
+      transition: opacity 0.8s ease;
+    }
+    #loadingScreen.fade-out { opacity: 0; pointer-events: none; }
+    .loading-logo {
+      font-size: 2.4rem; font-weight: 900; letter-spacing: 0.15em;
+      color: #FFEE91; text-shadow: 0 0 30px rgba(255,238,145,0.4);
+    }
+    .loading-bar-wrap {
+      width: 260px; height: 6px;
+      background: rgba(255,255,255,0.12); border-radius: 99px; overflow: hidden;
+    }
+    .loading-bar-fill {
+      height: 100%; width: 0%; background: #FFEE91;
+      border-radius: 99px; transition: width 0.2s ease;
+    }
+    .loading-text {
+      font-size: 0.8rem; color: rgba(255,255,255,0.45); letter-spacing: 0.1em;
+    }
+  </style>
 </head>
 <body>
+
+  <!-- ══ LOADING SCREEN ══ -->
+  <div id="loadingScreen">
+    <div class="loading-logo">NoFold</div>
+    <div class="loading-bar-wrap">
+      <div class="loading-bar-fill" id="loadingBarFill"></div>
+    </div>
+    <div class="loading-text" id="loadingText">Loading... 0%</div>
+  </div>
 
   <!-- Google 登入 Overlay (兩步驟) -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -1027,6 +1062,66 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+  <script>
+  /* ══ PRELOADER ══ */
+  const PRELOAD_IMAGES = [
+    'public/pictures/homepage.PNG','public/pictures/characters.PNG',
+    'public/pictures/1-1.PNG','public/pictures/1-2.PNG','public/pictures/1-2-c.png',
+    'public/pictures/1-3.PNG','public/pictures/1-3-c.png','public/pictures/1-4.PNG',
+    'public/pictures/1-5.PNG','public/pictures/1-6.PNG','public/pictures/1-6-c.png',
+    'public/pictures/1-7-1.PNG','public/pictures/1-7-2.PNG','public/pictures/1-7-3.PNG',
+    'public/pictures/1-7-4.PNG','public/pictures/1-7-5.PNG',
+    'public/pictures/1-8.PNG','public/pictures/1-8-c.png',
+    'public/pictures/1-9.PNG','public/pictures/1-10.PNG','public/pictures/1-11.PNG',
+    'public/pictures/1-12.PNG','public/pictures/1-12-c.png','public/pictures/1-12-c2.png',
+    'public/pictures/1-13.PNG','public/pictures/1-13-c.png',
+    'public/pictures/2-10.PNG','public/pictures/3-1.PNG',
+    'public/pictures/2-1.PNG','public/pictures/2-2.PNG','public/pictures/2-3.PNG',
+    'public/pictures/2-4.PNG','public/pictures/2-4-c.png','public/pictures/2-5.PNG',
+    'public/pictures/2-5-c.png','public/pictures/2-6.PNG','public/pictures/2-6-c.png',
+    'public/pictures/2-7.PNG','public/pictures/2-8.PNG','public/pictures/2-8-c.png',
+    'public/pictures/2-9.PNG','public/pictures/2-9-c.png',
+    'public/pictures/3-2.PNG','public/pictures/3-3.PNG','public/pictures/3-4.PNG',
+    'public/pictures/3-5.PNG','public/pictures/3-6.PNG',
+    'public/buttoms/Homepage_buttom.PNG','public/buttoms/Character1.PNG',
+    'public/buttoms/Character2.PNG','public/buttoms/Character3.PNG',
+    'public/buttoms/3-6_buttom.PNG',
+    'public/animation/a1-1.PNG','public/animation/a1-2.PNG','public/animation/a1-3.PNG',
+    'public/animation/a2-1.PNG','public/animation/a2-2.PNG','public/animation/a2-3.PNG',
+    'public/animation/a3-1.PNG','public/animation/a3-2.PNG','public/animation/a3-3.PNG',
+    'public/animation/a4-1.PNG','public/animation/a4-2.PNG','public/animation/a4-3.PNG',
+    'public/animation/a5-1.PNG','public/animation/a5-2.PNG','public/animation/a5-3.PNG',
+    'public/animation/a7-1.PNG','public/animation/a7-2.PNG','public/animation/a7-3.PNG',
+  ];
+
+  (function preload() {
+    const total = PRELOAD_IMAGES.length;
+    let loaded = 0;
+    const bar  = document.getElementById('loadingBarFill');
+    const text = document.getElementById('loadingText');
+    const screen = document.getElementById('loadingScreen');
+
+    function tick() {
+      loaded++;
+      const pct = Math.round((loaded / total) * 100);
+      bar.style.width = pct + '%';
+      text.textContent = `Loading... ${pct}%`;
+      if (loaded >= total) {
+        setTimeout(() => {
+          screen.classList.add('fade-out');
+          setTimeout(() => { screen.style.display = 'none'; }, 800);
+        }, 300);
+      }
+    }
+
+    PRELOAD_IMAGES.forEach(src => {
+      const img = new Image();
+      img.onload  = tick;
+      img.onerror = tick; // 載入失敗也繼續，不卡住
+      img.src = src;
+    });
+  })();
+  </script>
   <script>
   /* ══════════════════════════════════════════
      ROUTER / NAVIGATION
