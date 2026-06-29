@@ -1451,10 +1451,48 @@
     const overlay  = document.getElementById('sidebarOverlay');
     const alignIcon= document.getElementById('alignIcon');
 
-    musicBtn.addEventListener('click', () => {
+    // 背景音樂
+    const bgm = new Audio('public/video/music.mp3');
+    bgm.loop = true;
+    bgm.volume = 0.5;
+    bgm.preload = 'auto';
+
+    let bgmStarted = false;
+
+    function tryPlayBgm() {
+      if (!isMusicOn || bgmStarted) return;
+      bgm.play().then(() => {
+        bgmStarted = true;
+      }).catch(() => {});
+    }
+
+    // 等音訊 load 完再播
+    bgm.addEventListener('canplaythrough', () => {
+      tryPlayBgm();
+    }, { once: true });
+
+    // fallback：第一次使用者互動時嘗試播放
+    function onFirstInteraction() {
+      tryPlayBgm();
+      document.removeEventListener('click', onFirstInteraction);
+      document.removeEventListener('touchstart', onFirstInteraction);
+      document.removeEventListener('keydown', onFirstInteraction);
+    }
+    document.addEventListener('click', onFirstInteraction);
+    document.addEventListener('touchstart', onFirstInteraction);
+    document.addEventListener('keydown', onFirstInteraction);
+
+    musicBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       isMusicOn = !isMusicOn;
       const icon = document.getElementById('musicIcon');
       icon.src = isMusicOn ? 'public/menu/music.svg' : 'public/menu/music-slash.svg';
+      if (isMusicOn) {
+        bgm.play().then(() => { bgmStarted = true; }).catch(()=>{});
+      } else {
+        bgm.pause();
+        bgmStarted = false;
+      }
     });
 
     alignBtn.addEventListener('click', () => {
@@ -2722,8 +2760,6 @@
   }
 
   </script>
-
-
 
 </body>
 </html>
