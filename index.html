@@ -482,6 +482,7 @@
   <nav class="sidebar" id="sidebar">
     <ul class="sidebar-menu">
       <li><a onclick="resumeGame()" id="backToGameBtn"><img src="public/menu/left.svg" alt="" class="menu-icon"/><span data-zh="回到遊戲" data-en="Back to Game">回到遊戲</span></a></li>
+      <li><a onclick="navTo('ending-anim', true)"><img src="public/menu/tv-retro.svg" alt="" class="menu-icon"/><span data-zh="宣傳動畫" data-en="Promo Animation">宣傳動畫</span></a></li>
       <li><a onclick="navTo('star')"><img src="public/menu/star.svg" alt="" class="menu-icon"/><span data-zh="收集結局" data-en="Endings">收集結局</span></a></li>
       <li><a onclick="navTo('egg')"><img src="public/menu/egg.svg" alt="" class="menu-icon"/><span data-zh="遊戲彩蛋" data-en="Easter Eggs">遊戲彩蛋</span></a></li>
       <li><a onclick="navTo('doc')"><img src="public/menu/doc.svg" alt="" class="menu-icon"/><span data-zh="相關資訊" data-en="Information">相關資訊</span></a></li>
@@ -1118,7 +1119,7 @@
     navTo('index');
   }
 
-  function navTo(page) {
+  function navTo(page, extra) {
     document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
     const el = document.getElementById('page-' + page);
     if (el) { el.classList.add('active'); el.style.display = 'flex'; }
@@ -1127,7 +1128,7 @@
     // Page-specific init
     if (page === 'star') initStarPage();
     if (page === 'egg')  initEggPage();
-    if (page === 'ending-anim') initEndingAnim();
+    if (page === 'ending-anim') initEndingAnim(extra);
     if (page === 'char1') { resetChar1(); char1GoToScene('1-1'); }
     if (page === 'char2') initChar2();
     if (page === 'char3') initChar3();
@@ -1996,7 +1997,10 @@
   let endingAnimTypeTimer = null;
   let endingAnimTimer   = null;
 
-  function initEndingAnim() {
+  let endingAnimFromMenu = false;
+
+  function initEndingAnim(fromMenu) {
+    endingAnimFromMenu = !!fromMenu;
     endingAnimSceneId = '1-7';
     endingAnimPart = 0;
     endingAnimTyping = false;
@@ -2081,12 +2085,16 @@
       return;
     }
 
-    // 最後一句播完 → 跳下一場景或結束進入 star
+    // 最後一句播完 → 從目錄來就重播，從結局來就跳 star
     if (scene.next) {
       endingAnimGoToScene(scene.next);
     } else {
-      if (endingAnimTimer) { clearInterval(endingAnimTimer); endingAnimTimer = null; }
-      navTo('star');
+      if (endingAnimFromMenu) {
+        endingAnimGoToScene('1-7'); // 重頭再播
+      } else {
+        if (endingAnimTimer) { clearInterval(endingAnimTimer); endingAnimTimer = null; }
+        navTo('star');
+      }
     }
   }
 
