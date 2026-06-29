@@ -589,6 +589,15 @@
        PAGE: CHARACTER 1 (瘤野螟)
   ══════════════════════════════════════════ -->
   <div id="page-char1" class="page">
+    <!-- 繁殖提示 warning -->
+    <div class="game-tip-overlay" id="char1BreedingTip">
+      <div class="game-tip-box">
+        <div class="game-tip-icon">!</div>
+        <div class="game-tip-title" id="char1BreedingTipTitle" data-zh="遊戲提示" data-en="Game Tips">遊戲提示</div>
+        <div class="game-tip-content" id="char1BreedingTipContent"></div>
+        <div class="game-tip-arrow" id="char1BreedingTipArrow"></div>
+      </div>
+    </div>
     <div id="sceneWrapper1">
       <!-- 1-1 -->
       <div id="scene-1-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
@@ -607,7 +616,7 @@
       </div></div></div>
       <!-- 1-2-choose -->
       <div id="scene-1-2-choose" class="scene"><div class="game-container"><div class="image-relative-wrapper">
-        <div class="choices-container show" id="choicesContainer-1-2">
+        <div class="choices-container" id="choicesContainer-1-2">
           <div class="choices-title" data-zh="請選擇要繁殖於哪一種稻作：" data-en="Please choose which rice crop to reproduce on:">請選擇要繁殖於哪一種稻作：</div>
           <ul class="choices-list">
             <li><button class="choice-button" data-choice="high-nitrogen" data-zh="繁殖於高氮密集的稻作" data-en="Reproduce on nitrogen-dense rice crops">繁殖於高氮密集的稻作</button></li>
@@ -1455,44 +1464,25 @@
     const bgm = new Audio('public/video/music.mp3');
     bgm.loop = true;
     bgm.volume = 0.5;
-    bgm.preload = 'auto';
 
-    let bgmStarted = false;
-
-    function tryPlayBgm() {
-      if (!isMusicOn || bgmStarted) return;
-      bgm.play().then(() => {
-        bgmStarted = true;
-      }).catch(() => {});
-    }
-
-    // 等音訊 load 完再播
-    bgm.addEventListener('canplaythrough', () => {
-      tryPlayBgm();
-    }, { once: true });
-
-    // fallback：第一次使用者互動時嘗試播放
-    function onFirstInteraction() {
-      tryPlayBgm();
-      document.removeEventListener('click', onFirstInteraction);
-      document.removeEventListener('touchstart', onFirstInteraction);
-      document.removeEventListener('keydown', onFirstInteraction);
-    }
-    document.addEventListener('click', onFirstInteraction);
-    document.addEventListener('touchstart', onFirstInteraction);
-    document.addEventListener('keydown', onFirstInteraction);
+    // 嘗試自動播，失敗就等第一次使用者互動再播
+    bgm.play().catch(() => {
+      const startBgm = () => {
+        if (isMusicOn) bgm.play().catch(()=>{});
+        document.removeEventListener('click', startBgm);
+        document.removeEventListener('touchstart', startBgm);
+      };
+      document.addEventListener('click', startBgm);
+      document.addEventListener('touchstart', startBgm);
+    });
 
     musicBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
+      e.stopPropagation(); // 防止觸發 document click
       isMusicOn = !isMusicOn;
       const icon = document.getElementById('musicIcon');
       icon.src = isMusicOn ? 'public/menu/music.svg' : 'public/menu/music-slash.svg';
-      if (isMusicOn) {
-        bgm.play().then(() => { bgmStarted = true; }).catch(()=>{});
-      } else {
-        bgm.pause();
-        bgmStarted = false;
-      }
+      if (isMusicOn) { bgm.play().catch(()=>{}); }
+      else { bgm.pause(); }
     });
 
     alignBtn.addEventListener('click', () => {
@@ -1554,6 +1544,15 @@
     }
     updateIndexLang(gameLang);
     window.addEventListener('languageChanged', e => updateIndexLang(e.detail.lang));
+    window.addEventListener('languageChanged', e => {
+      const lang = e.detail.lang;
+      const tipContent = document.getElementById('char1BreedingTipContent');
+      const tipTitle = document.getElementById('char1BreedingTipTitle');
+      if (tipContent) tipContent.innerHTML = lang === 'zh'
+        ? '當<strong>繁殖率</strong>到達 100% 時即可進入下一階段！'
+        : 'When the <strong>Breeding Rate</strong> reaches 100%, you can advance to the next stage!';
+      if (tipTitle) tipTitle.textContent = lang === 'zh' ? '遊戲提示' : 'Game Tips';
+    });
 
     startBtn.addEventListener('click', e => {
       e.preventDefault();
@@ -1673,11 +1672,46 @@
     char1InitScene(id);
   }
 
+  function char1ShowBreedingTip() {
+    const overlay = document.getElementById('char1BreedingTip');
+    const tipContent = document.getElementById('char1BreedingTipContent');
+    const tipTitle = document.getElementById('char1BreedingTipTitle');
+    const arrow = document.getElementById('char1BreedingTipArrow');
+    const container = document.getElementById('choicesContainer-1-2');
+    const lang = gameLang || 'zh';
+    tipTitle.textContent = lang === 'zh' ? '遊戲提示' : 'Game Tips';
+    tipContent.innerHTML = lang === 'zh'
+      ? '當<strong>繁殖率</strong>到達 100% 時即可進入下一階段！'
+      : 'When the <strong>Breeding Rate</strong> reaches 100%, you can advance to the next stage!';
+    // 先把選擇框藏起來
+    if (container) container.classList.remove('show');
+    overlay.classList.add('show');
+    function closeTip() {
+      overlay.classList.remove('show');
+      // 關閉提示後才顯示選擇框
+      if (container) container.classList.add('show');
+    }
+    arrow.onclick = closeTip;
+    overlay.onclick = e => { if (e.target === overlay) closeTip(); };
+  }
+
   function char1InitScene(id) {
     if (id === '1-2-c') {
       localStorage.setItem('health','15'); localStorage.setItem('breeding','0'); localStorage.setItem('generation','0');
     }
-    if (id === '1-2-choose') { char1BindChoices_1_2(); char1ApplyLang(gameLang); return; }
+    if (id === '1-2-choose') {
+      char1BindChoices_1_2(); char1ApplyLang(gameLang);
+      // 第一次進入（breeding===0 且 generation===0）才顯示提示
+      const isFirstVisit = (parseInt(localStorage.getItem('breeding'))||0) === 0
+                        && (parseInt(localStorage.getItem('generation'))||0) === 0;
+      const container = document.getElementById('choicesContainer-1-2');
+      if (isFirstVisit) {
+        char1ShowBreedingTip(); // tip 裡面會控制 container 顯示
+      } else {
+        if (container) container.classList.add('show'); // 非第一次直接顯示
+      }
+      return;
+    }
     if (id === '1-2p2-choose') { char1BindChoices_1_2p2(); char1ApplyLang(gameLang); return; }
     if (id === '1-s3') char1StartAnimation();
     const data = SCENE_DATA1[id];
@@ -2760,6 +2794,8 @@
   }
 
   </script>
+
+
 
 </body>
 </html>
