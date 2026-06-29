@@ -1163,10 +1163,10 @@
       start(interval) {
         this.stop(); idx = 0; dir = 1; show(0);
         timer = setInterval(() => {
-          const fs = frames(); if (!fs.length) return;
+          const fs = frames(); if (!fs.length || fs.length === 1) return;
           idx += dir;
-          if (idx >= fs.length - 1) dir = -1;
-          else if (idx <= 0) dir = 1;
+          if (idx >= fs.length - 1) { idx = fs.length - 1; dir = -1; }
+          else if (idx <= 0) { idx = 0; dir = 1; }
           show(idx);
         }, interval || 250);
       },
@@ -1201,10 +1201,10 @@
       start(interval) {
         this.stop(); idx = 0; dir = 1; show(0);
         timer = setInterval(() => {
-          const fs = frames(); if (!fs.length) return;
+          const fs = frames(); if (!fs.length || fs.length === 1) return;
           idx += dir;
-          if (idx >= fs.length - 1) dir = -1;
-          else if (idx <= 0) dir = 1;
+          if (idx >= fs.length - 1) { idx = fs.length - 1; dir = -1; }
+          else if (idx <= 0) { idx = 0; dir = 1; }
           show(idx);
         }, interval || 250);
       },
@@ -1269,29 +1269,37 @@
   ];
 
   (function preload() {
-    const total = PRELOAD_IMAGES.length;
-    let loaded = 0;
-    const bar  = document.getElementById('loadingBarFill');
-    const text = document.getElementById('loadingText');
+    const bar    = document.getElementById('loadingBarFill');
+    const text   = document.getElementById('loadingText');
     const screen = document.getElementById('loadingScreen');
+
+    function finish() {
+      screen.classList.add('fade-out');
+      setTimeout(() => { screen.style.display = 'none'; }, 800);
+    }
+
+    // 收集所有需要預載的圖片：PRELOAD_IMAGES + DOM 裡所有 anim-frame
+    const domFrameSrcs = Array.from(document.querySelectorAll('.anim-frame[src]')).map(el => el.src);
+    const allSrcs = [...new Set([...PRELOAD_IMAGES.map(s => new URL(s, location.href).href), ...domFrameSrcs])];
+    const total = allSrcs.length;
+    let loaded = 0;
 
     function tick() {
       loaded++;
       const pct = Math.round((loaded / total) * 100);
-      bar.style.width = pct + '%';
-      text.textContent = `Loading... ${pct}%`;
+      if (bar) bar.style.width = pct + '%';
+      if (text) text.textContent = `Loading... ${pct}%`;
       if (loaded >= total) {
-        setTimeout(() => {
-          screen.classList.add('fade-out');
-          setTimeout(() => { screen.style.display = 'none'; }, 800);
-        }, 300);
+        setTimeout(finish, 300);
       }
     }
 
-    PRELOAD_IMAGES.forEach(src => {
+    if (total === 0) { finish(); return; }
+
+    allSrcs.forEach(src => {
       const img = new Image();
       img.onload  = tick;
-      img.onerror = tick; // 載入失敗也繼續，不卡住
+      img.onerror = tick; // 404 也繼續，不卡住
       img.src = src;
     });
   })();
