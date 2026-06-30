@@ -598,6 +598,15 @@
         <div class="game-tip-arrow" id="char1BreedingTipArrow"></div>
       </div>
     </div>
+    <!-- 子代成長率提示 -->
+    <div class="game-tip-overlay" id="char1OffspringTip">
+      <div class="game-tip-box">
+        <div class="game-tip-icon">!</div>
+        <div class="game-tip-title" id="char1OffspringTipTitle" data-zh="遊戲提示" data-en="Game Tips">遊戲提示</div>
+        <div class="game-tip-content" id="char1OffspringTipContent"></div>
+        <div class="game-tip-arrow" id="char1OffspringTipArrow"></div>
+      </div>
+    </div>
     <div id="sceneWrapper1">
       <!-- 1-1 -->
       <div id="scene-1-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
@@ -673,12 +682,12 @@
       <!-- 1-s3 animation -->
       <div id="scene-1-s3" class="scene scene-dialogue"><div class="game-container"><div class="image-relative-wrapper">
         <div class="story-text-box" id="storyTextBox-1-s3"><div class="character-name" data-zh="瘤野螟" data-en="Cnaphalocrocis medinalis">瘤野螟</div><div id="storyText-1-s3" class="story-text"></div><span class="story-text-arrow"></span></div>
-        <div id="animFrameContainer1" style="position:relative;width:100%;height:100%;">
-          <img class="game-image anim-frame" src="public/pictures/1-7-1.PNG" alt="anim-1" style="display:block;position:relative;top:0;left:0;width:100%;" />
-          <img class="game-image anim-frame" src="public/pictures/1-7-2.PNG" alt="anim-2" style="display:none;position:absolute;top:0;left:0;width:100%;" />
-          <img class="game-image anim-frame" src="public/pictures/1-7-3.PNG" alt="anim-3" style="display:none;position:absolute;top:0;left:0;width:100%;" />
-          <img class="game-image anim-frame" src="public/pictures/1-7-4.PNG" alt="anim-4" style="display:none;position:absolute;top:0;left:0;width:100%;" />
-          <img class="game-image anim-frame" src="public/pictures/1-7-5.PNG" alt="anim-5" style="display:none;position:absolute;top:0;left:0;width:100%;" />
+        <div id="animFrameContainer1" style="position:relative;width:100%;">
+          <img class="game-image anim-frame" src="public/pictures/1-7-1.PNG" alt="anim-1" style="display:block;width:100%;height:auto;" />
+          <img class="game-image anim-frame" src="public/pictures/1-7-2.PNG" alt="anim-2" style="display:none;width:100%;height:auto;" />
+          <img class="game-image anim-frame" src="public/pictures/1-7-3.PNG" alt="anim-3" style="display:none;width:100%;height:auto;" />
+          <img class="game-image anim-frame" src="public/pictures/1-7-4.PNG" alt="anim-4" style="display:none;width:100%;height:auto;" />
+          <img class="game-image anim-frame" src="public/pictures/1-7-5.PNG" alt="anim-5" style="display:none;width:100%;height:auto;" />
         </div>
       </div></div></div>
       <!-- 1-s4-1 -->
@@ -703,7 +712,7 @@
       </div></div></div>
       <!-- 1-2p2-choose -->
       <div id="scene-1-2p2-choose" class="scene"><div class="game-container"><div class="image-relative-wrapper">
-        <div class="choices-container show" id="choicesContainer-1-2p2">
+        <div class="choices-container" id="choicesContainer-1-2p2">
           <div class="choices-title" data-zh="請選擇要如何保護你的子代：" data-en="Please choose how to protect your offspring:">請選擇要如何保護你的子代：</div>
           <ul class="choices-list">
             <li><button class="choice-button" data-choice="latent" data-zh="採取潛伏策略" data-en="Adopt a latent strategy">採取潛伏策略</button></li>
@@ -784,6 +793,15 @@
        PAGE: CHARACTER 2 (水稻)
   ══════════════════════════════════════════ -->
   <div id="page-char2" class="page">
+    <!-- 生長值提示 -->
+    <div class="game-tip-overlay" id="char2GrowthTip">
+      <div class="game-tip-box">
+        <div class="game-tip-icon">!</div>
+        <div class="game-tip-title" id="char2GrowthTipTitle" data-zh="遊戲提示" data-en="Game Tips">遊戲提示</div>
+        <div class="game-tip-content" id="char2GrowthTipContent"></div>
+        <div class="game-tip-arrow" id="char2GrowthTipArrow"></div>
+      </div>
+    </div>
     <div class="choices-container" id="choicesContainer2">
       <div class="choices-title" id="choicesTitle2"></div>
       <ul class="choices-list" id="choicesList2"></ul>
@@ -796,12 +814,12 @@
           <span class="story-text-arrow" id="nextArrow2"></span>
         </div>
         <img class="game-image" id="gameImage2" src="public/pictures/2-10.PNG" alt="scene" />
-        <div id="animFrameContainer2" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;">
-  <img class="game-image anim-frame" src="public/pictures/1-7-1.PNG" alt="anim2-1" style="display:none;position:absolute;top:0;left:0;width:100%;" />
-  <img class="game-image anim-frame" src="public/pictures/1-7-2.PNG" alt="anim2-2" style="display:none;position:absolute;top:0;left:0;width:100%;" />
-  <img class="game-image anim-frame" src="public/pictures/1-7-3.PNG" alt="anim2-3" style="display:none;position:absolute;top:0;left:0;width:100%;" />
-  <img class="game-image anim-frame" src="public/pictures/1-7-4.PNG" alt="anim2-4" style="display:none;position:absolute;top:0;left:0;width:100%;" />
-  <img class="game-image anim-frame" src="public/pictures/1-7-5.PNG" alt="anim2-5" style="display:none;position:absolute;top:0;left:0;width:100%;" />
+        <div id="animFrameContainer2" style="display:none;position:relative;width:100%;">
+  <img class="game-image anim-frame" src="public/pictures/1-7-1.PNG" alt="anim2-1" style="display:block;width:100%;height:auto;" />
+  <img class="game-image anim-frame" src="public/pictures/1-7-2.PNG" alt="anim2-2" style="display:none;width:100%;height:auto;" />
+  <img class="game-image anim-frame" src="public/pictures/1-7-3.PNG" alt="anim2-3" style="display:none;width:100%;height:auto;" />
+  <img class="game-image anim-frame" src="public/pictures/1-7-4.PNG" alt="anim2-4" style="display:none;width:100%;height:auto;" />
+  <img class="game-image anim-frame" src="public/pictures/1-7-5.PNG" alt="anim2-5" style="display:none;width:100%;height:auto;" />
         </div>
       </div>
     </div>
@@ -811,6 +829,15 @@
        PAGE: CHARACTER 3 (農民)
   ══════════════════════════════════════════ -->
   <div id="page-char3" class="page">
+    <!-- 金錢提示 -->
+    <div class="game-tip-overlay" id="char3MoneyTip">
+      <div class="game-tip-box">
+        <div class="game-tip-icon">!</div>
+        <div class="game-tip-title" id="char3MoneyTipTitle" data-zh="遊戲提示" data-en="Game Tips">遊戲提示</div>
+        <div class="game-tip-content" id="char3MoneyTipContent"></div>
+        <div class="game-tip-arrow" id="char3MoneyTipArrow"></div>
+      </div>
+    </div>
     <div class="choices-container" id="choicesContainer3">
       <div class="choices-title" id="choicesTitle3"></div>
       <ul class="choices-list" id="choicesList3"></ul>
@@ -1552,6 +1579,30 @@
         ? '當<strong>繁殖率</strong>到達 100% 時即可進入下一階段！'
         : 'When the <strong>Breeding Rate</strong> reaches 100%, you can advance to the next stage!';
       if (tipTitle) tipTitle.textContent = lang === 'zh' ? '遊戲提示' : 'Game Tips';
+
+      // 子代成長率提示
+      const offTipContent = document.getElementById('char1OffspringTipContent');
+      const offTipTitle = document.getElementById('char1OffspringTipTitle');
+      if (offTipContent) offTipContent.innerHTML = lang === 'zh'
+        ? '當<strong>子代成長率</strong>到達 100% 時即可進入下一階段！'
+        : 'When the <strong>Offspring Growth Rate</strong> reaches 100%, you can advance to the next stage!';
+      if (offTipTitle) offTipTitle.textContent = lang === 'zh' ? '遊戲提示' : 'Game Tips';
+
+      // 稻米：生長值提示
+      const growthTipContent = document.getElementById('char2GrowthTipContent');
+      const growthTipTitle = document.getElementById('char2GrowthTipTitle');
+      if (growthTipContent) growthTipContent.innerHTML = lang === 'zh'
+        ? '當<strong>生長值</strong>到達 100% 時即可進入下一階段！'
+        : 'When the <strong>Growth Value</strong> reaches 100%, you can advance to the next stage!';
+      if (growthTipTitle) growthTipTitle.textContent = lang === 'zh' ? '遊戲提示' : 'Game Tips';
+
+      // 農民：金錢提示
+      const moneyTipContent = document.getElementById('char3MoneyTipContent');
+      const moneyTipTitle = document.getElementById('char3MoneyTipTitle');
+      if (moneyTipContent) moneyTipContent.innerHTML = lang === 'zh'
+        ? '當<strong>金錢</strong>到達 100% 時即可進入下一階段！'
+        : 'When <strong>Money</strong> reaches 100%, you can advance to the next stage!';
+      if (moneyTipTitle) moneyTipTitle.textContent = lang === 'zh' ? '遊戲提示' : 'Game Tips';
     });
 
     startBtn.addEventListener('click', e => {
@@ -1695,9 +1746,33 @@
     overlay.onclick = e => { if (e.target === overlay) closeTip(); };
   }
 
+  function char1ShowOffspringTip() {
+    const overlay = document.getElementById('char1OffspringTip');
+    const tipContent = document.getElementById('char1OffspringTipContent');
+    const tipTitle = document.getElementById('char1OffspringTipTitle');
+    const arrow = document.getElementById('char1OffspringTipArrow');
+    const container = document.getElementById('choicesContainer-1-2p2');
+    const lang = gameLang || 'zh';
+    tipTitle.textContent = lang === 'zh' ? '遊戲提示' : 'Game Tips';
+    tipContent.innerHTML = lang === 'zh'
+      ? '當<strong>子代成長率</strong>到達 100% 時即可進入下一階段！'
+      : 'When the <strong>Offspring Growth Rate</strong> reaches 100%, you can advance to the next stage!';
+    if (container) container.classList.remove('show');
+    overlay.classList.add('show');
+    function closeTip() {
+      overlay.classList.remove('show');
+      if (container) container.classList.add('show');
+    }
+    arrow.onclick = closeTip;
+    overlay.onclick = e => { if (e.target === overlay) closeTip(); };
+  }
+
+  let char1OffspringTipShownThisRun = false;
+
   function char1InitScene(id) {
     if (id === '1-2-c') {
       localStorage.setItem('health','15'); localStorage.setItem('breeding','0'); localStorage.setItem('generation','0');
+      char1OffspringTipShownThisRun = false;
     }
     if (id === '1-2-choose') {
       char1BindChoices_1_2(); char1ApplyLang(gameLang);
@@ -1712,7 +1787,17 @@
       }
       return;
     }
-    if (id === '1-2p2-choose') { char1BindChoices_1_2p2(); char1ApplyLang(gameLang); return; }
+    if (id === '1-2p2-choose') {
+      char1BindChoices_1_2p2(); char1ApplyLang(gameLang);
+      const container = document.getElementById('choicesContainer-1-2p2');
+      if (!char1OffspringTipShownThisRun) {
+        char1OffspringTipShownThisRun = true;
+        char1ShowOffspringTip();
+      } else {
+        if (container) container.classList.add('show');
+      }
+      return;
+    }
     if (id === '1-s3') char1StartAnimation();
     const data = SCENE_DATA1[id];
     if (!data) { char1ApplyLang(gameLang); return; }
@@ -1833,7 +1918,8 @@
         if (health <= 0) { localStorage.setItem('health',health); localStorage.setItem('breeding',breeding); char1GoToScene('1-13-1'); return; }
         if (breeding >= 100) {
           localStorage.setItem('health',health); localStorage.setItem('breeding',breeding);
-          if (!playedSpecial && Math.random() < 0.5) { localStorage.setItem('end_special','true'); char1GoToScene('1-s1'); }
+          const alreadyPlayedSpecial = localStorage.getItem('end_special') === 'true';
+          if (!alreadyPlayedSpecial && Math.random() < 0.5) { localStorage.setItem('end_special','true'); char1GoToScene('1-s1'); }
           else char1GoToScene('1-2p2');
           return;
         }
@@ -2027,12 +2113,8 @@
     }
   }
 
-  function char2GoChoice(key){
-    if(char2Stats.pestResist<=0){char2TriggerBad1();return;}
-    if(char2Stats.growth>=100){char2BeginSalePeriod();return;}
+  function char2RenderChoiceBox(key){
     const data=CHOICES2[key]; if(!data)return;
-    char2CurrentChoiceKey=key;
-    char2SaveProgress(char2CurrentScene,key);
     char2ChoicesBox().classList.add('show');
     char2StoryTextBox().classList.add('blur');
     char2GameImageEl().style.filter='blur(8px)';
@@ -2046,9 +2128,48 @@
     });
   }
 
+  function char2ShowGrowthTip(key){
+    const overlay = document.getElementById('char2GrowthTip');
+    const tipContent = document.getElementById('char2GrowthTipContent');
+    const tipTitle = document.getElementById('char2GrowthTipTitle');
+    const arrow = document.getElementById('char2GrowthTipArrow');
+    const lang = gameLang || 'zh';
+    tipTitle.textContent = lang === 'zh' ? '遊戲提示' : 'Game Tips';
+    tipContent.innerHTML = lang === 'zh'
+      ? '當<strong>生長值</strong>到達 100% 時即可進入下一階段！'
+      : 'When the <strong>Growth Value</strong> reaches 100%, you can advance to the next stage!';
+    overlay.classList.add('show');
+    function closeTip() {
+      overlay.classList.remove('show');
+      char2RenderChoiceBox(key);
+    }
+    arrow.onclick = closeTip;
+    overlay.onclick = e => { if (e.target === overlay) closeTip(); };
+  }
+
+  let char2GrowthTipShownThisRun = false;
+
+  function char2GoChoice(key){
+    if(char2Stats.pestResist<=0){char2TriggerBad1();return;}
+    if(char2Stats.growth>=100){char2BeginSalePeriod();return;}
+    const data=CHOICES2[key]; if(!data)return;
+    char2CurrentChoiceKey=key;
+    char2SaveProgress(char2CurrentScene,key);
+    if (key === 'choose1' && !char2GrowthTipShownThisRun) {
+      char2GrowthTipShownThisRun = true;
+      char2StoryTextBox().classList.add('blur');
+      char2GameImageEl().style.filter='blur(8px)';
+      char2Arrow().classList.remove('show');
+      char2ShowGrowthTip(key);
+      return;
+    }
+    char2RenderChoiceBox(key);
+  }
+
   function initChar2(){
     char2Stats.quality=0;char2Stats.pestResist=50;char2Stats.growth=0;char2Stats.pesticideUsed=0;
     char2FinalEnding=null; char2CurrentChoiceKey=null; char2SpecialReturnChoice=null;
+    char2GrowthTipShownThisRun=false;
     char2RunScene('s1');
     const stb=char2StoryTextBox();
     stb.onclick=()=>{if(char2ChoicesBox().classList.contains('show'))return;char2ShowNextLine();};
@@ -2238,10 +2359,8 @@
     }
   }
 
-  function char3GoChoice(key){
+  function char3RenderChoiceBox(key){
     const data=CHOICES3[key];if(!data)return;
-    char3CurrentChoiceKey=key;
-    char3SaveProgress(char3CurrentScene,key);
     char3ChoicesBox().classList.add('show');
     char3StoryTextBox().classList.add('blur');
     char3GameImageEl().style.filter='blur(8px)';
@@ -2255,9 +2374,46 @@
     });
   }
 
+  function char3ShowMoneyTip(key){
+    const overlay = document.getElementById('char3MoneyTip');
+    const tipContent = document.getElementById('char3MoneyTipContent');
+    const tipTitle = document.getElementById('char3MoneyTipTitle');
+    const arrow = document.getElementById('char3MoneyTipArrow');
+    const lang = gameLang || 'zh';
+    tipTitle.textContent = lang === 'zh' ? '遊戲提示' : 'Game Tips';
+    tipContent.innerHTML = lang === 'zh'
+      ? '當<strong>金錢</strong>到達 100% 時即可進入下一階段！'
+      : 'When <strong>Money</strong> reaches 100%, you can advance to the next stage!';
+    overlay.classList.add('show');
+    function closeTip() {
+      overlay.classList.remove('show');
+      char3RenderChoiceBox(key);
+    }
+    arrow.onclick = closeTip;
+    overlay.onclick = e => { if (e.target === overlay) closeTip(); };
+  }
+
+  let char3MoneyTipShownThisRun = false;
+
+  function char3GoChoice(key){
+    const data=CHOICES3[key];if(!data)return;
+    char3CurrentChoiceKey=key;
+    char3SaveProgress(char3CurrentScene,key);
+    if (key === 'period1' && !char3MoneyTipShownThisRun) {
+      char3MoneyTipShownThisRun = true;
+      char3StoryTextBox().classList.add('blur');
+      char3GameImageEl().style.filter='blur(8px)';
+      char3Arrow().classList.remove('show');
+      char3ShowMoneyTip(key);
+      return;
+    }
+    char3RenderChoiceBox(key);
+  }
+
   function initChar3(){
     char3Stats.money=50;char3Stats.health=50;char3Stats.stress=0;char3Stats.reputation=0;
     char3FinalEnding=null;char3CurrentChoiceKey=null;
+    char3MoneyTipShownThisRun=false;
     char3RunScene('s1');
     const stb=char3StoryTextBox();
     stb.onclick=()=>{if(char3ChoicesBox().classList.contains('show'))return;char3ShowNextLine();};
