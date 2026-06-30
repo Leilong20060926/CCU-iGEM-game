@@ -1767,12 +1767,9 @@
     overlay.onclick = e => { if (e.target === overlay) closeTip(); };
   }
 
-  let char1OffspringTipShownThisRun = false;
-
   function char1InitScene(id) {
     if (id === '1-2-c') {
       localStorage.setItem('health','15'); localStorage.setItem('breeding','0'); localStorage.setItem('generation','0');
-      char1OffspringTipShownThisRun = false;
     }
     if (id === '1-2-choose') {
       char1BindChoices_1_2(); char1ApplyLang(gameLang);
@@ -1780,6 +1777,10 @@
       const isFirstVisit = (parseInt(localStorage.getItem('breeding'))||0) === 0
                         && (parseInt(localStorage.getItem('generation'))||0) === 0;
       const container = document.getElementById('choicesContainer-1-2');
+      const overlay = document.getElementById('char1BreedingTip');
+      // 每次進入都先強制重置畫面狀態，避免「提示還沒關就被切走再切回來」造成疊圖
+      if (container) container.classList.remove('show');
+      if (overlay) overlay.classList.remove('show');
       if (isFirstVisit) {
         char1ShowBreedingTip(); // tip 裡面會控制 container 顯示
       } else {
@@ -1789,12 +1790,17 @@
     }
     if (id === '1-2p2-choose') {
       char1BindChoices_1_2p2(); char1ApplyLang(gameLang);
+      // 第一次進入（generation===0）才顯示提示
+      const isFirstVisit = (parseInt(localStorage.getItem('generation'))||0) === 0;
       const container = document.getElementById('choicesContainer-1-2p2');
-      if (!char1OffspringTipShownThisRun) {
-        char1OffspringTipShownThisRun = true;
-        char1ShowOffspringTip();
+      const overlay = document.getElementById('char1OffspringTip');
+      // 每次進入都先強制重置畫面狀態，避免「提示還沒關就被切走再切回來」造成疊圖
+      if (container) container.classList.remove('show');
+      if (overlay) overlay.classList.remove('show');
+      if (isFirstVisit) {
+        char1ShowOffspringTip(); // tip 裡面會控制 container 顯示
       } else {
-        if (container) container.classList.add('show');
+        if (container) container.classList.add('show'); // 非第一次直接顯示
       }
       return;
     }
@@ -2147,20 +2153,23 @@
     overlay.onclick = e => { if (e.target === overlay) closeTip(); };
   }
 
-  let char2GrowthTipShownThisRun = false;
-
   function char2GoChoice(key){
     if(char2Stats.pestResist<=0){char2TriggerBad1();return;}
     if(char2Stats.growth>=100){char2BeginSalePeriod();return;}
     const data=CHOICES2[key]; if(!data)return;
     char2CurrentChoiceKey=key;
     char2SaveProgress(char2CurrentScene,key);
-    if (key === 'choose1' && !char2GrowthTipShownThisRun) {
-      char2GrowthTipShownThisRun = true;
+    // 每次呼叫都先強制關掉提示，避免「提示還沒關就被切走再切回來」造成疊圖
+    const growthTipOverlay = document.getElementById('char2GrowthTip');
+    if (growthTipOverlay) growthTipOverlay.classList.remove('show');
+    // 第一次進入（growth===0）才顯示提示，邏輯與繁殖率提示一致
+    const isFirstVisit = key === 'choose1' && char2Stats.growth === 0;
+    if (isFirstVisit) {
+      char2ChoicesBox().classList.remove('show');
       char2StoryTextBox().classList.add('blur');
       char2GameImageEl().style.filter='blur(8px)';
       char2Arrow().classList.remove('show');
-      char2ShowGrowthTip(key);
+      char2ShowGrowthTip(key); // tip 裡面會控制 choices box 顯示
       return;
     }
     char2RenderChoiceBox(key);
@@ -2169,7 +2178,7 @@
   function initChar2(){
     char2Stats.quality=0;char2Stats.pestResist=50;char2Stats.growth=0;char2Stats.pesticideUsed=0;
     char2FinalEnding=null; char2CurrentChoiceKey=null; char2SpecialReturnChoice=null;
-    char2GrowthTipShownThisRun=false;
+    char2SaveStats(); // 立即把初始狀態存檔，確保中途離開重回時 resumeGame 讀到的是正確的初始值
     char2RunScene('s1');
     const stb=char2StoryTextBox();
     stb.onclick=()=>{if(char2ChoicesBox().classList.contains('show'))return;char2ShowNextLine();};
@@ -2297,9 +2306,9 @@
     'bad1':{image:'3-4.PNG',charName:null,texts:{zh:['帳戶裡的數字終於歸零。','借不到錢、賣不出稻米，這片田你再也撐不下去了。','你只能黯然放棄這次的耕種。'],en:['The number in your account finally hits zero.','Unable to borrow more or sell any rice, you cannot keep this field going any longer.','You have no choice but to give up this harvest.']},next:()=>{char3FinishEnding('bad1');return null;}},
     'bad2':{image:'2-5.PNG',charName:null,texts:{zh:['你持續借錢擴張並大量使用農藥。','田區開始被外部檢查介入。','用藥紀錄與異常數據被放大檢視。','最終，收成被封存，無法販售，信任中斷，一切停止。'],en:['You keep borrowing money to grow bigger and use a large amount of pesticides.','Outside inspectors start to step into your fields.','Your spray records and strange data are put under a big magnifying glass.','In the end, your harvest is sealed away and cannot be sold. Trust is broken, and everything stops.']},next:()=>{char3FinishEnding('bad2');return null;}},
     'good2':{image:'2-7.PNG',charName:null,texts:{zh:['收成與販售過程順利完成。','未出現重大問題，也未有特別突出的成果。','整體維持基本穩定。','田地持續運作，資源得以延續至下一季。','本季以平穩的狀態結束。'],en:['The harvest and sales process are completed smoothly.','No major problems occur, but there are also no particularly outstanding results.','Overall, things remain basically stable.','The field continues to operate, and resources are carried over to the next season.','This season ends in a steady, uneventful state.']},next:()=>{char3FinishEnding('good2');return null;}},
-    'good1_1':{image:'2-8.PNG',charName:null,texts:{zh:['整體種植過程穩定，品質與管理受到肯定。','產品順利通過市場檢驗，並獲得良好評價。','收成後的產品不僅成功完成販售，也逐漸累積了市場信任，為下一季的合作與機會奠定基礎。'],en:['The overall cultivation process remained stable, and both quality and management were well recognized.','The product successfully passed market inspections and received positive evaluations.','After harvest, the rice was not only successfully sold but also gradually built market trust, laying the foundation for future cooperation and opportunities.']},next:()=>'good1_c'},
-    'good1_c':{image:'2-8.PNG',charName:{zh:'農民',en:'Farmer'},texts:{zh:['好欸，成功達成目標了！'],en:['Yes, I did it—I reached my goal!']},next:()=>'good1_2'},
-    'good1_2':{image:'2-8.PNG',charName:null,texts:{zh:['最終，本季的表現被視為一次成功的種植案例。'],en:['In the end, this season was regarded as a successful farming case study.']},next:()=>{char3FinishEnding('good1');return null;}},
+    'good1_1':{image:'2-9.PNG',charName:null,texts:{zh:['整體種植過程穩定，品質與管理受到肯定。','產品順利通過市場檢驗，並獲得良好評價。','收成後的產品不僅成功完成販售，也逐漸累積了市場信任，為下一季的合作與機會奠定基礎。'],en:['The overall cultivation process remained stable, and both quality and management were well recognized.','The product successfully passed market inspections and received positive evaluations.','After harvest, the rice was not only successfully sold but also gradually built market trust, laying the foundation for future cooperation and opportunities.']},next:()=>'good1_c'},
+    'good1_c':{image:'2-9.PNG',charName:{zh:'農民',en:'Farmer'},texts:{zh:['好欸，成功達成目標了！'],en:['Yes, I did it—I reached my goal!']},next:()=>'good1_2'},
+    'good1_2':{image:'2-9.PNG',charName:null,texts:{zh:['最終，本季的表現被視為一次成功的種植案例。'],en:['In the end, this season was regarded as a successful farming case study.']},next:()=>{char3FinishEnding('good1');return null;}},
     'bad3':{image:'2-5.PNG',charName:null,texts:{zh:['你持續借錢擴張並大量使用農藥。','你的身體開始無法負荷長期壓力與化學暴露。'],en:['You keep borrowing money to grow bigger and use a large amount of pesticides.','Your body begins to break down from the long-term stress and the chemicals.']},next:()=>'bad3_c'},
     'bad3_c':{image:'2-5.PNG',charName:{zh:'農民',en:'Farmer'},texts:{zh:['咳咳咳......'],en:['Cough, cough, cough...']},next:()=>'bad3_2'},
     'bad3_2':{image:'2-5.PNG',charName:null,texts:{zh:['田還在，但你已經無法長時間停留。'],en:['The field is still there, but you can no longer stay in it for long.']},next:()=>{char3FinishEnding('bad3');return null;}},
@@ -2393,18 +2402,21 @@
     overlay.onclick = e => { if (e.target === overlay) closeTip(); };
   }
 
-  let char3MoneyTipShownThisRun = false;
-
   function char3GoChoice(key){
     const data=CHOICES3[key];if(!data)return;
     char3CurrentChoiceKey=key;
     char3SaveProgress(char3CurrentScene,key);
-    if (key === 'period1' && !char3MoneyTipShownThisRun) {
-      char3MoneyTipShownThisRun = true;
+    // 每次呼叫都先強制關掉提示，避免「提示還沒關就被切走再切回來」造成疊圖
+    const moneyTipOverlay = document.getElementById('char3MoneyTip');
+    if (moneyTipOverlay) moneyTipOverlay.classList.remove('show');
+    // 第一次進入（money===50，初始值）才顯示提示，邏輯與繁殖率提示一致
+    const isFirstVisit = key === 'period1' && char3Stats.money === 50;
+    if (isFirstVisit) {
+      char3ChoicesBox().classList.remove('show');
       char3StoryTextBox().classList.add('blur');
       char3GameImageEl().style.filter='blur(8px)';
       char3Arrow().classList.remove('show');
-      char3ShowMoneyTip(key);
+      char3ShowMoneyTip(key); // tip 裡面會控制 choices box 顯示
       return;
     }
     char3RenderChoiceBox(key);
@@ -2413,7 +2425,7 @@
   function initChar3(){
     char3Stats.money=50;char3Stats.health=50;char3Stats.stress=0;char3Stats.reputation=0;
     char3FinalEnding=null;char3CurrentChoiceKey=null;
-    char3MoneyTipShownThisRun=false;
+    char3SaveStats(); // 立即把初始狀態存檔，確保中途離開重回時 resumeGame 讀到的是正確的初始值
     char3RunScene('s1');
     const stb=char3StoryTextBox();
     stb.onclick=()=>{if(char3ChoicesBox().classList.contains('show'))return;char3ShowNextLine();};
