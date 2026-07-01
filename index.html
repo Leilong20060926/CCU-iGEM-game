@@ -74,8 +74,8 @@
     }
     .image-relative-wrapper {
       position: relative; display: inline-block;
-      width: calc(100vw - 1002px); min-width: 270px;
-      max-width: calc(100vw - 1002px); margin: auto; box-sizing: border-box;
+      width: calc(100vw - 1000px); min-width: 250px;
+      max-width: calc(100vw - 1000px); margin: auto; box-sizing: border-box;
     }
     /* 選單頁（首頁/egg/doc/info）填滿 game-container */
     #page-index .image-relative-wrapper,
@@ -462,6 +462,14 @@
       font-size: 0.8rem; color: rgba(255,255,255,0.45); letter-spacing: 0.1em;
     }
   </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TE3GEQVKKJ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-TE3GEQVKKJ');
+  </script>
 </head>
 <body>
 
@@ -2960,10 +2968,7 @@
     } catch(e){ if(e.name!=='AbortError'){ console.error(e); } }
     finally { resetBtns(); }
   }
-
   </script>
-
-
 
 </body>
 </html>
