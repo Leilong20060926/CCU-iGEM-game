@@ -61,8 +61,8 @@
     .sidebar-overlay.show { background: rgba(0,0,0,0.3); pointer-events: auto; }
 
     /* Pages */
-    .page { display: none; width: 100%; height: 100%; position: relative; }
-    .page.active { display: flex; flex-direction: column; }
+    .page { display: none; width: 100%; height: 100vh; position: relative; }
+    .page.active { display: flex; flex-direction: column; overflow: hidden; }
 
     /* ══════════════════════════════════════════
        Game Container / Image Wrapper
@@ -73,22 +73,33 @@
       flex: 1; width: 100%; height: 100%;
     }
     .image-relative-wrapper {
-      position: relative; display: inline-block;
-      width: calc(100vw - 1000px); min-width: 250px;
-      max-width: calc(100vw - 1000px); margin: auto; box-sizing: border-box;
+      position: relative; display: inline-flex;
+      align-items: center; justify-content: center;
+      margin: auto; box-sizing: border-box;
+      flex-shrink: 0;
     }
-    /* 選單頁（首頁/egg/doc/info）填滿 game-container */
+    /* 選單頁（首頁/egg/doc/info）維持原本寬度邏輯 */
     #page-index .image-relative-wrapper,
     #page-egg   .image-relative-wrapper,
     #page-doc   .image-relative-wrapper,
     #page-info  .image-relative-wrapper {
       width: calc(100vw - 1002px) !important;
       min-width: 270px;
+      display: inline-block !important;
     }
     .game-image {
-      display: block; width: 100%; height: auto;
+      display: block;
+      max-height: 100vh; max-width: 100vw;
+      width: auto; height: auto;
       border: 2px solid #000; box-sizing: border-box;
       transition: filter 0.3s ease;
+    }
+    /* 選單頁的圖片維持原本寬度撐滿 */
+    #page-index .game-image,
+    #page-egg   .game-image,
+    #page-doc   .game-image,
+    #page-info  .game-image {
+      width: 100%; height: auto; max-height: none;
     }
     .game-image.blurred { filter: blur(8px); }
 
@@ -2968,7 +2979,10 @@
     } catch(e){ if(e.name!=='AbortError'){ console.error(e); } }
     finally { resetBtns(); }
   }
+
   </script>
+
+
 
 </body>
 </html>
