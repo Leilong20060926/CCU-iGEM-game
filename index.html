@@ -242,7 +242,8 @@
     .character-button:active .character-img-button { transform: scale(0.98); }
     .game-tip-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center;
+      background: rgba(0,0,0,0.3); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      display: flex; justify-content: center; align-items: center;
       z-index: 2000; opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
     }
     .game-tip-overlay.show { opacity: 1; pointer-events: auto; }
@@ -446,6 +447,28 @@
   <!-- ══════════════════════════════════════════
        Shared UI (Sidebar + Controls)
   ══════════════════════════════════════════ -->
+  <!-- 宣傳動畫結束後的「我知道了」提示 -->
+  <div class="game-tip-overlay" id="endingAnimTip">
+    <div class="game-tip-box">
+      <div class="game-tip-icon">!</div>
+      <div class="game-tip-title" data-zh="溫馨提醒" data-en="Reminder">溫馨提醒</div>
+      <div class="game-tip-content" id="endingAnimTipContent"
+        data-zh="以上內容為真實數據與研究成果。<br><br>希望透過《NoFold》，讓你重新思考農藥、糧食與環境的關係。<br><br>你的每一次選擇，都在影響未來。"
+        data-en="The above content is based on real data and research findings.<br><br>We hope NoFold inspires you to rethink the relationship between pesticides, food, and the environment.<br><br>Every choice you make shapes the future.">
+        以上內容為真實數據與研究成果。<br><br>希望透過《NoFold》，讓你重新思考農藥、糧食與環境的關係。<br><br>你的每一次選擇，都在影響未來。
+      </div>
+      <button id="endingAnimTipBtn" style="
+        background:#FFEE91;border:1px solid #000;border-radius:12px;
+        padding:10px 28px;font-size:1rem;font-weight:700;cursor:pointer;
+        margin:0 auto;display:block;transition:background 0.2s;
+      "
+        data-zh="我知道了" data-en="Got it!"
+        onmouseover="this.style.background='#ffe666'"
+        onmouseout="this.style.background='#FFEE91'"
+      >我知道了</button>
+    </div>
+  </div>
+
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <nav class="sidebar" id="sidebar">
     <ul class="sidebar-menu">
@@ -2519,18 +2542,39 @@
       return;
     }
 
-    // 最後一句播完 → 從目錄來就重播，從結局來就跳 star
+    // 最後一句播完 → 兩種情況都跳出提示
     if (scene.next) {
       endingAnimGoToScene(scene.next);
     } else {
-      if (endingAnimFromMenu) {
-        endingAnimGoToScene('1-7'); // 重頭再播
-      } else {
-        if (endingAnimTimer) { clearInterval(endingAnimTimer); endingAnimTimer = null; }
-        endingPlayer.stop();
-        navTo('star');
-      }
+      if (endingAnimTimer) { clearInterval(endingAnimTimer); endingAnimTimer = null; }
+      endingPlayer.stop();
+      showEndingAnimTip(endingAnimFromMenu);
     }
+  }
+
+  function showEndingAnimTip(fromMenu) {
+    const tip = document.getElementById('endingAnimTip');
+    const content = document.getElementById('endingAnimTipContent');
+    content.innerHTML = gameLang === 'zh' ? content.getAttribute('data-zh') : content.getAttribute('data-en');
+    const oldBtn = document.getElementById('endingAnimTipBtn');
+    const newBtn = document.createElement('button');
+    newBtn.id = 'endingAnimTipBtn';
+    newBtn.setAttribute('data-zh', '我知道了');
+    newBtn.setAttribute('data-en', 'Got it!');
+    newBtn.textContent = gameLang === 'zh' ? '我知道了' : 'Got it!';
+    newBtn.style.cssText = 'background:#FFEE91;border:1px solid #000;border-radius:12px;padding:10px 28px;font-size:1rem;font-weight:700;cursor:pointer;margin:0 auto;display:block;transition:background 0.2s;';
+    newBtn.addEventListener('mouseenter', () => { newBtn.style.background = '#ffe666'; });
+    newBtn.addEventListener('mouseleave', () => { newBtn.style.background = '#FFEE91'; });
+    newBtn.addEventListener('click', () => {
+      tip.classList.remove('show');
+      if (fromMenu) {
+        endingAnimGoToScene('1-7'); // 目錄來的 → 重頭再播
+      } else {
+        navTo('star'); // 結局來的 → 跳收集結局
+      }
+    });
+    oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+    tip.classList.add('show');
   }
 
   // 語言切換時重播當前句
@@ -2538,6 +2582,14 @@
     if (currentPage === 'ending-anim') {
       endingAnimPart = 0;
       endingAnimShowPart();
+      // 若 tip 正在顯示，同步更新語言
+      const tip = document.getElementById('endingAnimTip');
+      if (tip && tip.classList.contains('show')) {
+        const content = document.getElementById('endingAnimTipContent');
+        const btn = document.getElementById('endingAnimTipBtn');
+        if (content) content.innerHTML = e.detail.lang === 'zh' ? content.getAttribute('data-zh') : content.getAttribute('data-en');
+        if (btn) btn.textContent = e.detail.lang === 'zh' ? btn.getAttribute('data-zh') : btn.getAttribute('data-en');
+      }
     }
     const docVideoTitle = document.getElementById('docVideoTitle');
     if (docVideoTitle) {
