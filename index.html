@@ -387,61 +387,6 @@
     .scene-overlay-btn:active { transform: translate(-50%, -50%) scale(0.98); }
     .scene-overlay-btn.hidden { display: none; }
 
-    /* Google 登入 Overlay */
-    .google-login-overlay {
-      display: none; position: fixed; top: 0; left: 0;
-      width: 100vw; height: 100vh; background: rgba(0,0,0,0.55);
-      z-index: 9999; justify-content: center; align-items: center;
-    }
-    .google-login-overlay.show { display: flex; }
-    .google-login-box {
-      background: #fff; border-radius: 16px; padding: 32px 28px 24px;
-      max-width: 360px; width: 90%; box-shadow: 0 12px 40px rgba(0,0,0,0.28);
-      display: flex; flex-direction: column; align-items: center; gap: 0;
-      border: 1px solid #e0e0e0; position: relative;
-    }
-    .gl-step { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 14px; }
-    .gl-step.hidden { display: none; }
-    .gl-google-logo { width: 40px; height: 40px; margin-bottom: 4px; }
-    .gl-title { font-size: 1.1rem; font-weight: 700; color: #202124; text-align: center; margin: 0; }
-    .gl-subtitle { font-size: 0.85rem; color: #5f6368; text-align: center; margin: 0; line-height: 1.55; }
-    .gl-divider { width: 100%; height: 1px; background: #e8eaed; }
-    .gl-sign-btn {
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      width: 100%; padding: 11px 16px; border-radius: 8px;
-      border: 1px solid #dadce0; background: #fff; cursor: pointer;
-      font-size: 0.95rem; font-weight: 600; color: #3c4043;
-      transition: background 0.15s, box-shadow 0.15s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    }
-    .gl-sign-btn:hover { background: #f8f9fa; box-shadow: 0 2px 6px rgba(0,0,0,0.13); }
-    .gl-sign-btn img { width: 20px; height: 20px; }
-    .gl-cancel {
-      font-size: 0.85rem; color: #5f6368; background: none; border: none;
-      cursor: pointer; padding: 4px 10px; border-radius: 6px; transition: background 0.15s;
-    }
-    .gl-cancel:hover { background: #f1f3f4; }
-    .gl-avatar {
-      width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid #e0e0e0;
-    }
-    .gl-avatar-placeholder {
-      width: 64px; height: 64px; border-radius: 50%;
-      background: #4285f4; display: flex; align-items: center; justify-content: center;
-      font-size: 28px; color: #fff; font-weight: 700;
-    }
-    .gl-user-name { font-size: 1.05rem; font-weight: 700; color: #202124; margin: 0; text-align: center; }
-    .gl-user-email { font-size: 0.85rem; color: #5f6368; margin: 0; text-align: center; }
-    .gl-confirm-btn {
-      width: 100%; padding: 12px; border-radius: 8px; border: none;
-      background: #4285f4; color: #fff; font-size: 0.95rem; font-weight: 700;
-      cursor: pointer; transition: background 0.15s;
-    }
-    .gl-confirm-btn:hover { background: #3367d6; }
-    .gl-switch-btn {
-      font-size: 0.82rem; color: #4285f4; background: none; border: none;
-      cursor: pointer; padding: 2px 6px; text-decoration: underline;
-    }
-
     /* ── SHARE SHEET ── */
     .ss-retro    { background: #2e7d32; }
 
@@ -493,37 +438,6 @@
     <div class="loading-text" id="loadingText">Loading... 0%</div>
   </div>
 
-  <!-- Google 登入 Overlay (兩步驟) -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <div class="google-login-overlay" id="googleLoginOverlay">
-    <div class="google-login-box">
-      <!-- Step 1: 提示登入 -->
-      <div class="gl-step" id="glStep1">
-        <img class="gl-google-logo" src="https://www.google.com/favicon.ico" alt="Google" />
-        <p class="gl-title" id="glTitle1">登入以繼續分享</p>
-        <p class="gl-subtitle" id="glSubtitle1">請先登入你的 Google 帳號，才能分享結局卡片。</p>
-        <div class="gl-divider"></div>
-        <button class="gl-sign-btn" id="glSignBtn">
-          <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google" />
-          <span id="glSignBtnText">使用 Google 帳號登入</span>
-        </button>
-        <button class="gl-cancel" id="glCancelBtn">取消</button>
-      </div>
-      <!-- Step 2: 確認帳號 -->
-      <div class="gl-step hidden" id="glStep2">
-        <img class="gl-google-logo" src="https://www.google.com/favicon.ico" alt="Google" />
-        <p class="gl-title" id="glTitle2">確認帳號</p>
-        <div id="glAvatarWrap"></div>
-        <p class="gl-user-name" id="glUserName"></p>
-        <p class="gl-user-email" id="glUserEmail"></p>
-        <div class="gl-divider"></div>
-        <p class="gl-subtitle" id="glSubtitle2">以此帳號繼續分享結局卡片？</p>
-        <button class="gl-confirm-btn" id="glConfirmBtn">確認繼續</button>
-        <button class="gl-switch-btn" id="glSwitchBtn">切換帳號</button>
-        <button class="gl-cancel" id="glCancelBtn2">取消</button>
-      </div>
-    </div>
-  </div>
 
   <!-- ══════════════════════════════════════════
        SHARE SHEET OVERLAY
@@ -2740,7 +2654,6 @@
         let cnt = 0; ACHIEVEMENTS.forEach(a=>{if(localStorage.getItem(a.key)==='true')cnt++;});
         updateStarLang(starLang, cnt);
         if(starActiveAch && document.getElementById('resultModal').style.display==='flex') renderModal(starActiveAch, starLang);
-        if(document.getElementById('googleLoginOverlay').classList.contains('show')) updateGoogleLoginLang();
         resetBtns();
       });
       starPageInited = true;
@@ -2829,90 +2742,6 @@
   /* ══════════════════════════════════════════
      GOOGLE LOGIN OVERLAY (真實 GIS OAuth)
   ══════════════════════════════════════════ */
-  const GOOGLE_CLIENT_ID = '994477253429-c5e95fc37719lmcav7oh87s1bq88vlol.apps.googleusercontent.com';
-  let googleLoggedIn = false;
-  let googleUserInfo = null;
-  let pendingShare   = false;
-
-  function updateGoogleLoginLang() {
-    const isZh = gameLang === 'zh';
-    document.getElementById('glTitle1').textContent    = isZh ? '登入以繼續分享' : 'Sign in to continue';
-    document.getElementById('glSubtitle1').textContent = isZh ? '請先登入你的 Google 帳號，才能分享結局卡片。' : 'Please sign in with your Google account to share the ending card.';
-    document.getElementById('glSignBtnText').textContent = isZh ? '使用 Google 帳號登入' : 'Sign in with Google';
-    document.getElementById('glCancelBtn').textContent   = isZh ? '取消' : 'Cancel';
-    document.getElementById('glTitle2').textContent      = isZh ? '確認帳號' : 'Confirm Account';
-    document.getElementById('glSubtitle2').textContent   = isZh ? '以此帳號繼續分享結局卡片？' : 'Continue sharing with this account?';
-    document.getElementById('glConfirmBtn').textContent  = isZh ? '確認繼續' : 'Confirm & Continue';
-    document.getElementById('glSwitchBtn').textContent   = isZh ? '切換帳號' : 'Switch Account';
-    document.getElementById('glCancelBtn2').textContent  = isZh ? '取消' : 'Cancel';
-  }
-
-  function showGoogleLogin() {
-    updateGoogleLoginLang();
-    document.getElementById('glStep1').classList.remove('hidden');
-    document.getElementById('glStep2').classList.add('hidden');
-    document.getElementById('googleLoginOverlay').classList.add('show');
-  }
-  function hideGoogleLogin() {
-    document.getElementById('googleLoginOverlay').classList.remove('show');
-  }
-  function showStep2(userInfo) {
-    // 頭像
-    const wrap = document.getElementById('glAvatarWrap');
-    if (userInfo.picture) {
-      wrap.innerHTML = `<img class="gl-avatar" src="${userInfo.picture}" alt="avatar" />`;
-    } else {
-      const initial = (userInfo.name || '?')[0].toUpperCase();
-      wrap.innerHTML = `<div class="gl-avatar-placeholder">${initial}</div>`;
-    }
-    document.getElementById('glUserName').textContent  = userInfo.name  || '';
-    document.getElementById('glUserEmail').textContent = userInfo.email || '';
-    document.getElementById('glStep1').classList.add('hidden');
-    document.getElementById('glStep2').classList.remove('hidden');
-  }
-
-  // GIS popup login
-  function startGoogleLogin() {
-    const client = google.accounts.oauth2.initTokenClient({
-      client_id: GOOGLE_CLIENT_ID,
-      scope: 'openid email profile',
-      callback: async (tokenResponse) => {
-        if (tokenResponse.error) { console.error(tokenResponse); return; }
-        // 用 access_token 取使用者資訊
-        try {
-          const res  = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-            headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
-          });
-          const info = await res.json();
-          googleUserInfo = info;
-          showStep2(info);
-        } catch(e) { console.error('Failed to get user info', e); }
-      }
-    });
-    client.requestAccessToken({ prompt: 'select_account' });
-  }
-
-  document.getElementById('glSignBtn').onclick   = startGoogleLogin;
-  document.getElementById('glSwitchBtn').onclick = startGoogleLogin;
-
-  document.getElementById('glConfirmBtn').onclick = () => {
-    googleLoggedIn = true;
-    hideGoogleLogin();
-    if (pendingShare) {
-      pendingShare = false;
-      doShare();
-    }
-  };
-
-  document.getElementById('glCancelBtn').onclick = () => {
-    pendingShare = false;
-    hideGoogleLogin();
-  };
-  document.getElementById('glCancelBtn2').onclick = () => {
-    pendingShare = false;
-    hideGoogleLogin();
-  };
-
   /* ══════════════════════════════════════════
      SHARE SHEET LOGIC
   ══════════════════════════════════════════ */
@@ -2961,7 +2790,6 @@
 
   async function handleShare(){
     if(!starActiveAch) return;
-    if(!googleLoggedIn){ pendingShare=true; showGoogleLogin(); return; }
     setBtnLoading('modalShareBtn');
     try {
       const {blob, fileName} = await generateCardBlob();
