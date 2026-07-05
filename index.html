@@ -515,7 +515,7 @@
       </div>
     </div>
     <div class="game-container" id="gameContainerIndex">
-      <div class="image-relative-wrapper" style="width:calc(100vw - 1002px);min-width:270px;position:relative;overflow:hidden;">
+      <div class="image-relative-wrapper" style="width:calc(100vw - 1002px);min-width:270px;position:relative;overflow:hidden;display:block;">
 
         <div id="homepageScene">
           <img class="game-image" src="public/pictures/homepage.PNG" alt="homepage" />
@@ -526,13 +526,13 @@
         <div id="characterScene">
           <div class="character-buttons-container" id="characterButtonsContainer">
             <a class="character-button show character-button-1" href="#" onclick="navTo('char1');return false;">
-              <button class="character-img-button" style="background-image: url('public/buttoms/Character1.PNG');"></button>
+              <button class="character-img-button" id="charBtn1" style="background-image: url('public/buttoms/Character1.PNG');"></button>
             </a>
             <a class="character-button show character-button-2" href="#" onclick="navTo('char2');return false;">
-              <button class="character-img-button" style="background-image: url('public/buttoms/Character2.PNG');"></button>
+              <button class="character-img-button" id="charBtn2" style="background-image: url('public/buttoms/Character2.PNG');"></button>
             </a>
             <a class="character-button show character-button-3" href="#" onclick="navTo('char3');return false;">
-              <button class="character-img-button" style="background-image: url('public/buttoms/Character3.PNG');"></button>
+              <button class="character-img-button" id="charBtn3" style="background-image: url('public/buttoms/Character3.PNG');"></button>
             </a>
           </div>
           <img class="game-image" id="characterImage" src="public/pictures/characters.PNG" alt="characters" />
@@ -1227,10 +1227,12 @@
     'public/pictures/2-9.PNG','public/pictures/2-9-c.png','public/pictures/2-10.PNG',
     'public/pictures/3-1.PNG','public/pictures/3-2.PNG','public/pictures/3-3.PNG',
     'public/pictures/3-4.PNG','public/pictures/3-5.PNG','public/pictures/3-6.PNG',
+    'public/pictures/3-5-2.PNG','public/pictures/3-6-2.PNG',
     // buttoms
     'public/buttoms/Homepage_buttom.PNG','public/buttoms/Character1.PNG',
     'public/buttoms/Character2.PNG','public/buttoms/Character3.PNG',
-    'public/buttoms/3-6_buttom.PNG',
+    'public/buttoms/Charater1-2.PNG','public/buttoms/Charater2-2.PNG','public/buttoms/Charater3-2.PNG',
+    'public/buttoms/3-6_buttom.PNG','public/buttoms/3-6-2_buttom.PNG',
     // animation
     'public/animation/a1-1.PNG','public/animation/a1-2.PNG','public/animation/a1-3.PNG',
     'public/animation/a1-4.PNG','public/animation/a1-5.PNG','public/animation/a1-6.PNG',
@@ -1388,6 +1390,14 @@
     navTo('index');
   }
 
+  function updateCharBtnLang(lang) {
+    const map = { 1: ['Character1.PNG','Charater1-2.PNG'], 2: ['Character2.PNG','Charater2-2.PNG'], 3: ['Character3.PNG','Charater3-2.PNG'] };
+    [1,2,3].forEach(i => {
+      const btn = document.getElementById('charBtn'+i);
+      if (btn) btn.style.backgroundImage = `url('public/buttoms/${lang==='zh' ? map[i][0] : map[i][1]}')`;
+    });
+  }
+
   function navTo(page, extra) {
     document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
     const el = document.getElementById('page-' + page);
@@ -1430,6 +1440,7 @@
       el.innerHTML = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
     });
     window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
+    updateCharBtnLang(lang);
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -2252,8 +2263,8 @@
     'harvest_bad2_1':{image:'2-5.PNG',charName:null,texts:{zh:['市場早已對你的稻米失去信任。','即使完成收成，仍無法順利進入販售流程。','部分稻米被退回，部分滯留倉庫。','田地仍在運作，但產出不再被認可。'],en:['The market has already lost trust in your rice.','Even after the harvest is completed, it still cannot smoothly enter the sales process.','Some of the rice is returned, while some remains stuck in storage warehouses.','The fields continue to operate, but the produce is no longer recognized.']},next:()=>'harvest_bad2_c'},
     'harvest_bad2_c':{image:'2-5-cf.PNG',charName:{zh:'農民',en:'Farmer'},texts:{zh:['怎麼會這樣......'],en:['How did it come to this...']},next:()=>'harvest_bad2_2'},
     'harvest_bad2_2':{image:'2-5.PNG',charName:null,texts:{zh:['過去的選擇累積成結果，影響的不只是這一季的收成。'],en:["Past choices have accumulated into consequences, affecting not just this season's harvest."]},next:()=>{char3FinishEnding('bad2');return null;}},
-    'g3_1':{image:'3-5.PNG',charName:null,texts:{zh:['你在整理收成資料時，手機裡冒出了一則通知。'],en:['While you are organizing the harvest data, a notification suddenly pops up on your phone.']},next:()=>'g3_2'},
-    'g3_2':{image:'3-6.PNG',charName:null,buttonScene:true,texts:{zh:[],en:[]},next:()=>'g3_3'},
+    'g3_1':{image:'3-5.PNG',imageen:'3-5-2.PNG',charName:null,texts:{zh:['你在整理收成資料時，手機裡冒出了一則通知。'],en:['While you are organizing the harvest data, a notification suddenly pops up on your phone.']},next:()=>'g3_2'},
+    'g3_2':{image:'3-6.PNG',imageen:'3-6-2.PNG',charName:null,buttonScene:true,texts:{zh:[],en:[]},next:()=>'g3_3'},
     'g3_3':{image:'3-7.PNG',charName:null,texts:{zh:['隔天，你與IGEM 10團隊聊了許多稻田的種種與研究的內容。'],en:['The next day, you spend a long time talking with iGEM Team 10 about rice fields and their research.']},next:()=>'g3_4'},
     'g3_4':{image:'3-7-c.PNG',charName:{zh:'農民',en:'Farmer'},texts:{zh:['這些秧苗給你們，一起來捕捉瘤野螟吧！'],en:["Here are the seedlings for you. Let's capture the rice leafrollers together!"]},next:()=>'g3_5'},
     'g3_5':{image:'3-7.PNG',charName:null,texts:{zh:['稻米被裝進了紙箱中，瘤野螟的幼蟲與成蟲則被裝進了昆蟲箱。'],en:['The rice plants are carefully packed into cardboard boxes, while the larvae and adult rice leafrollers are placed into insect containers for study.']},next:()=>'g3_6'},
@@ -2297,7 +2308,7 @@
     const scene=SCENES3[key];if(!scene)return;
     char3CurrentScene=key;char3CurrentPart=0;
     char3CurrentTexts=scene.texts[gameLang]||scene.texts['zh'];
-    char3GameImageEl().src='public/pictures/'+scene.image;
+    char3GameImageEl().src='public/pictures/'+(gameLang==='en'&&scene.imageen?scene.imageen:scene.image);
     if(scene.charName){char3CharNameEl().classList.remove('hidden');char3CharNameEl().innerText=gameLang==='en'?scene.charName.en:scene.charName.zh;char3SceneWrapper().classList.add('scene-dialogue');}
     else{char3CharNameEl().classList.add('hidden');char3SceneWrapper().classList.remove('scene-dialogue');}
     char3ChoicesBox().classList.remove('show');
@@ -2306,8 +2317,11 @@
     char3CurrentChoiceKey=null;
     char3SaveProgress(key,null);
     if(scene.buttonScene){
-      char3StoryTextBox().style.display='none';char3OverlayBtn().classList.remove('hidden');
-      char3OverlayBtn().onclick=()=>{char3OverlayBtn().classList.add('hidden');char3StoryTextBox().style.display='';const nk=scene.next();if(nk)char3RunScene(nk);};
+      char3StoryTextBox().style.display='none';
+      const btn=char3OverlayBtn();
+      btn.classList.remove('hidden');
+      btn.style.backgroundImage=`url('public/buttoms/${gameLang==='en'?'3-6-2_buttom.PNG':'3-6_buttom.PNG'}')`;
+      btn.onclick=()=>{btn.classList.add('hidden');char3StoryTextBox().style.display='';const nk=scene.next();if(nk)char3RunScene(nk);};
       return;
     }
     char3OverlayBtn().classList.add('hidden');char3StoryTextBox().style.display='';
