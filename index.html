@@ -123,28 +123,25 @@
       margin: auto; box-sizing: border-box;
       flex-shrink: 0;
     }
-    /* 選單頁（首頁/egg/doc/info）維持原本寬度邏輯 */
+    /* 所有頁面統一：圖片寬度 = 視窗寬 - 左右 panel */
     #page-index .image-relative-wrapper,
     #page-egg   .image-relative-wrapper,
     #page-doc   .image-relative-wrapper,
-    #page-info  .image-relative-wrapper {
+    #page-info  .image-relative-wrapper,
+    #page-char1 .image-relative-wrapper,
+    #page-char2 .image-relative-wrapper,
+    #page-char3 .image-relative-wrapper,
+    #page-ending-anim .image-relative-wrapper {
       width: calc(100vw - 1002px) !important;
       min-width: 270px;
       display: inline-block !important;
     }
     .game-image {
       display: block;
-      max-height: 100vh; max-width: 100vw;
-      width: auto; height: auto;
+      width: 100%; height: auto;
+      max-height: none; max-width: none;
       border: 2px solid #000; box-sizing: border-box;
       transition: filter 0.3s ease;
-    }
-    /* 選單頁的圖片維持原本寬度撐滿 */
-    #page-index .game-image,
-    #page-egg   .game-image,
-    #page-doc   .game-image,
-    #page-info  .game-image {
-      width: 100%; height: auto; max-height: none;
     }
     .game-image.blurred { filter: blur(8px); }
 
