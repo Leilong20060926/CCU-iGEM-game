@@ -2402,7 +2402,7 @@
       char3StoryTextBox().style.display='none';
       const btn=char3OverlayBtn();
       btn.classList.remove('hidden');
-      btn.style.backgroundImage=`url('public/buttoms/${gameLang==='en'?'3-6-2_buttom.PNG':'3-6_buttom.PNG'}')`;
+      btn.style.backgroundImage=`url('public/buttoms/${gameLang==='en'?'3-6-2_buttom.png':'3-6_buttom.PNG'}')`;
       btn.onclick=()=>{btn.classList.add('hidden');char3StoryTextBox().style.display='';const nk=scene.next();if(nk)char3RunScene(nk);};
       return;
     }
