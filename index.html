@@ -2393,8 +2393,12 @@
     const growthTipOverlay = document.getElementById('char2GrowthTip');
     if (growthTipOverlay) growthTipOverlay.classList.remove('show');
     updateHud2();
-    // 第一次進入（growth===0）才顯示提示，邏輯與繁殖率提示一致
-    const isFirstVisit = key === 'choose1' && char2Stats.growth === 0;
+    // 第一次進入：key 是 choose1 且四個數值全部都是初始值
+    const isFirstVisit = key === 'choose1'
+      && char2Stats.growth       === 0
+      && char2Stats.quality      === 0
+      && char2Stats.pestResist   === 50
+      && char2Stats.pesticideUsed=== 0;
     if (isFirstVisit) {
       char2ChoicesBox().classList.remove('show');
       char2StoryTextBox().classList.add('blur');
@@ -2651,8 +2655,12 @@
     const moneyTipOverlay = document.getElementById('char3MoneyTip');
     if (moneyTipOverlay) moneyTipOverlay.classList.remove('show');
     updateHud3();
-    // 第一次進入（money===50，初始值）才顯示提示，邏輯與繁殖率提示一致
-    const isFirstVisit = key === 'period1' && char3Stats.money === 50;
+    // 第一次進入：key 是 period1 且四個數值全部都是初始值
+    const isFirstVisit = key === 'period1'
+      && char3Stats.money      === 50
+      && char3Stats.health     === 50
+      && char3Stats.stress     === 0
+      && char3Stats.reputation === 0;
     if (isFirstVisit) {
       char3ChoicesBox().classList.remove('show');
       char3StoryTextBox().classList.add('blur');
