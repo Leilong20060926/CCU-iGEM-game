@@ -441,6 +441,49 @@
     .scene-overlay-btn:active { transform: translate(-50%, -50%) scale(0.98); }
     .scene-overlay-btn.hidden { display: none; }
 
+    /* ── STATS HUD ── */
+    .stats-hud {
+      display: none;
+      position: absolute; top: 20px; left: 50%;
+      transform: translateX(-50%);
+      width: 75%;
+      background: rgba(237,232,216,0.95);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(184,134,11,0.4);
+      border-radius: 10px;
+      padding: 10px 14px; box-sizing: border-box; z-index: 50;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      transition: background 0.3s ease;
+    }
+    .stats-hud.visible { display: flex; flex-direction: column; gap: 4px; }
+    .stats-hud.choices-blur { filter: blur(5px); opacity: 0.45; pointer-events: none; transition: filter 0.2s, opacity 0.2s; }
+    .stat-item {
+      display: flex; align-items: center; gap: 6px;
+      width: 100%; font-size: 0.72rem; color: #5a4a1a;
+    }
+    .stat-label { color: #8a6a2a; font-size: 0.68rem; white-space: nowrap; min-width: 4.5em; }
+    .stat-bar-wrap { flex: 1; height: 6px; background: rgba(184,134,11,0.2); border-radius: 3px; overflow: hidden; }
+    .stat-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+    .stat-val { font-weight: 700; min-width: 2.2em; text-align: right; font-size: 0.72rem; color: #5a4a1a; }
+    .stat-sep { display: none; }
+
+    /* HUD 深夜模式 */
+    body.dark-mode .stats-hud {
+      background: rgba(13,27,42,0.92);
+      border: 1px solid rgba(212,168,67,0.3);
+    }
+    body.dark-mode .stat-item { color: #C8B89A; }
+    body.dark-mode .stat-label { color: #8A9AB8; }
+    body.dark-mode .stat-bar-wrap { background: rgba(255,255,255,0.1); }
+    body.dark-mode .stat-val { color: #E8C060; }
+    .fill-health { background: #f87171; } .fill-breeding { background: #a78bfa; }
+    .fill-gen { background: #34d399; } .fill-quality { background: #fbbf24; }
+    .fill-resist { background: #60a5fa; } .fill-growth { background: #34d399; }
+    .fill-pest { background: #f472b6; } .fill-money { background: #fbbf24; }
+    .fill-hp { background: #f87171; } .fill-stress { background: #fb923c; }
+    .fill-rep { background: #a78bfa; }
+    /* HUD is now absolute inside image-relative-wrapper */
+
     /* ── SHARE SHEET ── */
     .ss-retro    { background: #2e7d32; }
 
@@ -629,6 +672,13 @@
     <div id="sceneWrapper1">
       <!-- 1-1 -->
       <div id="scene-1-1" class="scene"><div class="game-container"><div class="image-relative-wrapper">
+        <div class="stats-hud" id="char1Hud">
+          <div class="stat-item"><span class="stat-label" id="hud1LabelHealth">健康值</span><div class="stat-bar-wrap"><div class="stat-bar-fill fill-health" id="hud1BarHealth" style="width:100%"></div></div><span class="stat-val" id="hud1ValHealth">15</span></div>
+          <span class="stat-sep">|</span>
+          <div class="stat-item"><span class="stat-label" id="hud1LabelBreeding">繁殖率</span><div class="stat-bar-wrap"><div class="stat-bar-fill fill-breeding" id="hud1BarBreeding" style="width:0%"></div></div><span class="stat-val" id="hud1ValBreeding">0</span></div>
+          <span class="stat-sep">|</span>
+          <div class="stat-item"><span class="stat-label" id="hud1LabelGen">子代成長值</span><div class="stat-bar-wrap"><div class="stat-bar-fill fill-gen" id="hud1BarGen" style="width:0%"></div></div><span class="stat-val" id="hud1ValGen">0</span></div>
+        </div>
         <div class="story-text-box" id="storyTextBox-1-1" data-goto="1-2"><div id="storyText-1-1" class="story-text"></div><span class="story-text-arrow" data-goto="1-2"></span></div>
         <img class="game-image" src="public/pictures/1-1.PNG" alt="1-1" />
       </div></div></div>
@@ -827,6 +877,15 @@
     </div>
     <div class="game-container">
       <div class="image-relative-wrapper" id="sceneWrapper2">
+        <div class="stats-hud" id="char2Hud">
+          <div class="stat-item"><span class="stat-label" id="hud2LabelQuality">品質</span><div class="stat-bar-wrap"><div class="stat-bar-fill fill-quality" id="hud2BarQuality" style="width:0%"></div></div><span class="stat-val" id="hud2ValQuality">0</span></div>
+          <span class="stat-sep">|</span>
+          <div class="stat-item"><span class="stat-label" id="hud2LabelResist">抗蟲率</span><div class="stat-bar-wrap"><div class="stat-bar-fill fill-resist" id="hud2BarResist" style="width:50%"></div></div><span class="stat-val" id="hud2ValResist">50</span></div>
+          <span class="stat-sep">|</span>
+          <div class="stat-item"><span class="stat-label" id="hud2LabelGrowth">生長值</span><div class="stat-bar-wrap"><div class="stat-bar-fill fill-growth" id="hud2BarGrowth" style="width:0%"></div></div><span class="stat-val" id="hud2ValGrowth">0</span></div>
+          <span class="stat-sep">|</span>
+          <div class="stat-item"><span class="stat-label" id="hud2LabelPest">農藥用量</span><div class="stat-bar-wrap"><div class="stat-bar-fill fill-pest" id="hud2BarPest" style="width:0%"></div></div><span class="stat-val" id="hud2ValPest">0</span></div>
+        </div>
         <div class="story-text-box" id="storyTextBox2">
           <div class="character-name hidden" id="charName2"></div>
           <div id="storyText2" class="story-text"></div>
@@ -863,6 +922,15 @@
     </div>
     <div class="game-container">
       <div class="image-relative-wrapper" id="sceneWrapper3">
+        <div class="stats-hud" id="char3Hud">
+          <div class="stat-item"><span class="stat-label" id="hud3LabelMoney">金錢</span><div class="stat-bar-wrap"><div class="stat-bar-fill fill-money" id="hud3BarMoney" style="width:50%"></div></div><span class="stat-val" id="hud3ValMoney">50</span></div>
+          <span class="stat-sep">|</span>
+          <div class="stat-item"><span class="stat-label" id="hud3LabelHp">健康</span><div class="stat-bar-wrap"><div class="stat-bar-fill fill-hp" id="hud3BarHp" style="width:50%"></div></div><span class="stat-val" id="hud3ValHp">50</span></div>
+          <span class="stat-sep">|</span>
+          <div class="stat-item"><span class="stat-label" id="hud3LabelStress">壓力</span><div class="stat-bar-wrap"><div class="stat-bar-fill fill-stress" id="hud3BarStress" style="width:0%"></div></div><span class="stat-val" id="hud3ValStress">0</span></div>
+          <span class="stat-sep">|</span>
+          <div class="stat-item"><span class="stat-label" id="hud3LabelRep">聲譽</span><div class="stat-bar-wrap"><div class="stat-bar-fill fill-rep" id="hud3BarRep" style="width:0%"></div></div><span class="stat-val" id="hud3ValRep">0</span></div>
+        </div>
         <div class="story-text-box" id="storyTextBox3">
           <div class="character-name hidden" id="charName3"></div>
           <div id="storyText3" class="story-text"></div>
@@ -1456,6 +1524,95 @@
     });
   }
 
+  /* ══════════════════════════════════════════
+     STATS HUD UPDATE FUNCTIONS
+  ══════════════════════════════════════════ */
+
+  function clamp(v, min, max) { return Math.min(Math.max(v, min), max); }
+  function pct(v, max) { return clamp(Math.round(v / max * 100), 0, 100) + '%'; }
+
+  // ── char1 HUD（健康值 0-15, 繁殖率 0-100, 子代成長值 0-100）──────────────
+  function updateHud1() {
+    const hud = document.getElementById('char1Hud');
+    if (!hud) return;
+    const health    = parseInt(localStorage.getItem('health'))    || 15;
+    const breeding  = parseInt(localStorage.getItem('breeding'))  || 0;
+    const generation= parseInt(localStorage.getItem('generation'))|| 0;
+    const isZh = typeof gameLang !== 'undefined' && gameLang === 'zh';
+
+    document.getElementById('hud1LabelHealth').textContent   = isZh ? '健康值' : 'Health';
+    document.getElementById('hud1LabelBreeding').textContent = isZh ? '繁殖率' : 'Breeding';
+    document.getElementById('hud1LabelGen').textContent      = isZh ? '子代成長值' : 'Growth';
+
+    document.getElementById('hud1ValHealth').textContent   = health;
+    document.getElementById('hud1ValBreeding').textContent = breeding;
+    document.getElementById('hud1ValGen').textContent      = generation;
+
+    document.getElementById('hud1BarHealth').style.width   = pct(health, 15);
+    document.getElementById('hud1BarBreeding').style.width = pct(breeding, 100);
+    document.getElementById('hud1BarGen').style.width      = pct(generation, 100);
+    hud.classList.add('visible');
+  }
+
+  function hideHud1() {
+    const hud = document.getElementById('char1Hud');
+    if (hud) hud.classList.remove('visible');
+  }
+
+  // ── char2 HUD（品質 0-100, 抗蟲率 0-100, 生長值 0-100, 農藥用量 0-100+）──
+  function updateHud2() {
+    const hud = document.getElementById('char2Hud');
+    if (!hud) return;
+    const isZh = typeof gameLang !== 'undefined' && gameLang === 'zh';
+    document.getElementById('hud2LabelQuality').textContent = isZh ? '品質' : 'Quality';
+    document.getElementById('hud2LabelResist').textContent  = isZh ? '抗蟲率' : 'Pest Resist';
+    document.getElementById('hud2LabelGrowth').textContent  = isZh ? '生長值' : 'Growth';
+    document.getElementById('hud2LabelPest').textContent    = isZh ? '農藥用量' : 'Pesticide';
+
+    document.getElementById('hud2ValQuality').textContent = char2Stats.quality;
+    document.getElementById('hud2ValResist').textContent  = char2Stats.pestResist;
+    document.getElementById('hud2ValGrowth').textContent  = char2Stats.growth;
+    document.getElementById('hud2ValPest').textContent    = char2Stats.pesticideUsed;
+
+    document.getElementById('hud2BarQuality').style.width = pct(char2Stats.quality, 100);
+    document.getElementById('hud2BarResist').style.width  = pct(char2Stats.pestResist, 100);
+    document.getElementById('hud2BarGrowth').style.width  = pct(char2Stats.growth, 100);
+    document.getElementById('hud2BarPest').style.width    = pct(char2Stats.pesticideUsed, 90);
+    hud.classList.add('visible');
+  }
+
+  function hideHud2() {
+    const hud = document.getElementById('char2Hud');
+    if (hud) hud.classList.remove('visible');
+  }
+
+  // ── char3 HUD（金錢, 健康, 壓力, 聲譽，範圍因遊戲不同，以200為上限顯示比例）
+  function updateHud3() {
+    const hud = document.getElementById('char3Hud');
+    if (!hud) return;
+    const isZh = typeof gameLang !== 'undefined' && gameLang === 'zh';
+    document.getElementById('hud3LabelMoney').textContent  = isZh ? '金錢' : 'Money';
+    document.getElementById('hud3LabelHp').textContent     = isZh ? '健康' : 'Health';
+    document.getElementById('hud3LabelStress').textContent = isZh ? '壓力' : 'Stress';
+    document.getElementById('hud3LabelRep').textContent    = isZh ? '聲譽' : 'Reputation';
+
+    document.getElementById('hud3ValMoney').textContent  = char3Stats.money;
+    document.getElementById('hud3ValHp').textContent     = char3Stats.health;
+    document.getElementById('hud3ValStress').textContent = char3Stats.stress;
+    document.getElementById('hud3ValRep').textContent    = char3Stats.reputation;
+
+    document.getElementById('hud3BarMoney').style.width  = pct(char3Stats.money, 300);
+    document.getElementById('hud3BarHp').style.width     = pct(char3Stats.health, 100);
+    document.getElementById('hud3BarStress').style.width = pct(char3Stats.stress, 100);
+    document.getElementById('hud3BarRep').style.width    = pct(char3Stats.reputation + 100, 200);
+    hud.classList.add('visible');
+  }
+
+  function hideHud3() {
+    const hud = document.getElementById('char3Hud');
+    if (hud) hud.classList.remove('visible');
+  }
+
   function navTo(page, extra) {
     document.querySelectorAll('.page').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
     const el = document.getElementById('page-' + page);
@@ -1469,6 +1626,10 @@
     if (page === 'char1') { resetChar1(); char1GoToScene('1-1'); }
     if (page === 'char2') initChar2();
     if (page === 'char3') initChar3();
+    // HUD 進入角色頁時先隱藏，等進入 choose box 才顯示
+    ['char1Hud','char2Hud','char3Hud'].forEach(id => {
+      const h = document.getElementById(id); if(h) h.classList.remove('visible');
+    });
     // currentGamePage 由各角色的 saveProgress / char1GoToScene 自行寫入，navTo 不覆蓋
   }
 
@@ -1612,6 +1773,13 @@
     }
     updateIndexLang(gameLang);
     window.addEventListener('languageChanged', e => updateIndexLang(e.detail.lang));
+    window.addEventListener('languageChanged', () => {
+      if (typeof currentPage !== 'undefined') {
+        if (currentPage === 'char1') updateHud1();
+        if (currentPage === 'char2') updateHud2();
+        if (currentPage === 'char3') updateHud3();
+      }
+    });
     window.addEventListener('languageChanged', e => {
       const lang = e.detail.lang;
       const tipContent = document.getElementById('char1BreedingTipContent');
@@ -1741,6 +1909,7 @@
   }
 
   function char1DoEnding(key) {
+    hideHud1();
     localStorage.setItem(key, 'true');
     localStorage.setItem('last_ending', key);
     localStorage.setItem('came_from_ending', 'true');
@@ -1752,7 +1921,17 @@
     }
   }
 
+  function char1MoveHudToScene(id) {
+    const hud = document.getElementById('char1Hud');
+    if (!hud) return;
+    const wrapper = document.querySelector('#scene-' + id + ' .image-relative-wrapper');
+    if (wrapper && !wrapper.contains(hud)) {
+      wrapper.insertBefore(hud, wrapper.firstChild);
+    }
+  }
+
   function char1GoToScene(id) {
+    const hud1r=document.getElementById('char1Hud'); if(hud1r) hud1r.classList.remove('choices-blur');
     if (globalTypewriterTimer1) { clearTimeout(globalTypewriterTimer1); globalTypewriterTimer1 = null; }
     if (animationTimer1) { clearInterval(animationTimer1); animationTimer1 = null; }
     document.querySelectorAll('#page-char1 .scene').forEach(s => s.style.display = 'none');
@@ -1761,6 +1940,8 @@
     target.style.display = 'flex';
     currentScene1 = id;
     localStorage.setItem('currentGamePage', 'char1#' + id);
+    char1MoveHudToScene(id);
+    if (id === '1-2-choose' || id === '1-2p2-choose') { updateHud1(); }
     char1InitScene(id);
   }
 
@@ -1780,8 +1961,8 @@
     overlay.classList.add('show');
     function closeTip() {
       overlay.classList.remove('show');
-      // 關閉提示後才顯示選擇框
       if (container) container.classList.add('show');
+      const hud1=document.getElementById('char1Hud'); if(hud1) hud1.classList.add('choices-blur');
     }
     arrow.onclick = closeTip;
     overlay.onclick = e => { if (e.target === overlay) closeTip(); };
@@ -1803,6 +1984,7 @@
     function closeTip() {
       overlay.classList.remove('show');
       if (container) container.classList.add('show');
+      const hud1=document.getElementById('char1Hud'); if(hud1) hud1.classList.add('choices-blur');
     }
     arrow.onclick = closeTip;
     overlay.onclick = e => { if (e.target === overlay) closeTip(); };
@@ -2023,7 +2205,7 @@
   const char2SceneWrapper = () => document.getElementById('sceneWrapper2');
 
   const char2Stats = { quality:0, pestResist:50, growth:0, pesticideUsed:0,
-    add(k,v){ this[k]=(this[k]||0)+v; },
+    add(k,v){ this[k]=(this[k]||0)+v; updateHud2(); },
     getEnding(){ if(this.pestResist<=0)return'bad1'; if(this.pesticideUsed>=60){const r=Math.random();if(r<0.5)return'bad2';if(r<0.75)return'bad3';return'good1';}if(this.quality>=100)return'good2';return'good3'; }
   };
 
@@ -2060,6 +2242,7 @@
   function char2BeginSalePeriod(){ char2FinalEnding=char2Stats.getEnding(); char2RunScene('s_sale1'); }
   function char2TriggerBad1(){ char2FinalEnding='bad1'; char2RunScene('s_bad1'); }
   function char2FinishEnding(){
+    hideHud2();
     localStorage.setItem('last_ending','rice_'+char2FinalEnding);
     localStorage.setItem('rice_'+char2FinalEnding,'true');
     localStorage.setItem('came_from_ending','true');
@@ -2143,6 +2326,7 @@
     char2ChoicesBox().classList.remove('show');
     char2StoryTextBox().classList.remove('blur');
     char2GameImageEl().style.filter='';
+    const hud2r=document.getElementById('char2Hud'); if(hud2r) hud2r.classList.remove('choices-blur');
     char2CurrentChoiceKey=null;
     char2SaveProgress(key,null);
     char2ShowNextLine();
@@ -2166,12 +2350,17 @@
     char2StoryTextBox().classList.add('blur');
     char2GameImageEl().style.filter='blur(8px)';
     char2Arrow().classList.remove('show');
+    const hud2 = document.getElementById('char2Hud'); if(hud2) hud2.classList.add('choices-blur');
     char2ChoicesTitle().innerText=data.title[gameLang]||data.title['zh'];
     char2ChoicesList().innerHTML='';
     data.options.forEach(opt=>{
       const li=document.createElement('li'),btn=document.createElement('button');
       btn.className='choice-button'; btn.innerText=gameLang==='en'?opt.en:opt.zh;
-      btn.addEventListener('click',()=>opt.action()); li.appendChild(btn); char2ChoicesList().appendChild(li);
+      btn.addEventListener('click',()=>{
+        const hud2=document.getElementById('char2Hud'); if(hud2) hud2.classList.remove('choices-blur');
+        char2ChoicesBox().classList.remove('show');
+        opt.action();
+      }); li.appendChild(btn); char2ChoicesList().appendChild(li);
     });
   }
 
@@ -2203,6 +2392,7 @@
     // 每次呼叫都先強制關掉提示，避免「提示還沒關就被切走再切回來」造成疊圖
     const growthTipOverlay = document.getElementById('char2GrowthTip');
     if (growthTipOverlay) growthTipOverlay.classList.remove('show');
+    updateHud2();
     // 第一次進入（growth===0）才顯示提示，邏輯與繁殖率提示一致
     const isFirstVisit = key === 'choose1' && char2Stats.growth === 0;
     if (isFirstVisit) {
@@ -2253,7 +2443,7 @@
   const char3OverlayBtn=()=>document.getElementById('sceneOverlayBtn3');
 
   const char3Stats={money:50,health:50,stress:0,reputation:0,
-    add(k,v){this[k]=(this[k]||0)+v;},
+    add(k,v){this[k]=(this[k]||0)+v;updateHud3();},
     isHealthy(){return this.health>0&&this.stress<100;},
     rollBadEnding(){const r=Math.random();if(r<0.2)return'bad2';if(r<0.6)return'bad3';return'bad4';},
     harvestEnding(){if(this.reputation<-50)return'bad2';if(this.reputation>100)return'good1';return'good2';}
@@ -2283,6 +2473,7 @@
   function char3LoadStats(){try{const raw=localStorage.getItem('farmer_game_stats');return raw?JSON.parse(raw):null;}catch(e){return null;}}
 
   function char3FinishEnding(ending){
+    hideHud3();
     char3FinalEnding=ending;
     localStorage.setItem('last_ending','farmer_'+ending);
     localStorage.setItem('farmer_'+ending,'true');
@@ -2388,6 +2579,7 @@
     char3ChoicesBox().classList.remove('show');
     char3StoryTextBox().classList.remove('blur');
     char3GameImageEl().style.filter='';
+    const hud3r=document.getElementById('char3Hud'); if(hud3r) hud3r.classList.remove('choices-blur');
     char3CurrentChoiceKey=null;
     char3SaveProgress(key,null);
     if(scene.buttonScene){
@@ -2418,12 +2610,17 @@
     char3StoryTextBox().classList.add('blur');
     char3GameImageEl().style.filter='blur(8px)';
     char3Arrow().classList.remove('show');
+    const hud3 = document.getElementById('char3Hud'); if(hud3) hud3.classList.add('choices-blur');
     char3ChoicesTitle().innerText=data.title[gameLang]||data.title['zh'];
     char3ChoicesList().innerHTML='';
     data.options.forEach(opt=>{
       const li=document.createElement('li'),btn=document.createElement('button');
       btn.className='choice-button';btn.innerText=gameLang==='en'?opt.en:opt.zh;
-      btn.addEventListener('click',()=>opt.action());li.appendChild(btn);char3ChoicesList().appendChild(li);
+      btn.addEventListener('click',()=>{
+        const hud3=document.getElementById('char3Hud'); if(hud3) hud3.classList.remove('choices-blur');
+        char3ChoicesBox().classList.remove('show');
+        opt.action();
+      });li.appendChild(btn);char3ChoicesList().appendChild(li);
     });
   }
 
@@ -2453,6 +2650,7 @@
     // 每次呼叫都先強制關掉提示，避免「提示還沒關就被切走再切回來」造成疊圖
     const moneyTipOverlay = document.getElementById('char3MoneyTip');
     if (moneyTipOverlay) moneyTipOverlay.classList.remove('show');
+    updateHud3();
     // 第一次進入（money===50，初始值）才顯示提示，邏輯與繁殖率提示一致
     const isFirstVisit = key === 'period1' && char3Stats.money === 50;
     if (isFirstVisit) {
