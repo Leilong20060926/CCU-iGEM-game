@@ -1562,7 +1562,7 @@
     if (hud) hud.classList.remove('visible');
   }
 
-  // ── char2 HUD（品質 0-100, 抗蟲率 0-100, 生長值 0-100, 農藥用量 0-100+）──
+  // ── char2 HUD（品質 0-150, 抗蟲率 0-100, 生長值 0-100, 農藥用量 0-100+）──
   function updateHud2() {
     const hud = document.getElementById('char2Hud');
     if (!hud) return;
@@ -1577,7 +1577,7 @@
     document.getElementById('hud2ValGrowth').textContent  = char2Stats.growth;
     document.getElementById('hud2ValPest').textContent    = char2Stats.pesticideUsed;
 
-    document.getElementById('hud2BarQuality').style.width = pct(char2Stats.quality, 100);
+    document.getElementById('hud2BarQuality').style.width = pct(char2Stats.quality, 150);
     document.getElementById('hud2BarResist').style.width  = pct(char2Stats.pestResist, 100);
     document.getElementById('hud2BarGrowth').style.width  = pct(char2Stats.growth, 100);
     document.getElementById('hud2BarPest').style.width    = pct(char2Stats.pesticideUsed, 90);
@@ -2209,7 +2209,7 @@
 
   const char2Stats = { quality:0, pestResist:50, growth:0, pesticideUsed:0,
     add(k,v){ this[k]=(this[k]||0)+v; updateHud2(); },
-    getEnding(){ if(this.pestResist<=0)return'bad1'; if(this.pesticideUsed>=60){const r=Math.random();if(r<0.5)return'bad2';if(r<0.75)return'bad3';return'good1';}if(this.quality>=100)return'good2';return'good3'; }
+    getEnding(){ if(this.pestResist<=0)return'bad1'; if(this.pesticideUsed>=60){const r=Math.random();if(r<0.5)return'bad2';if(r<0.75)return'bad3';return'good1';}if(this.quality>=150)return'good2';return'good3'; }
   };
 
   function char2RunTypewriter(text, arrowEl, onComplete) {
