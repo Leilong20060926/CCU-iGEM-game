@@ -1,0 +1,20 @@
+/* ── page-info inline style ── */
+        #page-info .info-news-title {
+          font-size: 16pt; font-weight: bold; color: var(--text-title);
+          margin-top: 25px; margin-bottom: 15px; padding-bottom: 4px;
+          display: inline-block; border-bottom: 4px solid #D4A843;
+        }
+        #page-info .info-news-title:first-child { margin-top: 5px; }
+        #page-info .info-news-body { font-size: 11pt; line-height: 1.8; color: var(--text-box); margin-bottom: 20px; text-align: left; }
+        #page-info .info-link-buttons { display: flex; flex-direction: row; gap: 14px; margin-top: 10px; margin-bottom: 20px; }
+        #page-info .info-link-btn {
+          display: flex; align-items: center; justify-content: center;
+          padding: 14px; background: #E8C060; border: 1px solid #000;
+          border-radius: 18px; cursor: pointer; text-decoration: none;
+          color: var(--text-box); font-weight: 700; font-size: 1rem;
+          box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+          transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        #page-info .info-link-btn:hover { transform: translateY(-1px); box-shadow: 0 16px 30px rgba(0,0,0,0.14); background: #D4A843; }
+        #page-info .info-link-btn:active { transform: translateY(0); }
+        #page-info .info-link-btn img { width: 28px; height: 28px; flex-shrink: 0; }

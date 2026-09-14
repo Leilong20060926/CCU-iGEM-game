@@ -1,0 +1,62 @@
+/* ══════════════════════════════════════════
+       Story Text Box (char 1 - green)
+    ══════════════════════════════════════════ */
+    .story-text-box {
+      position: absolute; bottom: 30px; left: 50%;
+      transform: translateX(-50%); width: 75%; min-height: 130px;
+      box-sizing: border-box; z-index: 50; overflow: visible;
+      transition: filter 0.3s ease;
+      background: rgba(60, 100, 60, 0.85); color: white;
+      border-radius: 10px; padding: 20px; font-size: 1rem;
+      line-height: 1.6; text-align: left;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3); cursor: pointer;
+    }
+    .story-text-box.blur { filter: blur(5px); opacity: 0.5; pointer-events: none; }
+    .story-text-arrow {
+      width: 0; height: 0;
+      border-left: 12px solid transparent; border-right: 12px solid transparent;
+      border-top: 12px solid white; margin: 15px auto 0; cursor: pointer;
+      opacity: 0; transition: opacity 0.5s ease-in-out; display: block;
+    }
+    .story-text-arrow.show { opacity: 1; }
+
+    /* Dialogue box style */
+    .scene-dialogue .story-text-box {
+      border-radius: 15px; bottom: 25px; width: 85%; min-height: 110px; padding: 12px 18px;
+    }
+    .scene-dialogue .story-text-box::before {
+      content: ''; position: absolute; top: -12px; left: 25px;
+      width: 0; height: 0;
+      border-left: 12px solid transparent; border-right: 0 solid transparent;
+    }
+    .character-name {
+      font-weight: bold; padding: 5px 12px; border-radius: 12px;
+      display: inline-block; margin-bottom: 8px; font-size: 0.85rem;
+    }
+    .character-name.hidden { display: none; }
+    .story-text { margin: 0; }
+
+    /* Char 1 (leaffolder) specific */
+    #page-char1 .story-text-box { background: rgba(60,100,60,0.85); color: white; }
+    #page-char1 .scene-dialogue .story-text-box { background: rgba(180,220,180,0.95); color: #333; }
+    #page-char1 .scene-dialogue .story-text-box::before { border-bottom-color: rgba(180,220,180,0.95); }
+    #page-char1 .scene-dialogue .story-text-arrow { border-top-color: #333; }
+    #page-char1 .character-name { background: rgba(100,180,100,0.9); color: white; }
+
+    /* Char 2 (rice) specific */
+    #page-char2 .story-text-box { background: rgba(127,108,54,0.92); color: white; }
+    #page-char2 .story-text-box:hover { background: rgba(140,120,60,0.95); }
+    #page-char2 .scene-dialogue .story-text-box { background: rgba(206,163,43,0.92); color: white; }
+    #page-char2 .scene-dialogue .story-text-box:hover { background: rgba(220,175,50,0.95); }
+    #page-char2 .scene-dialogue .story-text-box::before { border-bottom-color: rgba(206,163,43,0.92); }
+    #page-char2 .character-name { background: rgba(127,108,54,0.92); color: white; }
+    #page-char2 .story-text-arrow { border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid rgba(255,255,255,0.8); margin: 12px auto 0; pointer-events: none; }
+
+    /* Char 3 (farmer) specific */
+    #page-char3 .story-text-box { background: rgba(45,82,119,0.85); color: white; }
+    #page-char3 .story-text-box:hover { background: rgba(55,95,135,0.92); }
+    #page-char3 .scene-dialogue .story-text-box { background: rgba(83,164,207,0.92); color: white; }
+    #page-char3 .scene-dialogue .story-text-box:hover { background: rgba(95,178,220,0.95); }
+    #page-char3 .scene-dialogue .story-text-box::before { border-bottom-color: rgba(83,164,207,0.92); }
+    #page-char3 .character-name { background: rgba(45,99,160,0.92); color: white; }
+    #page-char3 .story-text-arrow { border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid rgba(255,255,255,0.8); margin: 12px auto 0; pointer-events: none; }

@@ -1,0 +1,46 @@
+<!-- ══════════════════════════════════════════
+       PAGE: INDEX
+  ══════════════════════════════════════════ -->
+  <div id="page-index" class="page active">
+    <div class="game-tip-overlay" id="gameTipOverlay">
+      <div class="game-tip-box">
+        <div class="game-tip-icon">!</div>
+        <div class="game-tip-title" data-zh="遊戲提示" data-en="Game Tips">遊戲提示</div>
+        <div class="game-tip-content" id="tipContent1"></div>
+        <div class="game-tip-arrow" id="tipArrow1"></div>
+      </div>
+    </div>
+    <div class="game-tip-overlay" id="gameTipOverlay2">
+      <div class="game-tip-box">
+        <div class="game-tip-icon">!</div>
+        <div class="game-tip-title" data-zh="遊戲提示" data-en="Game Tips">遊戲提示</div>
+        <div class="game-tip-content" id="tipContent2"></div>
+        <div class="game-tip-arrow" id="tipArrow2"></div>
+      </div>
+    </div>
+    <div class="game-container" id="gameContainerIndex">
+      <div class="image-relative-wrapper" style="width:calc(100vw - 1002px);min-width:270px;position:relative;overflow:hidden;display:block;">
+
+        <div id="homepageScene">
+          <img class="game-image" src="public/pictures/homepage.PNG" alt="homepage" />
+          <a class="start-button" id="startBtn" href="#">
+            <button class="png-button">前往下一頁</button>
+          </a>
+        </div>
+        <div id="characterScene">
+          <div class="character-buttons-container" id="characterButtonsContainer">
+            <a class="character-button show character-button-1" href="#" onclick="navTo('char1');return false;">
+              <button class="character-img-button" id="charBtn1" style="background-image: url('public/buttoms/Character1.PNG');"></button>
+            </a>
+            <a class="character-button show character-button-2" href="#" onclick="navTo('char2');return false;">
+              <button class="character-img-button" id="charBtn2" style="background-image: url('public/buttoms/Character2.PNG');"></button>
+            </a>
+            <a class="character-button show character-button-3" href="#" onclick="navTo('char3');return false;">
+              <button class="character-img-button" id="charBtn3" style="background-image: url('public/buttoms/Character3.PNG');"></button>
+            </a>
+          </div>
+          <img class="game-image" id="characterImage" src="public/pictures/characters.PNG" alt="characters" />
+        </div>
+      </div>
+    </div>
+  </div>

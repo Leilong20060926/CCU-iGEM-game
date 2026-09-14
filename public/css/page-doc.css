@@ -1,0 +1,20 @@
+/* ── page-doc inline style ── */
+        #page-doc .doc-news-title {
+          font-size: 16pt; font-weight: bold; color: var(--text-title);
+          margin-top: 25px; margin-bottom: 15px; padding-bottom: 4px;
+          display: inline-block; border-bottom: 4px solid #D4A843;
+        }
+        #page-doc .doc-news-title:first-child { margin-top: 5px; }
+        #page-doc .doc-news-list { list-style-type: none !important; padding-left: 0 !important; margin-bottom: 20px; width: 100%; }
+        #page-doc .doc-news-list li {
+          font-size: 11pt; line-height: 1.7; position: relative;
+          padding-left: 20px; margin-bottom: 12px; text-align: left; color: var(--text-body);
+        }
+        #page-doc .doc-news-list li::before {
+          content: "■"; position: absolute; left: 0;
+          color: #E8C060; font-size: 9pt; top: 2px;
+        }
+        #page-doc .doc-video-box {
+          background: #f0f0f0; border: 1px solid #ddd; padding: 20px;
+          text-align: center; margin-top: 25px; border-radius: 4px; width: 100%; box-sizing: border-box;
+        }

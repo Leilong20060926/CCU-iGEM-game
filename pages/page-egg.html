@@ -1,0 +1,44 @@
+<!-- ══════════════════════════════════════════
+       PAGE: EGG (Easter Egg)
+  ══════════════════════════════════════════ -->
+  <div id="page-egg" class="page">
+    <div class="game-container">
+    <div class="image-relative-wrapper" id="eggBox" style="width:calc(100vw - 1002px);min-width:270px;overflow-y:auto;max-height:100vh;background:var(--bg-box);border:2px solid var(--border-box);color:var(--text-box);padding:25px;color:#333;box-sizing:border-box;display:block;position:relative;">
+
+      <!-- ── Locked overlay (fixed, centered on screen) ── -->
+      <div id="eggLocked" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:2000;background:rgba(0,0,0,0.3);justify-content:center;align-items:center;">
+        <div class="game-tip-box" style="position:relative;">
+          <div class="game-tip-icon">!</div>
+          <div class="game-tip-title" data-zh="彩蛋尚未開放" data-en="Easter Egg Locked">彩蛋尚未開放</div>
+          <div class="game-tip-content" data-zh="尚未解鎖全部結局，先收集完所有結局再回來吧。" data-en="You haven't unlocked all endings yet. Collect all endings first and come back!">尚未解鎖全部結局，先收集完所有結局再回來吧。</div>
+          <div class="game-tip-arrow"></div>
+        </div>
+      </div>
+
+      <!-- ── Completed: wallpaper download ── -->
+      <div id="eggUnlocked" style="display:none;">
+        <div class="egg-section-title" data-zh="遊戲彩蛋" data-en="Easter Egg">遊戲彩蛋</div>
+        <p class="egg-body-text"
+          data-zh="恭喜完成所有結局！<br>你成功體驗了每位角色的選擇與命運。<br>作為獎勵，點擊以下團隊設計的桌布即可下載圖片！"
+          data-en="Congratulations on completing all endings!<br>You have experienced the choices and fate of every character.<br>As a reward, click on the wallpapers below designed by our team to download!">
+          恭喜完成所有結局！<br>你成功體驗了每位角色的選擇與命運。<br>作為獎勵，點擊以下團隊設計的桌布即可下載圖片！
+        </p>
+        <div class="egg-wallpaper-grid" id="eggWallpaperGrid">
+          <div class="egg-wallpaper-card" data-src="public/wallpapers/phone.png" data-name="NoFold_phone.png">
+            <img src="public/wallpapers/phone.png" alt="手機桌布 1" />
+            <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
+          </div>
+          <div class="egg-wallpaper-card" data-src="public/wallpapers/phone2.png" data-name="NoFold_phone2.png">
+            <img src="public/wallpapers/phone2.png" alt="手機桌布 2" />
+            <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
+          </div>
+          <div class="egg-wallpaper-card" data-src="public/wallpapers/computer.png" data-name="NoFold_computer.png">
+            <img src="public/wallpapers/computer.png" alt="電腦桌布" />
+            <div class="egg-dl-label" data-zh="點擊下載" data-en="Click to Download">點擊下載</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    </div>
+  </div>
