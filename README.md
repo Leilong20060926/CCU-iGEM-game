@@ -78,7 +78,7 @@ cd game
 ```
 
 **Option B — Without Git**
-1. Go to https://gitlab.igem.org/2026/software/ccu-taiwan/game
+1. Go to https://github.com/Leilong20060926/CCU-iGEM-game
 2. Click the **Code** button → **Download source code** → **zip**
 3. Unzip the file, then open a terminal inside the unzipped folder.
 
