@@ -73,7 +73,7 @@ If either command shows an error, install it first:
 
 **Option A — Using Git (recommended)**
 ```bash
-git clone https://gitlab.igem.org/2026/software/ccu-taiwan/game.git
+git clone https://github.com/Leilong20060926/CCU-iGEM-game.git
 cd game
 ```
 
