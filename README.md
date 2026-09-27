@@ -47,13 +47,62 @@ Technical notes for anyone working on the codebase.
 
 ### Getting Started
 
+### Play Online
+No installation needed — just open:
+https://leilong20060926.github.io/CCU-iGEM-game/
+
+### Run Locally
+
+#### Step 1: Install the required tools
+You need **Git** and **Python 3**. Check whether you already have them by opening a terminal
+(Windows: *Command Prompt* or *PowerShell*; macOS: *Terminal*; Linux: your terminal app) and running:
+
 ```bash
-git clone https://github.com/Leilong20060926/CCU-iGEM-game.git
-cd CCU-iGEM-game
-python3 -m http.server 8000
+git --version
+python3 --version
 ```
 
-Then open `http://localhost:8000` in your browser. (A local server is required — see [How index.html loads the game](#how-indexhtml-loads-the-game) for why.)
+> On Windows, use `python --version` instead of `python3 --version`.
+
+If either command shows an error, install it first:
+- Git: https://git-scm.com/downloads
+- Python 3: https://www.python.org/downloads/
+  (Windows users: check **"Add Python to PATH"** during installation.)
+
+#### Step 2: Download the game
+
+**Option A — Using Git (recommended)**
+```bash
+git clone https://gitlab.igem.org/2026/software/ccu-taiwan/game.git
+cd game
+```
+
+**Option B — Without Git**
+1. Go to https://gitlab.igem.org/2026/software/ccu-taiwan/game
+2. Click the **Code** button → **Download source code** → **zip**
+3. Unzip the file, then open a terminal inside the unzipped folder.
+
+#### Step 3: Start a local server
+```bash
+python3 -m http.server 8000
+```
+> On Windows, use `python -m http.server 8000`.
+
+You should see a message like `Serving HTTP on ... port 8000`. Keep this terminal window open while playing.
+
+#### Step 4: Open the game
+Open your browser and go to:
+```
+http://localhost:8000
+```
+
+#### Step 5: Stop the server
+When you're done, go back to the terminal and press **Ctrl + C**.
+
+### Troubleshooting
+- **"Address already in use"** — port 8000 is taken. Use another port, e.g. `python3 -m http.server 8080`, then open `http://localhost:8080`.
+- **Blank page or missing images** — make sure you ran the server command *inside* the `game` folder (the one containing `index.html`).
+- **Why not just double-click `index.html`?** — browsers block some features when files are opened directly, so the game needs to be served through a local server.
 
 ### Project structure
 
